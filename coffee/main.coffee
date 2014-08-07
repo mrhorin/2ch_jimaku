@@ -1,9 +1,16 @@
 $ ->
+	# スレッド一覧ボタンが押された時
 	$("#get-thread").click ->
-		# 掲示板インスタンス
+		# 掲示板の処理系インスタンス
 		bbs = new Bbs($("#url").val())
+		# 掲示板の表示系インスタンス
 		bbsView = new BbsView(bbs)
+		# スレッド一覧を描画
 		bbsView.printSubject()
 
+		# スレッドが選択された時
 		$(".thread").click ->
-			thread = new Thread(bbsView.clickedThread)
+			# スレッドインスタンスの作成
+			thread = new Thread(bbsView.clickedThread, bbs.url)
+			thread.getRes()
+			air.Introspector.Console.log(thread.res);

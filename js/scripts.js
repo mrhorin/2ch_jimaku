@@ -12,7 +12,9 @@
       bbsView.printSubject();
       return $(".thread").click(function() {
         var thread;
-        return thread = new Thread(bbsView.clickedThread);
+        thread = new Thread(bbsView.clickedThread, bbs.url);
+        thread.getRes();
+        return air.Introspector.Console.log(thread.res);
       });
     });
   });
@@ -20,10 +22,10 @@
   window.Bbs = (function() {
     function Bbs(url) {
       this.subjectsToArray = __bind(this.subjectsToArray, this);
-      this.getSubject = __bind(this.getSubject, this);
+      this.getSubjects = __bind(this.getSubjects, this);
       this.url = url;
       this.urlToArray();
-      this.getSubject();
+      this.getSubjects();
       this.subjectsToArray();
     }
 
@@ -36,7 +38,7 @@
       };
     };
 
-    Bbs.prototype.getSubject = function() {
+    Bbs.prototype.getSubjects = function() {
       return $.ajax({
         async: false,
         beforeSend: (function(_this) {
@@ -81,11 +83,52 @@
   })();
 
   window.Thread = (function() {
-    function Thread(clickedThread) {
+    function Thread(clickedThread, bbsUrl) {
+      this.getRes = __bind(this.getRes, this);
       this.clickedThread = clickedThread;
+      this.bbsUrl = bbsUrl;
+      this.clickedThread["ReqUrl"] = "http://" + bbsUrl["domain"] + "/bbs/rawmode.cgi/" + bbsUrl["category"] + "/" + bbsUrl["address"] + "/" + clickedThread["number"] + "/";
     }
 
-    Thread.prototype.getThread = function(title, number, url) {};
+    Thread.prototype.getRes = function() {
+      return $.ajax({
+        async: false,
+        beforeSend: (function(_this) {
+          return function(xhr) {
+            return xhr.overrideMimeType("text/html;charset=EUC-JP");
+          };
+        })(this),
+        type: 'GET',
+        url: this.clickedThread["ReqUrl"],
+        dataType: 'text',
+        success: (function(_this) {
+          return function(data) {
+            return _this.resToArray(data);
+          };
+        })(this),
+        error: function() {
+          return alert("スレッド読み込みエラー");
+        }
+      });
+    };
+
+    Thread.prototype.resToArray = function(data) {
+      this.res = [];
+      data = data.split("\n");
+      data.pop();
+      return $.each(data, (function(_this) {
+        return function(index, value) {
+          var i, _i, _results;
+          _this.res[index] = [];
+          value = value.split("<>");
+          _results = [];
+          for (i = _i = 0; _i <= 4; i = ++_i) {
+            _results.push(_this.res[index][i] = value[i]);
+          }
+          return _results;
+        };
+      })(this));
+    };
 
     return Thread;
 
@@ -116,11 +159,10 @@
       $.each(this.subjects, (function(_this) {
         return function(index, value) {
           return $("section").append($("<div class=\"thread\">" + _this.subjects[index]["title"] + "</div>").click(function() {
-            _this.clickedThread = {
+            return _this.clickedThread = {
               "title": _this.subjects[index]["title"],
               "number": _this.subjects[index]["number"]
             };
-            return alert(_this.clickedThread["title"]);
           }));
         };
       })(this));

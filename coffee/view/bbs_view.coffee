@@ -1,7 +1,7 @@
 class window.BbsView extends BaseView
-	# url 掲示板のURL
-	# subjects 掲示板のスレッド一覧
-	# clickedThread クリックされたスレ情報
+	# url 掲示板TOPのURL
+	# subjects スレッド一覧
+	# clickedThread クリックされたスレタイとスレ番号
 
 	# 【引数】Bbsインスタンス
 	constructor: (bbs) ->
@@ -20,7 +20,6 @@ class window.BbsView extends BaseView
 					@clickedThread =
 						"title": @subjects[index]["title"]
 						"number": @subjects[index]["number"]
-					alert @clickedThread["title"]
 			)
 		# 偶数行の背景を緑色に
 		$(".thread:odd").css("background-color", "#B1FF8E")

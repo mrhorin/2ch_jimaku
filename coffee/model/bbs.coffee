@@ -1,11 +1,12 @@
 class window.Bbs
 	# url 掲示板TOPのURL
-	# subjects スレタイ一覧
+	# subjects スレッド一覧
 
+	# 【引数】フォームから受け取った掲示板URL
 	constructor: (url) ->
 		@url = url
 		@urlToArray()
-		@getSubject()
+		@getSubjects()
 		@subjectsToArray()
 
 	# urlを連想配列化する
@@ -17,7 +18,7 @@ class window.Bbs
 			"address": @url[4]
 
 	# subject.txtの取得
-	getSubject: =>
+	getSubjects: =>
 		$.ajax({
 			async: false
 			beforeSend: (xhr) =>
