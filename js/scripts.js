@@ -11,10 +11,11 @@
       bbsView = new BbsView(bbs);
       bbsView.printSubject();
       return $(".thread").click(function() {
-        var thread;
+        var thread, threadView;
         thread = new Thread(bbsView.clickedThread, bbs.url);
         thread.getRes();
-        return air.Introspector.Console.log(thread.res);
+        threadView = new ThreadView(thread);
+        return threadView.printRes();
       });
     });
   });
@@ -31,11 +32,12 @@
 
     Bbs.prototype.urlToArray = function() {
       this.url = this.url.split("/");
-      return this.url = {
+      this.url = {
         "domain": this.url[2],
         "category": this.url[3],
         "address": this.url[4]
       };
+      return this.url["reqSubjectUrl"] = "http://" + this.url["domain"] + "/" + this.url["category"] + "/" + this.url["address"] + "/subject.txt";
     };
 
     Bbs.prototype.getSubjects = function() {
@@ -47,7 +49,7 @@
           };
         })(this),
         type: 'GET',
-        url: "http://" + this.url["domain"] + "/" + this.url["category"] + "/" + this.url["address"] + "/subject.txt",
+        url: this.url["reqSubjectUrl"],
         dataType: 'text',
         success: (function(_this) {
           return function(data) {
@@ -86,8 +88,10 @@
     function Thread(clickedThread, bbsUrl) {
       this.getRes = __bind(this.getRes, this);
       this.clickedThread = clickedThread;
-      this.bbsUrl = bbsUrl;
       this.clickedThread["ReqUrl"] = "http://" + bbsUrl["domain"] + "/bbs/rawmode.cgi/" + bbsUrl["category"] + "/" + bbsUrl["address"] + "/" + clickedThread["number"] + "/";
+      this.bbsUrl = bbsUrl;
+      this.resLoadFlug = false;
+      this.resCount = 0;
     }
 
     Thread.prototype.getRes = function() {
@@ -170,6 +174,27 @@
     };
 
     return BbsView;
+
+  })(BaseView);
+
+  window.ThreadView = (function(_super) {
+    __extends(ThreadView, _super);
+
+    function ThreadView(thread) {
+      this.printRes = __bind(this.printRes, this);
+      this.res = thread.res;
+    }
+
+    ThreadView.prototype.printRes = function() {
+      this.sectionToEmpty();
+      return $.each(this.res, (function(_this) {
+        return function(index, value) {
+          return $("section").append("<div class=\"res\">\n	<div class=\"res-head\">\n		<span class=\"res-no\">\n			" + _this.res[index][0] + "\n		</span>\n		<span class=\"res-name\">\n			" + _this.res[index][1] + "\n		</span>\n		<span class=\"res-date\">\n			" + _this.res[index][3] + "\n		</span>\n	</div>\n	<div class=\"res-body\">\n		" + _this.res[index][4] + "\n	</div>\n</div>");
+        };
+      })(this));
+    };
+
+    return ThreadView;
 
   })(BaseView);
 

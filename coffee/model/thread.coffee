@@ -1,14 +1,21 @@
 class window.Thread
 	# clickedThread スレッドタイトルと番号とリクエストURLを格納
 	# bbsUrl 掲示板のURL
+	# resLoadFlug スレッド自動更新用フラグ
+	# resCount 取得済みレス数
 	# res レスを格納する二次元配列
 
 	# 【引数】選択されたスレッドと掲示板URL
 	constructor: (clickedThread, bbsUrl) ->
 		@clickedThread = clickedThread
-		@bbsUrl = bbsUrl
 		# スレッドのリクエスト用URL
 		@clickedThread["ReqUrl"] = "http://#{bbsUrl["domain"]}/bbs/rawmode.cgi/#{bbsUrl["category"]}/#{bbsUrl["address"]}/#{clickedThread["number"]}/"
+		# 掲示板URL
+		@bbsUrl = bbsUrl
+		# スレッド自動更新用フラグ
+		@resLoadFlug = false;
+		# 取得済みレス数
+		@resCount = 0
 
 	# レスを取得
 	getRes: =>
@@ -38,9 +45,9 @@ class window.Thread
 		# 末尾のundefinedを削除
 		data.pop()
 
+		# 1レスを各要素ごとに配列で分ける
 		$.each data, (index, value) =>
 			@res[index] = []
-			# 1レスを各要素ごとに配列で分ける
 			value = value.split("<>")
 			for i in [0..4]
 				@res[index][i] = value[i]

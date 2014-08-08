@@ -1,6 +1,6 @@
 class window.BbsView extends BaseView
-	# url 掲示板TOPのURL
-	# subjects スレッド一覧
+	# url コンストラクタで取得した掲示板TOPのURL
+	# subjects コンストラクタで取得したスレッド一覧
 	# clickedThread クリックされたスレタイとスレ番号
 
 	# 【引数】Bbsインスタンス
@@ -10,6 +10,7 @@ class window.BbsView extends BaseView
 
 	# スレッドタイトル一覧を描画
 	printSubject: =>
+		# sectionを空に
 		@sectionToEmpty()
 
 		$.each @subjects, (index, value) =>

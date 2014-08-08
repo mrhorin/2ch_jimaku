@@ -16,6 +16,12 @@ class window.Bbs
 			"domain": @url[2]
 			"category": @url[3]
 			"address": @url[4]
+		# subject.txt取得用URL
+		@url["reqSubjectUrl"] =
+			"http://"+
+			@url["domain"]+"/"+
+			@url["category"]+"/"+
+			@url["address"]+"/subject.txt"
 
 	# subject.txtの取得
 	getSubjects: =>
@@ -24,10 +30,7 @@ class window.Bbs
 			beforeSend: (xhr) =>
 		    	 xhr.overrideMimeType("text/html;charset=EUC-JP")
 			type: 'GET'
-			url:    "http://"+
-					@url["domain"]+"/"+
-					@url["category"]+"/"+
-					@url["address"]+"/subject.txt"
+			url: @url["reqSubjectUrl"]
 			dataType: 'text'
 			# 成功時
 			success: (data) =>

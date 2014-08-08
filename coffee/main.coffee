@@ -12,5 +12,8 @@ $ ->
 		$(".thread").click ->
 			# スレッドインスタンスの作成
 			thread = new Thread(bbsView.clickedThread, bbs.url)
+			# スレッドを取得
 			thread.getRes()
-			air.Introspector.Console.log(thread.res);
+			threadView = new ThreadView(thread)
+			threadView.printRes()
+			# air.Introspector.Console.log(thread.res);
