@@ -1,15 +1,7 @@
 class window.ThreadView extends BaseView
-	# res コンストラクタ取得したレス
-
-	# 【引数】Threadインスタンス
-	constructor: (thread) ->
-		@res = thread.res
 
 	# レスを描画
 	printRes: =>
-		# sectionを空に
-		@sectionToEmpty()
-
 		$.each @res, (index, value) =>
 			$("section").append(
 				"""

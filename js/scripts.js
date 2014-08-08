@@ -11,11 +11,11 @@
       bbsView = new BbsView(bbs);
       bbsView.printSubject();
       return $(".thread").click(function() {
-        var thread, threadView;
+        var thread;
         thread = new Thread(bbsView.clickedThread, bbs.url);
+        thread.sectionToEmpty();
         thread.getRes();
-        threadView = new ThreadView(thread);
-        return threadView.printRes();
+        return air.Introspector.Console.log(thread.res);
       });
     });
   });
@@ -84,60 +84,6 @@
 
   })();
 
-  window.Thread = (function() {
-    function Thread(clickedThread, bbsUrl) {
-      this.getRes = __bind(this.getRes, this);
-      this.clickedThread = clickedThread;
-      this.clickedThread["ReqUrl"] = "http://" + bbsUrl["domain"] + "/bbs/rawmode.cgi/" + bbsUrl["category"] + "/" + bbsUrl["address"] + "/" + clickedThread["number"] + "/";
-      this.bbsUrl = bbsUrl;
-      this.resLoadFlug = false;
-      this.resCount = 0;
-    }
-
-    Thread.prototype.getRes = function() {
-      return $.ajax({
-        async: false,
-        beforeSend: (function(_this) {
-          return function(xhr) {
-            return xhr.overrideMimeType("text/html;charset=EUC-JP");
-          };
-        })(this),
-        type: 'GET',
-        url: this.clickedThread["ReqUrl"],
-        dataType: 'text',
-        success: (function(_this) {
-          return function(data) {
-            return _this.resToArray(data);
-          };
-        })(this),
-        error: function() {
-          return alert("スレッド読み込みエラー");
-        }
-      });
-    };
-
-    Thread.prototype.resToArray = function(data) {
-      this.res = [];
-      data = data.split("\n");
-      data.pop();
-      return $.each(data, (function(_this) {
-        return function(index, value) {
-          var i, _i, _results;
-          _this.res[index] = [];
-          value = value.split("<>");
-          _results = [];
-          for (i = _i = 0; _i <= 4; i = ++_i) {
-            _results.push(_this.res[index][i] = value[i]);
-          }
-          return _results;
-        };
-      })(this));
-    };
-
-    return Thread;
-
-  })();
-
   window.BaseView = (function() {
     function BaseView() {}
 
@@ -180,13 +126,12 @@
   window.ThreadView = (function(_super) {
     __extends(ThreadView, _super);
 
-    function ThreadView(thread) {
+    function ThreadView() {
       this.printRes = __bind(this.printRes, this);
-      this.res = thread.res;
+      return ThreadView.__super__.constructor.apply(this, arguments);
     }
 
     ThreadView.prototype.printRes = function() {
-      this.sectionToEmpty();
       return $.each(this.res, (function(_this) {
         return function(index, value) {
           return $("section").append("<div class=\"res\">\n	<div class=\"res-head\">\n		<span class=\"res-no\">\n			" + _this.res[index][0] + "\n		</span>\n		<span class=\"res-name\">\n			" + _this.res[index][1] + "\n		</span>\n		<span class=\"res-date\">\n			" + _this.res[index][3] + "\n		</span>\n	</div>\n	<div class=\"res-body\">\n		" + _this.res[index][4] + "\n	</div>\n</div>");
@@ -197,5 +142,94 @@
     return ThreadView;
 
   })(BaseView);
+
+  window.Thread = (function(_super) {
+    __extends(Thread, _super);
+
+    function Thread(clickedThread, bbsUrl) {
+      this.resLoading = __bind(this.resLoading, this);
+      this.getRes = __bind(this.getRes, this);
+      this.clickedThread = clickedThread;
+      this.clickedThread["ReqUrl"] = "http://" + bbsUrl["domain"] + "/bbs/rawmode.cgi/" + bbsUrl["category"] + "/" + bbsUrl["address"] + "/" + clickedThread["number"] + "/";
+      this.bbsUrl = bbsUrl;
+      this.resLoadFlag = false;
+      this.resCount = 0;
+      this.resLoadTimer = null;
+    }
+
+    Thread.prototype.getRes = function() {
+      var url;
+      if (this.resCount === 0) {
+        url = this.clickedThread["ReqUrl"];
+      } else {
+        url = this.clickedThread["ReqUrl"] + (this.resCount + 1) + "-";
+      }
+      return $.ajax({
+        async: false,
+        beforeSend: (function(_this) {
+          return function(xhr) {
+            return xhr.overrideMimeType("text/html;charset=EUC-JP");
+          };
+        })(this),
+        type: 'GET',
+        url: url,
+        dataType: 'text',
+        success: (function(_this) {
+          return function(data) {
+            if (data) {
+              return _this.resToArray(data);
+            }
+          };
+        })(this),
+        error: function() {
+          return alert("スレッド読み込みエラー");
+        }
+      });
+    };
+
+    Thread.prototype.resToArray = function(data) {
+      this.res = [];
+      data = data.split("\n");
+      data.pop();
+      this.resCount = this.resCount + data.length;
+      $.each(data, (function(_this) {
+        return function(index, value) {
+          var i, _i, _results;
+          _this.res[index] = [];
+          value = value.split("<>");
+          _results = [];
+          for (i = _i = 0; _i <= 4; i = ++_i) {
+            _results.push(_this.res[index][i] = value[i]);
+          }
+          return _results;
+        };
+      })(this));
+      return this.printRes();
+    };
+
+    Thread.prototype.loadOn = function() {
+      this.resLoadFlag = true;
+      return this.resLoading();
+    };
+
+    Thread.prototype.loadOff = function() {
+      this.resLoadFlag = false;
+      return clearTimeout(this.resLoadTimer);
+    };
+
+    Thread.prototype.resLoading = function() {
+      this.getRes();
+      if (this.resLoadFlag) {
+        return this.resLoadTimer = setTimeout((function(_this) {
+          return function() {
+            return _this.resLoading();
+          };
+        })(this), 7000);
+      }
+    };
+
+    return Thread;
+
+  })(ThreadView);
 
 }).call(this);
