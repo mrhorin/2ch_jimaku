@@ -1,18 +1,20 @@
-# #get-thread->.thread->#get-thread->play->.thread
-# の順にいくと自動更新が止まらない問題
-# #play押しまくると更新インターバルが増え続ける問題
 $ ->
 	# スレッド一覧ボタンが押された時
 	$("#get-thread").click ->
-		# 掲示板の処理系インスタンス
+		# 自動更新ONボタンを無効化
+		$("#play").attr('disabled', true)
+		# 掲示板の処理系インスタンスを生成
 		bbs = new Bbs($("#url").val())
-		# 掲示板の表示系インスタンス
+		# 掲示板の表示系インスタンスを生成
 		bbsView = new BbsView(bbs)
 		# スレッド一覧を描画
 		bbsView.printSubject()
 
 		# スレッドが選択された時
 		$(".thread").click =>
+			# 自動更新ONボタンを有効化
+			$("#play").attr('disabled', false)
+			$("#play").removeAttr('disabled')
 			# スレッドインスタンスの生成
 			thread = new Thread(bbsView.clickedThread, bbs.url)
 			# スレッドビューインスタンスを生成
@@ -23,27 +25,21 @@ $ ->
 			res = thread.getRes()
 			# レスを表示
 			threadView.printRes(res)
+			# ThreadControllerを生成
+			threadController = new ThreadController(thread, threadView)
 
-			# 自動更新用タイマー
-			resLoadTimer = null
 			air.Introspector.Console.log(res)
 
 			# 自動更新ONボタン
 			$("#play").click =>
-				alert "play"
-				# 自動更新ON
-				thread.loadOn()
-				# 7秒毎に更新
-				resLoadTimer = setInterval =>
-					res = thread.getRes()
-					if res
-						threadView.printRes(res)
-				, 7000
+				if !thread.resLoadFlag
+					# 自動更新ON
+					thread.resLoadFlag = true
+					threadController.resLoadOn()
 
 			# 自動更新OFFボタン
-			$("#pause,#get-thread,.thread").click =>
-				alert "pause"
-				# 自動更新ON
-				thread.loadOff()
-				# タイマー停止
-				clearInterval(resLoadTimer)
+			$("#pause,#get-thread").click =>
+				if thread.resLoadFlag
+					# 自動更新OFF
+					thread.resLoadFlag = false
+					threadController.resLoadOff()

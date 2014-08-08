@@ -6,33 +6,33 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 $(function() {
   return $("#get-thread").click(function() {
     var bbs, bbsView;
+    $("#play").attr('disabled', true);
     bbs = new Bbs($("#url").val());
     bbsView = new BbsView(bbs);
     bbsView.printSubject();
     return $(".thread").click((function(_this) {
       return function() {
-        var res, resLoadTimer, thread, threadView;
+        var res, thread, threadController, threadView;
+        $("#play").attr('disabled', false);
+        $("#play").removeAttr('disabled');
         thread = new Thread(bbsView.clickedThread, bbs.url);
         threadView = new ThreadView();
         threadView.sectionToEmpty();
         res = thread.getRes();
         threadView.printRes(res);
-        resLoadTimer = null;
+        threadController = new ThreadController(thread, threadView);
         air.Introspector.Console.log(res);
         $("#play").click(function() {
-          alert("play");
-          thread.loadOn();
-          return resLoadTimer = setInterval(function() {
-            res = thread.getRes();
-            if (res) {
-              return threadView.printRes(res);
-            }
-          }, 7000);
+          if (!thread.resLoadFlag) {
+            thread.resLoadFlag = true;
+            return threadController.resLoadOn();
+          }
         });
-        return $("#pause,#get-thread,.thread").click(function() {
-          alert("pause");
-          thread.loadOff();
-          return clearInterval(resLoadTimer);
+        return $("#pause,#get-thread").click(function() {
+          if (thread.resLoadFlag) {
+            thread.resLoadFlag = false;
+            return threadController.resLoadOff();
+          }
         });
       };
     })(this));
@@ -105,14 +105,12 @@ window.Bbs = (function() {
 
 window.Thread = (function() {
   function Thread(clickedThread, bbsUrl) {
-    this.resLoading = __bind(this.resLoading, this);
     this.getRes = __bind(this.getRes, this);
     this.clickedThread = clickedThread;
     this.clickedThread["ReqUrl"] = "http://" + bbsUrl["domain"] + "/bbs/rawmode.cgi/" + bbsUrl["category"] + "/" + bbsUrl["address"] + "/" + clickedThread["number"] + "/";
     this.bbsUrl = bbsUrl;
     this.resLoadFlag = false;
     this.resCount = 0;
-    this.resLoadTimer = null;
   }
 
   Thread.prototype.getRes = function() {
@@ -175,19 +173,6 @@ window.Thread = (function() {
     return this.resLoadFlag = false;
   };
 
-  Thread.prototype.resLoading = function() {
-    this.getRes();
-    if (this.resLoadFlag) {
-      return this.resLoadTimer = setTimeout((function(_this) {
-        return function() {
-          return _this.resLoading();
-        };
-      })(this), 7000);
-    }
-  };
-
-  Thread.prototype.checkUpdateRes = function() {};
-
   return Thread;
 
 })();
@@ -247,3 +232,32 @@ window.ThreadView = (function(_super) {
   return ThreadView;
 
 })(BaseView);
+
+window.ThreadController = (function() {
+  function ThreadController(thread, threadView) {
+    this.resLoadOff = __bind(this.resLoadOff, this);
+    this.resLoadOn = __bind(this.resLoadOn, this);
+    this.thread = thread;
+    this.threadView = threadView;
+    this.resLoadTimer = null;
+  }
+
+  ThreadController.prototype.resLoadOn = function() {
+    return this.resLoadTimer = setInterval((function(_this) {
+      return function() {
+        var res;
+        res = _this.thread.getRes();
+        if (res) {
+          return _this.threadView.printRes(res);
+        }
+      };
+    })(this), 7000);
+  };
+
+  ThreadController.prototype.resLoadOff = function() {
+    return clearInterval(this.resLoadTimer);
+  };
+
+  return ThreadController;
+
+})();

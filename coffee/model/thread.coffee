@@ -16,8 +16,6 @@ class window.Thread
 		@resLoadFlag = false;
 		# 取得済みレス数
 		@resCount = 0
-		# 更新用タイマー
-		@resLoadTimer = null
 
 	# レスを取得
 	# 【戻り値】取得したレス配列
@@ -75,14 +73,3 @@ class window.Thread
 	# 自動更新OFF
 	loadOff: ->
 		@resLoadFlag = false
-
-	# 自動更新する
-	resLoading: =>
-		@getRes()
-		if @resLoadFlag
-			# alert "取得"
-			@resLoadTimer = setTimeout =>
-				@resLoading()
-			, 7000
-
-	checkUpdateRes: ->
