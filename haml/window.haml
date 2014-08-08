@@ -1,0 +1,21 @@
+!!!
+%html{:lang => "ja"}
+	%head
+		%link{:href => "../css/font-awesome.min.css", :media => "all", :rel => "stylesheet"}
+		%link{:href => "../css/style.css", :media => "all", :rel => "stylesheet"}
+		/ jQuery
+		%script{:src => "../lib/jquery-2.1.1.min.js"}
+		/ Air
+		%script{:src => "../lib/air/AIRIntrospector.js"}
+		%script{:src => "../lib/air/AIRAliases.js"}
+		%script{:src => "../js/scripts.js"}
+	%body#view
+		%nav
+			%input(type="text" id="url" value="http://jbbs.shitaraba.net/game/48925/")
+			%button#play
+				%i.fa.fa-play
+			%button#pause
+				%i.fa.fa-pause
+			%button#get-thread
+				%i.fa.fa-list
+		%section

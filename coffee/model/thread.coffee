@@ -1,4 +1,4 @@
-class window.Thread extends ThreadView
+class window.Thread
 	# clickedThread スレッドタイトルと番号とリクエストURLを格納
 	# bbsUrl 掲示板のURL
 	# resLoadFlag スレッド自動更新用フラグ
@@ -20,6 +20,7 @@ class window.Thread extends ThreadView
 		@resLoadTimer = null
 
 	# レスを取得
+	# 【戻り値】取得したレス配列
 	getRes: =>
 		if @resCount == 0
 			# 初回取得用URL
@@ -39,11 +40,14 @@ class window.Thread extends ThreadView
 			success: (data) =>
 				if data
 					@resToArray(data)
+				else
+					@res = null
 
 			# 失敗時
 			error: ->
 				alert "スレッド読み込みエラー"
 		});
+		return @res
 
 	# GETしたtxt形式のレスを配列化
 	# 【引数】GETしたtxt形式のレス
@@ -63,17 +67,14 @@ class window.Thread extends ThreadView
 			value = value.split("<>")
 			for i in [0..4]
 				@res[index][i] = value[i]
-		@printRes()
 
 	# 自動更新ON
 	loadOn: ->
 		@resLoadFlag = true
-		@resLoading()
 
 	# 自動更新OFF
 	loadOff: ->
 		@resLoadFlag = false
-		clearTimeout(@resLoadTimer)
 
 	# 自動更新する
 	resLoading: =>
@@ -83,3 +84,5 @@ class window.Thread extends ThreadView
 			@resLoadTimer = setTimeout =>
 				@resLoading()
 			, 7000
+
+	checkUpdateRes: ->

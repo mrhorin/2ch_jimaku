@@ -20,7 +20,7 @@
 
 	<!-- 初期ウィンドウプロパティ -->
 	<initialWindow>
-		<content>index.html</content>
+		<content>haml/window.html</content>
 		<title>なかやまんスレッドビューア</title>
 		<systemChrome>standard</systemChrome>
 		<!-- 透過設定 -->
