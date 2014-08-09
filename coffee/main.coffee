@@ -1,3 +1,12 @@
+# 字幕ウィンドウの初期化
+initialize = ->
+    jimakuSubject = document.getElementById("jimaku-subject")
+    jimakuSubject.addEventListener("mousedown", onMoveJimaku, true)
+
+# 字幕の移動
+onMoveJimaku = (event) ->
+	window.nativeWindow.startMove()
+
 $ ->
 	# スレッド一覧ボタンが押された時
 	$("#get-thread").click ->
@@ -10,14 +19,15 @@ $ ->
 		# スレッド一覧を描画
 		bbsView.printSubject()
 
-		# スレッドが選択された時
+		# スレッドが押された時
 		$(".thread").click =>
 			# 自動更新ONボタンを有効化
 			$("#play").attr('disabled', false)
 			$("#play").removeAttr('disabled')
-			# スレッドインスタンスの生成
+
+			# スレッドの処理系インスタンスの生成
 			thread = new Thread(bbsView.clickedThread, bbs.url)
-			# スレッドビューインスタンスを生成
+			# スレッドの表示系インスタンスを生成
 			threadView = new ThreadView()
 			# sectionタグを空に
 			threadView.sectionToEmpty()
@@ -28,7 +38,17 @@ $ ->
 			# ThreadControllerを生成
 			threadController = new ThreadController(thread, threadView)
 
-			air.Introspector.Console.log(res)
+			# 字幕の表示系インスタンスを生成
+			jimaku = new JimakuView(air, "../haml/jimaku.html")
+			# 字幕を生成
+			jimaku.create()
+			jimaku.activate()
+			air.Introspector.Console.log(jimaku)
+			# doc = jimaku.jimaku.document.getElementById("jimaku-subject")
+			# doc.addEventListener 'mousedown',(e)=>
+			# 	# window.nativeWindow.startMove()
+			# 	alert "okok"
+			# , true
 
 			# 自動更新ONボタン
 			$("#play").click =>
@@ -36,6 +56,7 @@ $ ->
 					# 自動更新ON
 					thread.resLoadFlag = true
 					threadController.resLoadOn()
+					$("#play").addClass("on")
 
 			# 自動更新OFFボタン
 			$("#pause,#get-thread").click =>
@@ -43,3 +64,4 @@ $ ->
 					# 自動更新OFF
 					thread.resLoadFlag = false
 					threadController.resLoadOff()
+					$("#play").removeClass("on")

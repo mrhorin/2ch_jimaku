@@ -23,4 +23,5 @@ class window.BbsView extends BaseView
 						"number": @subjects[index]["number"]
 			)
 		# 偶数行の背景を緑色に
-		$(".thread:odd").css("background-color", "#B1FF8E")
+		$(".thread:odd").addClass("odd")
+		$(".thread:even").addClass("even")

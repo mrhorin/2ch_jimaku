@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang='ja'>
   <head>
+    <meta content='charset=UTF-8'>
     <link href='../scss/font-awesome.min.css' media='all' rel='stylesheet'>
     <link href='../scss/style.css' media='all' rel='stylesheet'>
     <!-- jQuery -->
@@ -10,19 +11,12 @@
     <script src='../lib/air/AIRAliases.js'></script>
     <script src='../js/scripts.js'></script>
   </head>
-  <body id='view'>
-    <nav>
-      <input id='url' type='text' value='http://jbbs.shitaraba.net/game/48925/'>
-      <button id='play'>
-        <i class='fa fa-play'></i>
-      </button>
-      <button id='pause'>
-        <i class='fa fa-pause'></i>
-      </button>
-      <button id='get-thread'>
-        <i class='fa fa-list'></i>
-      </button>
-    </nav>
-    <section></section>
+  <body id='view' onLoad='initialize()'>
+    <span id='jimaku-subject'>
+      字幕ソフト
+    </span>
+    <div id='jimaku-res'>
+      ここにレスを表示
+    </div>
   </body>
 </html>

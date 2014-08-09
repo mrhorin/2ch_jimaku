@@ -1,6 +1,8 @@
+- # encoding: utf-8
 !!!
 %html{:lang => "ja"}
 	%head
+		%meta{:content => "charset=UTF-8"}
 		%link{:href => "../scss/font-awesome.min.css", :media => "all", :rel => "stylesheet"}
 		%link{:href => "../scss/style.css", :media => "all", :rel => "stylesheet"}
 		/ jQuery
@@ -9,13 +11,8 @@
 		%script{:src => "../lib/air/AIRIntrospector.js"}
 		%script{:src => "../lib/air/AIRAliases.js"}
 		%script{:src => "../js/scripts.js"}
-	%body#view
-		%nav
-			%input(type="text" id="url" value="http://jbbs.shitaraba.net/game/48925/")
-			%button#play
-				%i.fa.fa-play
-			%button#pause
-				%i.fa.fa-pause
-			%button#get-thread
-				%i.fa.fa-list
-		%section
+	%body#view(onLoad="initialize()")
+		%span#jimaku-subject
+			字幕ソフト
+		%div#jimaku-res
+			ここにレスを表示
