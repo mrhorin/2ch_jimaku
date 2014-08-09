@@ -1,12 +1,3 @@
-# 字幕ウィンドウの初期化
-initialize = ->
-    jimakuSubject = document.getElementById("jimaku-subject")
-    jimakuSubject.addEventListener("mousedown", onMoveJimaku, true)
-
-# 字幕の移動
-onMoveJimaku = (event) ->
-	window.nativeWindow.startMove()
-
 $ ->
 	# スレッド一覧ボタンが押された時
 	$("#get-thread").click ->
@@ -43,12 +34,6 @@ $ ->
 			# 字幕を生成
 			jimaku.create()
 			jimaku.activate()
-			air.Introspector.Console.log(jimaku)
-			# doc = jimaku.jimaku.document.getElementById("jimaku-subject")
-			# doc.addEventListener 'mousedown',(e)=>
-			# 	# window.nativeWindow.startMove()
-			# 	alert "okok"
-			# , true
 
 			# 自動更新ONボタン
 			$("#play").click =>
