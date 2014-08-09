@@ -32,6 +32,7 @@ $ ->
 			# 字幕を生成
 			jimakuView.create()
 			jimakuView.activate()
+			# ↓例外を吐く
 			jimakuView.close()
 
 			# ThreadControllerを生成

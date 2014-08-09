@@ -10,3 +10,6 @@ Adobe Air 14.0
 ロジック系はcoffeeフォルダ内を参照
 main.coffeeでクリックイベント等を受け取り各modelとviewを操作
 コンパイルしたファイルはjs/scripts.js
+
+【未解決不具合】
+字幕用のnativeWindowをclose()した時に例外を吐く
