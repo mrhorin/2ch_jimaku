@@ -4,13 +4,36 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 window.ThreadController = (function() {
-  function ThreadController(thread, threadView) {
+  function ThreadController(thread, threadView, jimakuView) {
     this.resLoadOff = __bind(this.resLoadOff, this);
     this.resLoadOn = __bind(this.resLoadOn, this);
+    this.printSubjectToJimaku = __bind(this.printSubjectToJimaku, this);
+    this.onMoveJimaku = __bind(this.onMoveJimaku, this);
+    this.jimakuCompleteHandler = __bind(this.jimakuCompleteHandler, this);
     this.thread = thread;
     this.threadView = threadView;
+    this.jimakuView = jimakuView;
     this.resLoadTimer = null;
+    this.jimakuInitialize();
   }
+
+  ThreadController.prototype.jimakuInitialize = function() {
+    return this.jimakuView.html.addEventListener("complete", this.jimakuCompleteHandler);
+  };
+
+  ThreadController.prototype.jimakuCompleteHandler = function() {
+    this.subject = this.jimakuView.html.window.document.getElementById("jimaku-subject");
+    this.subject.addEventListener("mousedown", this.onMoveJimaku, true);
+    return this.printSubjectToJimaku(this.subject);
+  };
+
+  ThreadController.prototype.onMoveJimaku = function(event) {
+    return this.jimakuView.jimaku.startMove();
+  };
+
+  ThreadController.prototype.printSubjectToJimaku = function(subject) {
+    return subject.innerHTML = this.thread.clickedThread["title"];
+  };
 
   ThreadController.prototype.resLoadOn = function() {
     return this.resLoadTimer = setInterval((function(_this) {
@@ -41,7 +64,7 @@ $(function() {
     bbsView.printSubject();
     return $(".thread").click((function(_this) {
       return function() {
-        var jimaku, res, thread, threadController, threadView;
+        var jimakuView, res, thread, threadController, threadView;
         $("#play").attr('disabled', false);
         $("#play").removeAttr('disabled');
         thread = new Thread(bbsView.clickedThread, bbs.url);
@@ -49,10 +72,11 @@ $(function() {
         threadView.sectionToEmpty();
         res = thread.getRes();
         threadView.printRes(res);
-        threadController = new ThreadController(thread, threadView);
-        jimaku = new JimakuView(air, "../haml/jimaku.html");
-        jimaku.create();
-        jimaku.activate();
+        jimakuView = new ThreadJimakuView(air, "../haml/jimaku.html");
+        jimakuView.create();
+        jimakuView.activate();
+        jimakuView.close();
+        threadController = new ThreadController(thread, threadView, jimakuView);
         $("#play").click(function() {
           if (!thread.resLoadFlag) {
             thread.resLoadFlag = true;
@@ -250,18 +274,33 @@ window.BbsView = (function(_super) {
 
 })(BaseView);
 
-window.JimakuView = (function(_super) {
-  __extends(JimakuView, _super);
+window.ThreadView = (function(_super) {
+  __extends(ThreadView, _super);
 
-  function JimakuView(air, path) {
-    this.onMoveJimaku = __bind(this.onMoveJimaku, this);
-    this.completeHandler = __bind(this.completeHandler, this);
+  function ThreadView() {
+    return ThreadView.__super__.constructor.apply(this, arguments);
+  }
+
+  ThreadView.prototype.printRes = function(res) {
+    return $.each(res, function(index, value) {
+      return $("section").append("<div class=\"res\">\n	<div class=\"res-head\">\n		<span class=\"res-no\">\n			" + res[index][0] + "\n		</span>\n		<span class=\"res-name\">\n			" + res[index][1] + "\n		</span>\n		<span class=\"res-date\">\n			" + res[index][3] + "\n		</span>\n	</div>\n	<div class=\"res-body\">\n		" + res[index][4] + "\n	</div>\n</div>");
+    });
+  };
+
+  return ThreadView;
+
+})(BaseView);
+
+window.ThreadJimakuView = (function(_super) {
+  __extends(ThreadJimakuView, _super);
+
+  function ThreadJimakuView(air, path) {
     this.air = air;
     this.path = path;
     this.flag = false;
   }
 
-  JimakuView.prototype.create = function() {
+  ThreadJimakuView.prototype.create = function() {
     var options, url;
     url = new this.air.URLRequest(this.path);
     this.html = new this.air.HTMLLoader();
@@ -269,7 +308,6 @@ window.JimakuView = (function(_super) {
     this.html.scaleX = 1;
     this.html.scaleY = 1;
     this.html.load(url);
-    this.html.addEventListener("complete", this.completeHandler);
     options = new this.air.NativeWindowInitOptions();
     options.transparent = true;
     options.systemChrome = this.air.NativeWindowSystemChrome.NONE;
@@ -286,42 +324,17 @@ window.JimakuView = (function(_super) {
     return this.jimaku.stage.align = "topLeft";
   };
 
-  JimakuView.prototype.completeHandler = function() {
-    this.subject = this.html.window.document.getElementById("jimaku-subject");
-    return this.subject.addEventListener("mousedown", this.onMoveJimaku, true);
-  };
-
-  JimakuView.prototype.onMoveJimaku = function(event) {
-    return this.jimaku.startMove();
-  };
-
-  JimakuView.prototype.activate = function() {
+  ThreadJimakuView.prototype.activate = function() {
     this.jimaku.activate();
     return this.flag = true;
   };
 
-  JimakuView.prototype.close = function() {
+  ThreadJimakuView.prototype.close = function() {
+    alert("close");
     this.jimaku.close();
     return this.flag = false;
   };
 
-  return JimakuView;
-
-})(BaseView);
-
-window.ThreadView = (function(_super) {
-  __extends(ThreadView, _super);
-
-  function ThreadView() {
-    return ThreadView.__super__.constructor.apply(this, arguments);
-  }
-
-  ThreadView.prototype.printRes = function(res) {
-    return $.each(res, function(index, value) {
-      return $("section").append("<div class=\"res\">\n	<div class=\"res-head\">\n		<span class=\"res-no\">\n			" + res[index][0] + "\n		</span>\n		<span class=\"res-name\">\n			" + res[index][1] + "\n		</span>\n		<span class=\"res-date\">\n			" + res[index][3] + "\n		</span>\n	</div>\n	<div class=\"res-body\">\n		" + res[index][4] + "\n	</div>\n</div>");
-    });
-  };
-
-  return ThreadView;
+  return ThreadJimakuView;
 
 })(BaseView);

@@ -26,14 +26,16 @@ $ ->
 			res = thread.getRes()
 			# レスを表示
 			threadView.printRes(res)
-			# ThreadControllerを生成
-			threadController = new ThreadController(thread, threadView)
 
 			# 字幕の表示系インスタンスを生成
-			jimaku = new JimakuView(air, "../haml/jimaku.html")
+			jimakuView = new ThreadJimakuView(air, "../haml/jimaku.html")
 			# 字幕を生成
-			jimaku.create()
-			jimaku.activate()
+			jimakuView.create()
+			jimakuView.activate()
+			jimakuView.close()
+
+			# ThreadControllerを生成
+			threadController = new ThreadController(thread, threadView, jimakuView)
 
 			# 自動更新ONボタン
 			$("#play").click =>
@@ -45,6 +47,7 @@ $ ->
 
 			# 自動更新OFFボタン
 			$("#pause,#get-thread").click =>
+				# threadController.jimakuView.jimaku.close()
 				if thread.resLoadFlag
 					# 自動更新OFF
 					thread.resLoadFlag = false
