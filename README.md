@@ -11,7 +11,7 @@ http://get.adobe.com/jp/air/
 http://www.adobe.com/devnet/air/air-sdk-download.html  
 ### 【CoffeeScript】
 node.jsがインストールされている事が前提  
-`sudo npm install -g coffee-script`  
+    sudo npm install -g coffee-script
 CoffeeScriptビルドコマンド  
     cd (プロジェクトルートディレクトリ)
     # coffee (オプション) (保存先パス/ファイル名) (coffeeファイルがある場所)
