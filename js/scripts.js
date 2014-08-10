@@ -25,8 +25,10 @@ window.ThreadController = (function() {
 
   ThreadController.prototype.jimakuCompleteHandler = function() {
     this.jimakuSubject = this.jimakuView.html.window.document.getElementById("jimaku-subject");
-    this.jimakuSubject.addEventListener("mousedown", this.onMoveJimaku, true);
-    return this.printSubjectToJimaku(this.jimakuSubject);
+    if (this.jimakuSubject != null) {
+      this.jimakuSubject.addEventListener("mousedown", this.onMoveJimaku, true);
+      return this.printSubjectToJimaku(this.jimakuSubject);
+    }
   };
 
   ThreadController.prototype.onMoveJimaku = function(event) {

@@ -26,8 +26,9 @@ class window.ThreadController
 		# 字幕タイトルエレメントの取得
 		@jimakuSubject = @jimakuView.html.window.document.getElementById("jimaku-subject")
 		# 字幕の移動ハンドラを設定
-		@jimakuSubject.addEventListener("mousedown", @onMoveJimaku, true)
-		@printSubjectToJimaku(@jimakuSubject)
+		if @jimakuSubject?
+			@jimakuSubject.addEventListener("mousedown", @onMoveJimaku, true)
+			@printSubjectToJimaku(@jimakuSubject)
 		# @jimaku.air.Introspector.Console.log(@jimakuSubject)
 
 	# 字幕移動ハンドラ
