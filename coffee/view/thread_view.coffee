@@ -23,3 +23,5 @@ class window.ThreadView extends BaseView
 				</div>
 				"""
 			)
+		# 一番下へスクロール
+		$("#bottom-most").get(0).scrollIntoView(true)

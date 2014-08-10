@@ -25,3 +25,5 @@ class window.BbsView extends BaseView
 		# 偶数行の背景を緑色に
 		$(".thread:odd").addClass("odd")
 		$(".thread:even").addClass("even")
+		# 一番上へスクロール
+		$("#top-most").get(0).scrollIntoView(true)

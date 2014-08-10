@@ -9,6 +9,7 @@ $ ->
 		bbsView = new BbsView(bbs)
 		# スレッド一覧を描画
 		bbsView.printSubject()
+		# air.Introspector.Console.log(window.nativeWindow)
 
 		# スレッドが押された時
 		$(".thread").click =>

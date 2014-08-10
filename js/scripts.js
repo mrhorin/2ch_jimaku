@@ -363,7 +363,8 @@ window.BbsView = (function(_super) {
       };
     })(this));
     $(".thread:odd").addClass("odd");
-    return $(".thread:even").addClass("even");
+    $(".thread:even").addClass("even");
+    return $("#top-most").get(0).scrollIntoView(true);
   };
 
   return BbsView;
@@ -437,9 +438,10 @@ window.ThreadView = (function(_super) {
   }
 
   ThreadView.prototype.printRes = function(res) {
-    return $.each(res, function(index, value) {
+    $.each(res, function(index, value) {
       return $("section").append("<div class=\"res\">\n	<div class=\"res-head\">\n		<span class=\"res-no\">\n			" + res[index][0] + "\n		</span>\n		<span class=\"res-name\">\n			" + res[index][1] + "\n		</span>\n		<span class=\"res-date\">\n			" + res[index][3] + "\n		</span>\n	</div>\n	<div class=\"res-body\">\n		" + res[index][4] + "\n	</div>\n</div>");
     });
+    return $("#bottom-most").get(0).scrollIntoView(true);
   };
 
   return ThreadView;
