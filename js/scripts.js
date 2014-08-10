@@ -7,6 +7,7 @@ window.ThreadController = (function() {
   function ThreadController(thread, threadView, jimakuView) {
     this.resLoadOff = __bind(this.resLoadOff, this);
     this.resLoadOn = __bind(this.resLoadOn, this);
+    this.printResToJimaku = __bind(this.printResToJimaku, this);
     this.printSubjectToJimaku = __bind(this.printSubjectToJimaku, this);
     this.onMoveJimaku = __bind(this.onMoveJimaku, this);
     this.jimakuCompleteHandler = __bind(this.jimakuCompleteHandler, this);
@@ -15,7 +16,7 @@ window.ThreadController = (function() {
     this.jimakuView = jimakuView;
     this.resLoadTimer = null;
     this.jimakuPrintTimer = null;
-    this.jimakuRes = [];
+    this.jimakuResQueue = [];
     this.jimakuInitialize();
   }
 
@@ -25,6 +26,7 @@ window.ThreadController = (function() {
 
   ThreadController.prototype.jimakuCompleteHandler = function() {
     this.jimakuSubject = this.jimakuView.html.window.document.getElementById("jimaku-subject");
+    this.jimakuRes = this.jimakuView.html.window.document.getElementById("jimaku-res");
     if (this.jimakuSubject != null) {
       this.jimakuSubject.addEventListener("mousedown", this.onMoveJimaku, true);
       return this.printSubjectToJimaku(this.jimakuSubject);
@@ -39,6 +41,10 @@ window.ThreadController = (function() {
     return subject.innerHTML = this.thread.clickedThread["title"];
   };
 
+  ThreadController.prototype.printResToJimaku = function(res) {
+    return this.jimakuRes.innerHTML = res;
+  };
+
   ThreadController.prototype.resLoadOn = function() {
     this.resLoadTimer = setInterval((function(_this) {
       return function() {
@@ -47,16 +53,16 @@ window.ThreadController = (function() {
         if (res) {
           _this.threadView.printRes(res);
           return $.each(res, function(index, value) {
-            return _this.jimakuRes.push(res[index][4]);
+            return _this.jimakuResQueue.push(res[index][4]);
           });
         }
       };
     })(this), 7000);
     return this.jimakuPrintTimer = setInterval((function(_this) {
       return function() {
-        if (_this.jimakuRes[0] != null) {
-          alert(_this.jimakuRes[0]);
-          return _this.jimakuRes.shift();
+        if (_this.jimakuResQueue[0] != null) {
+          _this.printResToJimaku(_this.jimakuResQueue[0]);
+          return _this.jimakuResQueue.shift();
         }
       };
     })(this), 500);
