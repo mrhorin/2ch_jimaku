@@ -32,8 +32,7 @@ $ ->
 			# 字幕を生成
 			jimakuView.create()
 			jimakuView.activate()
-			# ↓例外を吐く
-			jimakuView.close()
+			# jimakuView.close()
 
 			# ThreadControllerを生成
 			threadController = new ThreadController(thread, threadView, jimakuView)
@@ -48,7 +47,7 @@ $ ->
 
 			# 自動更新OFFボタン
 			$("#pause,#get-thread").click =>
-				# threadController.jimakuView.jimaku.close()
+				threadController.jimakuView.close()
 				if thread.resLoadFlag
 					# 自動更新OFF
 					thread.resLoadFlag = false

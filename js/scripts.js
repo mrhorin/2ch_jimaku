@@ -14,6 +14,8 @@ window.ThreadController = (function() {
     this.threadView = threadView;
     this.jimakuView = jimakuView;
     this.resLoadTimer = null;
+    this.jimakuPrintTimer = null;
+    this.jimakuRes = [];
     this.jimakuInitialize();
   }
 
@@ -22,9 +24,9 @@ window.ThreadController = (function() {
   };
 
   ThreadController.prototype.jimakuCompleteHandler = function() {
-    this.subject = this.jimakuView.html.window.document.getElementById("jimaku-subject");
-    this.subject.addEventListener("mousedown", this.onMoveJimaku, true);
-    return this.printSubjectToJimaku(this.subject);
+    this.jimakuSubject = this.jimakuView.html.window.document.getElementById("jimaku-subject");
+    this.jimakuSubject.addEventListener("mousedown", this.onMoveJimaku, true);
+    return this.printSubjectToJimaku(this.jimakuSubject);
   };
 
   ThreadController.prototype.onMoveJimaku = function(event) {
@@ -36,19 +38,31 @@ window.ThreadController = (function() {
   };
 
   ThreadController.prototype.resLoadOn = function() {
-    return this.resLoadTimer = setInterval((function(_this) {
+    this.resLoadTimer = setInterval((function(_this) {
       return function() {
         var res;
         res = _this.thread.getRes();
         if (res) {
-          return _this.threadView.printRes(res);
+          _this.threadView.printRes(res);
+          return $.each(res, function(index, value) {
+            return _this.jimakuRes.push(res[index][4]);
+          });
         }
       };
     })(this), 7000);
+    return this.jimakuPrintTimer = setInterval((function(_this) {
+      return function() {
+        if (_this.jimakuRes[0] != null) {
+          alert(_this.jimakuRes[0]);
+          return _this.jimakuRes.shift();
+        }
+      };
+    })(this), 500);
   };
 
   ThreadController.prototype.resLoadOff = function() {
-    return clearInterval(this.resLoadTimer);
+    clearInterval(this.resLoadTimer);
+    return clearInterval(this.jimakuPrintTimer);
   };
 
   return ThreadController;
@@ -75,7 +89,6 @@ $(function() {
         jimakuView = new ThreadJimakuView(air, "../haml/jimaku.html");
         jimakuView.create();
         jimakuView.activate();
-        jimakuView.close();
         threadController = new ThreadController(thread, threadView, jimakuView);
         $("#play").click(function() {
           if (!thread.resLoadFlag) {
@@ -85,6 +98,7 @@ $(function() {
           }
         });
         return $("#pause,#get-thread").click(function() {
+          threadController.jimakuView.close();
           if (thread.resLoadFlag) {
             thread.resLoadFlag = false;
             threadController.resLoadOff();
@@ -274,23 +288,6 @@ window.BbsView = (function(_super) {
 
 })(BaseView);
 
-window.ThreadView = (function(_super) {
-  __extends(ThreadView, _super);
-
-  function ThreadView() {
-    return ThreadView.__super__.constructor.apply(this, arguments);
-  }
-
-  ThreadView.prototype.printRes = function(res) {
-    return $.each(res, function(index, value) {
-      return $("section").append("<div class=\"res\">\n	<div class=\"res-head\">\n		<span class=\"res-no\">\n			" + res[index][0] + "\n		</span>\n		<span class=\"res-name\">\n			" + res[index][1] + "\n		</span>\n		<span class=\"res-date\">\n			" + res[index][3] + "\n		</span>\n	</div>\n	<div class=\"res-body\">\n		" + res[index][4] + "\n	</div>\n</div>");
-    });
-  };
-
-  return ThreadView;
-
-})(BaseView);
-
 window.ThreadJimakuView = (function(_super) {
   __extends(ThreadJimakuView, _super);
 
@@ -330,11 +327,27 @@ window.ThreadJimakuView = (function(_super) {
   };
 
   ThreadJimakuView.prototype.close = function() {
-    alert("close");
     this.jimaku.close();
     return this.flag = false;
   };
 
   return ThreadJimakuView;
+
+})(BaseView);
+
+window.ThreadView = (function(_super) {
+  __extends(ThreadView, _super);
+
+  function ThreadView() {
+    return ThreadView.__super__.constructor.apply(this, arguments);
+  }
+
+  ThreadView.prototype.printRes = function(res) {
+    return $.each(res, function(index, value) {
+      return $("section").append("<div class=\"res\">\n	<div class=\"res-head\">\n		<span class=\"res-no\">\n			" + res[index][0] + "\n		</span>\n		<span class=\"res-name\">\n			" + res[index][1] + "\n		</span>\n		<span class=\"res-date\">\n			" + res[index][3] + "\n		</span>\n	</div>\n	<div class=\"res-body\">\n		" + res[index][4] + "\n	</div>\n</div>");
+    });
+  };
+
+  return ThreadView;
 
 })(BaseView);

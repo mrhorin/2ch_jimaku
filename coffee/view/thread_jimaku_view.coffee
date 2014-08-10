@@ -4,7 +4,6 @@ class window.ThreadJimakuView extends BaseView
 	# path jimaku.htmlファイルへのパス
 	# clickedThread クリックされたスレタイとスレ番号
 	# flag 字幕のOn、Off状態を保持
-	# subject 字幕タイトルエレメント
 
 	constructor: (air, path) ->
 		@air = air
@@ -46,11 +45,6 @@ class window.ThreadJimakuView extends BaseView
 		@jimaku.stage.scaleMode = "noScale"
 		@jimaku.stage.align = "topLeft"
 
-	# HTML読み込み完了時に呼ぶハンドラ
-	# completeHandler: =>
-	# 	@subject = @html.window.document.getElementById("jimaku-subject")
-	# 	@subject.addEventListener("mousedown", @onMoveJimaku, true)
-
 	# 字幕をアクティベイト
 	activate: ->
 		@jimaku.activate()
@@ -58,6 +52,5 @@ class window.ThreadJimakuView extends BaseView
 
 	# 字幕を閉じる
 	close: ->
-		alert "close"
 		@jimaku.close()
 		@flag = false
