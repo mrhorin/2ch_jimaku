@@ -6,6 +6,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 window.ThreadController = (function() {
   function ThreadController(thread, threadView, jimakuView) {
     this.resLoadOff = __bind(this.resLoadOff, this);
+    this.jimakuLoadOn = __bind(this.jimakuLoadOn, this);
     this.resLoadOn = __bind(this.resLoadOn, this);
     this.printResToJimaku = __bind(this.printResToJimaku, this);
     this.printSubjectToJimaku = __bind(this.printSubjectToJimaku, this);
@@ -17,6 +18,7 @@ window.ThreadController = (function() {
     this.resLoadTimer = null;
     this.jimakuPrintTimer = null;
     this.jimakuResQueue = [];
+    this.jimakuLoadFlag = false;
     this.jimakuInitialize();
   }
 
@@ -45,32 +47,69 @@ window.ThreadController = (function() {
     return this.jimakuRes.innerHTML = res;
   };
 
+  ThreadController.prototype.checkQueueLength = function(count) {
+    var sec;
+    switch (false) {
+      case !(count <= 1):
+        return sec = 10000;
+      case !((2 <= count && count <= 3)):
+        return sec = 7500;
+      case !((4 <= count && count <= 5)):
+        return sec = 5000;
+      case !((6 <= count && count <= 10)):
+        return sec = 3500;
+      case !((11 <= count && count <= 15)):
+        return sec = 2000;
+      case !(16 < count):
+        return sec = 1000;
+      default:
+        return sec = 1000;
+    }
+  };
+
   ThreadController.prototype.resLoadOn = function() {
-    this.resLoadTimer = setInterval((function(_this) {
+    return this.resLoadTimer = setInterval((function(_this) {
       return function() {
         var res;
         res = _this.thread.getRes();
         if (res) {
           _this.threadView.printRes(res);
-          return $.each(res, function(index, value) {
+          $.each(res, function(index, value) {
             return _this.jimakuResQueue.push(res[index][4]);
           });
+          if (!_this.jimakuLoadFlag) {
+            return _this.jimakuLoadOn();
+          }
         }
       };
     })(this), 7000);
-    return this.jimakuPrintTimer = setInterval((function(_this) {
+  };
+
+  ThreadController.prototype.jimakuLoadOn = function(sec) {
+    if (sec == null) {
+      sec = 0;
+    }
+    this.jimakuLoadFlag = true;
+    return this.jimakuPrintTimer = setTimeout((function(_this) {
       return function() {
+        var hoge;
         if (_this.jimakuResQueue[0] != null) {
           _this.printResToJimaku(_this.jimakuResQueue[0]);
-          return _this.jimakuResQueue.shift();
+          _this.jimakuResQueue.shift();
+          hoge = _this.checkQueueLength(_this.jimakuResQueue.length);
+          return _this.jimakuLoadOn(hoge);
+        } else {
+          _this.printResToJimaku("");
+          _this.jimakuLoadFlag = false;
+          return clearTimeout(_this.jimakuPrintTimer);
         }
       };
-    })(this), 500);
+    })(this), sec);
   };
 
   ThreadController.prototype.resLoadOff = function() {
     clearInterval(this.resLoadTimer);
-    return clearInterval(this.jimakuPrintTimer);
+    return clearTimeout(this.jimakuPrintTimer);
   };
 
   return ThreadController;
@@ -219,7 +258,7 @@ window.Thread = (function() {
         };
       })(this),
       error: function() {
-        return alert("スレッド読み込みエラー");
+        return this.res = null;
       }
     });
     return this.res;

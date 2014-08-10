@@ -43,7 +43,7 @@ class window.Thread
 
 			# 失敗時
 			error: ->
-				alert "スレッド読み込みエラー"
+				@res = null
 		});
 		return @res
 

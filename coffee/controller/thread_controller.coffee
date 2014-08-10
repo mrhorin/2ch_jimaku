@@ -1,12 +1,13 @@
 class window.ThreadController
 	# thread Threadインスタンス
 	# threadView ThreadViewインスタンス
-	# jimakuView jimakuViewインスタンス
+	# jimakuView ThreadJimakuViewインスタンス
 	# resLoadTimer レス自動更新用タイマー
 	# jimakuPrintTimer 字幕表示用タイマー
 	# jimakuSubject 字幕タイトルエレメント
 	# jimakuRes 字幕レスエレメント
 	# jimakuResQueue 字幕レス表示用キュー
+	# jimakuLoadFlag
 
 	constructor: (thread, threadView, jimakuView) ->
 		@thread = thread
@@ -16,6 +17,7 @@ class window.ThreadController
 		@jimakuPrintTimer = null
 		# @jimakuSubject = null
 		@jimakuResQueue = []
+		@jimakuLoadFlag = false
 		@jimakuInitialize()
 
 	# 字幕初期化設定
@@ -44,9 +46,26 @@ class window.ThreadController
 	printResToJimaku: (res) =>
 		@jimakuRes.innerHTML = res
 
-	# 自動更新ON
+	# キューの要素数を調べて字幕表示秒数を返す
+	checkQueueLength: (count) ->
+		switch
+			when count <= 1
+				sec = 10000
+			when 2 <= count <= 3
+				sec = 7500
+			when 4 <= count <= 5
+				sec = 5000
+			when 6 <= count <= 10
+				sec = 3500
+			when 11 <= count <= 15
+				sec = 2000
+			when 16 < count
+				sec = 1000
+			else
+				sec = 1000
+
+	# レス自動更新用タイマーON
 	resLoadOn: =>
-		# レス自動更新用タイマー
 		@resLoadTimer = setInterval =>
 			# 新着レスを取得
 			res = @thread.getRes()
@@ -54,20 +73,36 @@ class window.ThreadController
 			if res
 				# スレッドビューに新着レスを描画
 				@threadView.printRes(res)
+				# @jimakuView.air.Introspector.Console.log(res)
 				# 字幕表示用配列に新着レスをpush
 				$.each res, (index, value) =>
 					@jimakuResQueue.push res[index][4]
-			# @jimakuView.air.Introspector.Console.log(res)
+				if !@jimakuLoadFlag
+					# 字幕表示用タイマーON
+					@jimakuLoadOn()
 		, 7000
 
-		# 字幕表示用タイマー
-		@jimakuPrintTimer = setInterval =>
+	# 字幕表示用タイマーON
+	jimakuLoadOn: (sec = 0) =>
+		@jimakuLoadFlag = true
+		@jimakuPrintTimer = setTimeout =>
+			# 新着レスがあるか確認
 			if @jimakuResQueue[0]?
+				# キューの先頭要素を表示
 				@printResToJimaku(@jimakuResQueue[0])
+				# デキュー
 				@jimakuResQueue.shift()
-		, 500
+				# レス表示時間を取得
+				hoge = @checkQueueLength(@jimakuResQueue.length)
+				@jimakuLoadOn(hoge)
+			else
+				# 字幕レス表示を消す
+				@printResToJimaku("")
+				@jimakuLoadFlag = false
+				clearTimeout(@jimakuPrintTimer)
+		, sec
 
 	# 自動更新OFF
 	resLoadOff: =>
 		clearInterval(@resLoadTimer)
-		clearInterval(@jimakuPrintTimer)
+		clearTimeout(@jimakuPrintTimer)
