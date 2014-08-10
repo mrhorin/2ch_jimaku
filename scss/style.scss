@@ -82,7 +82,12 @@ section{
 	padding-left: 0px;
 }
 #jimaku-subject{
+	margin: 0px;
+	padding: 0px;
 	margin-left: 5px;
+}
+#jimaku-count{
+	margin-left: -6px;
 }
 #jimaku-subject:hover{
 	cursor: default;

@@ -5,11 +5,12 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 window.ThreadController = (function() {
   function ThreadController(thread, threadView, jimakuView) {
-    this.resLoadOff = __bind(this.resLoadOff, this);
     this.jimakuClockOff = __bind(this.jimakuClockOff, this);
     this.jimakuClockOn = __bind(this.jimakuClockOn, this);
     this.jimakuLoadOn = __bind(this.jimakuLoadOn, this);
+    this.resLoadOff = __bind(this.resLoadOff, this);
     this.resLoadOn = __bind(this.resLoadOn, this);
+    this.printJimakuResCount = __bind(this.printJimakuResCount, this);
     this.printResToJimaku = __bind(this.printResToJimaku, this);
     this.printSubjectToJimaku = __bind(this.printSubjectToJimaku, this);
     this.onMoveJimaku = __bind(this.onMoveJimaku, this);
@@ -19,9 +20,11 @@ window.ThreadController = (function() {
     this.jimakuView = jimakuView;
     this.resLoadTimer = null;
     this.jimakuPrintTimer = null;
+    this.clock = null;
     this.jimakuSubject = null;
     this.jimakuClock = null;
-    this.clock = null;
+    this.jimakuCount = null;
+    this.jimakuRes = null;
     this.jimakuResQueue = [];
     this.jimakuLoadFlag = false;
     this.jimakuInitialize();
@@ -34,10 +37,12 @@ window.ThreadController = (function() {
   ThreadController.prototype.jimakuCompleteHandler = function() {
     this.jimakuSubject = this.jimakuView.html.window.document.getElementById("jimaku-subject");
     this.jimakuClock = this.jimakuView.html.window.document.getElementById("jimaku-clock");
+    this.jimakuCount = this.jimakuView.html.window.document.getElementById("jimaku-count");
     this.jimakuRes = this.jimakuView.html.window.document.getElementById("jimaku-res");
     if (this.jimakuSubject != null) {
       this.jimakuSubject.addEventListener("mousedown", this.onMoveJimaku, true);
       this.printSubjectToJimaku(this.jimakuSubject);
+      this.printJimakuResCount();
     }
     if (this.jimakuClock != null) {
       return this.jimakuClockOn();
@@ -49,11 +54,16 @@ window.ThreadController = (function() {
   };
 
   ThreadController.prototype.printSubjectToJimaku = function(subject) {
+    this.thread.clickedThread["title"] = this.thread.clickedThread["title"].replace(/\(\d+\)$/, "");
     return subject.innerHTML = this.thread.clickedThread["title"];
   };
 
   ThreadController.prototype.printResToJimaku = function(res) {
     return this.jimakuRes.innerHTML = res;
+  };
+
+  ThreadController.prototype.printJimakuResCount = function() {
+    return this.jimakuCount.innerHTML = "(" + this.thread.resCount + ")";
   };
 
   ThreadController.prototype.checkQueueLength = function(count) {
@@ -94,6 +104,11 @@ window.ThreadController = (function() {
     })(this), 7000);
   };
 
+  ThreadController.prototype.resLoadOff = function() {
+    clearInterval(this.resLoadTimer);
+    return clearTimeout(this.jimakuPrintTimer);
+  };
+
   ThreadController.prototype.jimakuLoadOn = function(sec) {
     if (sec == null) {
       sec = 0;
@@ -103,6 +118,7 @@ window.ThreadController = (function() {
       return function() {
         var hoge;
         if (_this.jimakuResQueue[0] != null) {
+          _this.printJimakuResCount();
           _this.printResToJimaku(_this.jimakuResQueue[0]);
           _this.jimakuResQueue.shift();
           hoge = _this.checkQueueLength(_this.jimakuResQueue.length);
@@ -128,11 +144,6 @@ window.ThreadController = (function() {
 
   ThreadController.prototype.jimakuClockOff = function() {
     return clearInterval(this.clock);
-  };
-
-  ThreadController.prototype.resLoadOff = function() {
-    clearInterval(this.resLoadTimer);
-    return clearTimeout(this.jimakuPrintTimer);
   };
 
   return ThreadController;
