@@ -48,6 +48,7 @@ $ ->
 			# 自動更新OFFボタン
 			$("#pause,#get-thread").click =>
 				threadController.jimakuView.close()
+				threadController.jimakuClockOff()
 				if thread.resLoadFlag
 					# 自動更新OFF
 					thread.resLoadFlag = false

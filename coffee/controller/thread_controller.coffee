@@ -4,7 +4,9 @@ class window.ThreadController
 	# jimakuView ThreadJimakuViewインスタンス
 	# resLoadTimer レス自動更新用タイマー
 	# jimakuPrintTimer 字幕表示用タイマー
+	# clock 時計表示用タイマー
 	# jimakuSubject 字幕タイトルエレメント
+	# jimakuClock 字幕時計エレメント
 	# jimakuRes 字幕レスエレメント
 	# jimakuResQueue 字幕レス表示用キュー
 	# jimakuLoadFlag
@@ -15,7 +17,9 @@ class window.ThreadController
 		@jimakuView = jimakuView
 		@resLoadTimer = null
 		@jimakuPrintTimer = null
-		# @jimakuSubject = null
+		@jimakuSubject = null
+		@jimakuClock = null
+		@clock = null
 		@jimakuResQueue = []
 		@jimakuLoadFlag = false
 		@jimakuInitialize()
@@ -24,15 +28,19 @@ class window.ThreadController
 	jimakuInitialize: ->
 		@jimakuView.html.addEventListener("complete", @jimakuCompleteHandler)
 
-	# 字幕初期読み込み完了時イベントハンドラー
+	# 字幕ウィンドウ読み込み完了時イベントハンドラー
 	jimakuCompleteHandler: =>
 		# 字幕タイトルエレメントの取得
 		@jimakuSubject = @jimakuView.html.window.document.getElementById("jimaku-subject")
+		@jimakuClock = @jimakuView.html.window.document.getElementById("jimaku-clock")
 		@jimakuRes = @jimakuView.html.window.document.getElementById("jimaku-res")
 		# 字幕の移動ハンドラを設定
 		if @jimakuSubject?
 			@jimakuSubject.addEventListener("mousedown", @onMoveJimaku, true)
 			@printSubjectToJimaku(@jimakuSubject)
+		# 字幕時計をON
+		if @jimakuClock?
+			@jimakuClockOn()
 
 	# 字幕移動ハンドラ
 	onMoveJimaku: (event) =>
@@ -101,6 +109,18 @@ class window.ThreadController
 				@jimakuLoadFlag = false
 				clearTimeout(@jimakuPrintTimer)
 		, sec
+
+	# 字幕時計をON
+	jimakuClockOn: () =>
+		@clock = setInterval =>
+			# 現在時刻を取得
+			nowTime = @jimakuView.getNowTime()
+			@jimakuClock.innerHTML = nowTime
+		, 1000
+
+	# 字幕時計をOFF
+	jimakuClockOff: () =>
+		clearInterval(@clock)
 
 	# 自動更新OFF
 	resLoadOff: =>

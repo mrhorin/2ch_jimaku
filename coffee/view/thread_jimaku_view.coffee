@@ -54,3 +54,13 @@ class window.ThreadJimakuView extends BaseView
 	close: ->
 		@jimaku.close()
 		@flag = false
+
+	getNowTime: ->
+		# 現在時刻を取得
+		nowTime = new Date
+		nowHour = nowTime.getHours()
+		nowMin = nowTime.getMinutes()
+		nowSec = nowTime.getSeconds()
+		if nowSec < 10
+			nowSec = "0" + nowSec
+		clock = nowHour + ":" + nowMin + ":" + nowSec
