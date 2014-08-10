@@ -13,11 +13,11 @@ http://www.adobe.com/devnet/air/air-sdk-download.html
 node.jsがインストールされている事が前提  
 `sudo npm install -g coffee-script`  
 CoffeeScriptビルドコマンド  
-    cd (プロジェクトルートディレクトリ)  
-    # coffee (オプション) (保存先パス/ファイル名) (coffeeファイルがある場所)  
-    coffee -bwc -j js/scripts.js .  
+    cd (プロジェクトルートディレクトリ)
+    # coffee (オプション) (保存先パス/ファイル名) (coffeeファイルがある場所)
+    coffee -bwc -j js/scripts.js .
 上記のコマンドを実行した後にcoffeeファイルを編集すると、変更前との差分を検知し、自動的にビルドされた後にjs/scripts.jsファイルに保存されます。  
-【その他】  
+### 【その他】
 haml  
 scss  
 
