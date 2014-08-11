@@ -15,6 +15,7 @@ class window.ThreadController
 
 	# jimakuResQueue 字幕レス表示用キュー
 	# jimakuLoadFlag
+	# sound レス着信音用Soundインスタンス
 	# airFlag switchClassAirのOnOff
 	# @jimakuView.air.Introspector.Console.log()
 
@@ -32,6 +33,8 @@ class window.ThreadController
 		@jimakuResQueue = []
 		@jimakuLoadFlag = false
 		@airFlag = false
+		req = new @jimakuView.air.URLRequest("../../sound/sound.mp3")
+		@sound = new air.Sound(req)
 		@jimakuInitialize()
 
 	# 字幕初期化設定
@@ -135,6 +138,8 @@ class window.ThreadController
 				@printJimakuResCount()
 				# キューの先頭要素を表示
 				@printResToJimaku(@jimakuResQueue[0])
+				# レス着信音の再生
+				@sound.play()
 				# デキュー
 				@jimakuResQueue.shift()
 				# レス表示時間を取得

@@ -17,6 +17,7 @@ window.ThreadController = (function() {
     this.onResizeJimaku = __bind(this.onResizeJimaku, this);
     this.onMoveJimaku = __bind(this.onMoveJimaku, this);
     this.jimakuCompleteHandler = __bind(this.jimakuCompleteHandler, this);
+    var req;
     this.thread = thread;
     this.threadView = threadView;
     this.jimakuView = jimakuView;
@@ -30,6 +31,8 @@ window.ThreadController = (function() {
     this.jimakuResQueue = [];
     this.jimakuLoadFlag = false;
     this.airFlag = false;
+    req = new this.jimakuView.air.URLRequest("../../sound/sound.mp3");
+    this.sound = new air.Sound(req);
     this.jimakuInitialize();
   }
 
@@ -134,6 +137,7 @@ window.ThreadController = (function() {
         if (_this.jimakuResQueue[0] != null) {
           _this.printJimakuResCount();
           _this.printResToJimaku(_this.jimakuResQueue[0]);
+          _this.sound.play();
           _this.jimakuResQueue.shift();
           hoge = _this.checkQueueLength(_this.jimakuResQueue.length);
           return _this.jimakuLoadOn(hoge);
