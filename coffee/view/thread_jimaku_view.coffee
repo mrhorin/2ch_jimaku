@@ -24,6 +24,7 @@ class window.ThreadJimakuView extends BaseView
 		# @html.addEventListener("complete", @completeHandler)
 
 		options = new @air.NativeWindowInitOptions()
+		# 透過にする
 		options.transparent = true
 		options.systemChrome = @air.NativeWindowSystemChrome.NONE
 		# 透過無効
@@ -35,6 +36,7 @@ class window.ThreadJimakuView extends BaseView
 		@jimaku.title = "字幕"
 		@jimaku.width = 800
 		@jimaku.height = 200
+		@jimaku.addEventListener(@air.Event.RESIZE, @htmlResize)
 
 		# HTMLLoaderのサイズをNativeWindowに合わせる
 		@html.width = @jimaku.width
@@ -55,6 +57,13 @@ class window.ThreadJimakuView extends BaseView
 		@jimaku.close()
 		@flag = false
 
+	# jimakuウィンドウリサイズイベントハンドラ
+	htmlResize: (event) =>
+		# HTMLLoaderのサイズをjimakuに合わせる
+		@html.width = @jimaku.width
+		@html.height = @jimaku.height
+
+	# 字幕タイトル表示用の現在時刻を取得する
 	getNowTime: ->
 		# 現在時刻を取得
 		nowTime = new Date

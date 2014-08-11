@@ -1,5 +1,5 @@
 $ ->
-	# スレッド一覧ボタンが押された時
+	# スレッド一覧ボタン
 	$("#get-thread").click ->
 		# 自動更新ONボタンを無効化
 		$("#play").attr('disabled', true)
@@ -55,3 +55,7 @@ $ ->
 					thread.resLoadFlag = false
 					threadController.resLoadOff()
 					$("#play").removeClass("on")
+
+			# Airボタン
+			$("#air").click =>
+				threadController.switchClassAir()

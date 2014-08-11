@@ -7,6 +7,7 @@ class window.ThreadController
 	# jimakuPrintTimer 字幕表示用タイマー
 	# clock 時計表示用タイマー
 
+	# jimakuBody 字幕bodyエレメント
 	# jimakuSubject 字幕タイトルエレメント
 	# jimakuClock 字幕時計エレメント
 	# jimakuCount 字幕レス数エレメント
@@ -14,6 +15,8 @@ class window.ThreadController
 
 	# jimakuResQueue 字幕レス表示用キュー
 	# jimakuLoadFlag
+	# airFlag switchClassAirのOnOff
+	# @jimakuView.air.Introspector.Console.log()
 
 	constructor: (thread, threadView, jimakuView) ->
 		@thread = thread
@@ -28,6 +31,7 @@ class window.ThreadController
 		@jimakuRes = null
 		@jimakuResQueue = []
 		@jimakuLoadFlag = false
+		@airFlag = false
 		@jimakuInitialize()
 
 	# 字幕初期化設定
@@ -38,14 +42,21 @@ class window.ThreadController
 	jimakuCompleteHandler: =>
 		# 字幕タイトルエレメントの取得
 		@jimakuSubject = @jimakuView.html.window.document.getElementById("jimaku-subject")
+		@jimakuBody = @jimakuView.html.window.document.getElementById("jimaku-body")
 		@jimakuClock = @jimakuView.html.window.document.getElementById("jimaku-clock")
 		@jimakuCount = @jimakuView.html.window.document.getElementById("jimaku-count")
 		@jimakuRes = @jimakuView.html.window.document.getElementById("jimaku-res")
-		# 字幕の移動ハンドラを設定
 		if @jimakuSubject?
+			# 字幕タイトルがドラッグされた時に字幕を移動
 			@jimakuSubject.addEventListener("mousedown", @onMoveJimaku, true)
+			# スレッドビューウィンドウが閉じた時にアプリを終了する
+			window.nativeWindow.addEventListener(@jimakuView.air.Event.CLOSING, =>
+				@jimakuView.air.NativeApplication.nativeApplication.exit()
+			)
+			@jimakuBody.addEventListener("mousedown", @onResizeJimaku, true)
 			@printSubjectToJimaku(@jimakuSubject)
 			@printJimakuResCount()
+			# @addClassAir()
 		# 字幕時計をON
 		if @jimakuClock?
 			@jimakuClockOn()
@@ -53,6 +64,10 @@ class window.ThreadController
 	# 字幕移動ハンドラ
 	onMoveJimaku: (event) =>
 		@jimakuView.jimaku.startMove()
+
+	# 字幕リサイズハンドラ
+	onResizeJimaku: (event) =>
+		@jimakuView.jimaku.startResize("BR")
 
 	# 字幕にスレタイを表示
 	printSubjectToJimaku: (subject) =>
@@ -143,3 +158,11 @@ class window.ThreadController
 	# 字幕時計をOFF
 	jimakuClockOff: () =>
 		clearInterval(@clock)
+
+	switchClassAir: =>
+		if @airFlag
+			@jimakuBody.className = ""
+			@airFlag = false
+		else
+			@jimakuBody.className = "bg-air"
+			@airFlag = true

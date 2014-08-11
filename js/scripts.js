@@ -5,6 +5,7 @@ var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments)
 
 window.ThreadController = (function() {
   function ThreadController(thread, threadView, jimakuView) {
+    this.switchClassAir = __bind(this.switchClassAir, this);
     this.jimakuClockOff = __bind(this.jimakuClockOff, this);
     this.jimakuClockOn = __bind(this.jimakuClockOn, this);
     this.jimakuLoadOn = __bind(this.jimakuLoadOn, this);
@@ -13,6 +14,7 @@ window.ThreadController = (function() {
     this.printJimakuResCount = __bind(this.printJimakuResCount, this);
     this.printResToJimaku = __bind(this.printResToJimaku, this);
     this.printSubjectToJimaku = __bind(this.printSubjectToJimaku, this);
+    this.onResizeJimaku = __bind(this.onResizeJimaku, this);
     this.onMoveJimaku = __bind(this.onMoveJimaku, this);
     this.jimakuCompleteHandler = __bind(this.jimakuCompleteHandler, this);
     this.thread = thread;
@@ -27,6 +29,7 @@ window.ThreadController = (function() {
     this.jimakuRes = null;
     this.jimakuResQueue = [];
     this.jimakuLoadFlag = false;
+    this.airFlag = false;
     this.jimakuInitialize();
   }
 
@@ -36,11 +39,18 @@ window.ThreadController = (function() {
 
   ThreadController.prototype.jimakuCompleteHandler = function() {
     this.jimakuSubject = this.jimakuView.html.window.document.getElementById("jimaku-subject");
+    this.jimakuBody = this.jimakuView.html.window.document.getElementById("jimaku-body");
     this.jimakuClock = this.jimakuView.html.window.document.getElementById("jimaku-clock");
     this.jimakuCount = this.jimakuView.html.window.document.getElementById("jimaku-count");
     this.jimakuRes = this.jimakuView.html.window.document.getElementById("jimaku-res");
     if (this.jimakuSubject != null) {
       this.jimakuSubject.addEventListener("mousedown", this.onMoveJimaku, true);
+      window.nativeWindow.addEventListener(this.jimakuView.air.Event.CLOSING, (function(_this) {
+        return function() {
+          return _this.jimakuView.air.NativeApplication.nativeApplication.exit();
+        };
+      })(this));
+      this.jimakuBody.addEventListener("mousedown", this.onResizeJimaku, true);
       this.printSubjectToJimaku(this.jimakuSubject);
       this.printJimakuResCount();
     }
@@ -51,6 +61,10 @@ window.ThreadController = (function() {
 
   ThreadController.prototype.onMoveJimaku = function(event) {
     return this.jimakuView.jimaku.startMove();
+  };
+
+  ThreadController.prototype.onResizeJimaku = function(event) {
+    return this.jimakuView.jimaku.startResize("BR");
   };
 
   ThreadController.prototype.printSubjectToJimaku = function(subject) {
@@ -146,6 +160,16 @@ window.ThreadController = (function() {
     return clearInterval(this.clock);
   };
 
+  ThreadController.prototype.switchClassAir = function() {
+    if (this.airFlag) {
+      this.jimakuBody.className = "";
+      return this.airFlag = false;
+    } else {
+      this.jimakuBody.className = "bg-air";
+      return this.airFlag = true;
+    }
+  };
+
   return ThreadController;
 
 })();
@@ -178,7 +202,7 @@ $(function() {
             return $("#play").addClass("on");
           }
         });
-        return $("#pause,#get-thread").click(function() {
+        $("#pause,#get-thread").click(function() {
           threadController.jimakuView.close();
           threadController.jimakuClockOff();
           if (thread.resLoadFlag) {
@@ -186,6 +210,9 @@ $(function() {
             threadController.resLoadOff();
             return $("#play").removeClass("on");
           }
+        });
+        return $("#air").click(function() {
+          return threadController.switchClassAir();
         });
       };
     })(this));
@@ -375,6 +402,7 @@ window.ThreadJimakuView = (function(_super) {
   __extends(ThreadJimakuView, _super);
 
   function ThreadJimakuView(air, path) {
+    this.htmlResize = __bind(this.htmlResize, this);
     this.air = air;
     this.path = path;
     this.flag = false;
@@ -396,6 +424,7 @@ window.ThreadJimakuView = (function(_super) {
     this.jimaku.title = "字幕";
     this.jimaku.width = 800;
     this.jimaku.height = 200;
+    this.jimaku.addEventListener(this.air.Event.RESIZE, this.htmlResize);
     this.html.width = this.jimaku.width;
     this.html.height = this.jimaku.height;
     this.jimaku.alwaysInFront = true;
@@ -412,6 +441,11 @@ window.ThreadJimakuView = (function(_super) {
   ThreadJimakuView.prototype.close = function() {
     this.jimaku.close();
     return this.flag = false;
+  };
+
+  ThreadJimakuView.prototype.htmlResize = function(event) {
+    this.html.width = this.jimaku.width;
+    return this.html.height = this.jimaku.height;
   };
 
   ThreadJimakuView.prototype.getNowTime = function() {
