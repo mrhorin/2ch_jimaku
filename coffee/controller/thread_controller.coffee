@@ -8,7 +8,8 @@ class window.ThreadController
 	# clock 時計表示用タイマー
 
 	# jimakuBody 字幕bodyエレメント
-	# jimakuSubject 字幕タイトルエレメント
+	# jimakuTitle 字幕titleエレメント
+	# jimakuSubject 字幕subjectエレメント
 	# jimakuClock 字幕時計エレメント
 	# jimakuCount 字幕レス数エレメント
 	# jimakuRes 字幕レスエレメント
@@ -26,11 +27,14 @@ class window.ThreadController
 		@resLoadTimer = null
 		@jimakuPrintTimer = null
 		@clock = null
+		@jimakuBody = null
+		@jimakuTitle = null
 		@jimakuSubject = null
 		@jimakuClock = null
 		@jimakuCount = null
 		@jimakuRes = null
 		@jimakuResQueue = []
+		@jimakuCompleteFlag = false
 		@jimakuLoadFlag = false
 		@airFlag = false
 		req = new @jimakuView.air.URLRequest("../../sound/sound.mp3")
@@ -44,6 +48,7 @@ class window.ThreadController
 	# 字幕ウィンドウ読み込み完了時イベントハンドラー
 	jimakuCompleteHandler: =>
 		# 字幕タイトルエレメントの取得
+		@jimakuTitle = @jimakuView.html.window.document.getElementById("jimaku-title")
 		@jimakuSubject = @jimakuView.html.window.document.getElementById("jimaku-subject")
 		@jimakuBody = @jimakuView.html.window.document.getElementById("jimaku-body")
 		@jimakuClock = @jimakuView.html.window.document.getElementById("jimaku-clock")
@@ -51,7 +56,7 @@ class window.ThreadController
 		@jimakuRes = @jimakuView.html.window.document.getElementById("jimaku-res")
 		if @jimakuSubject?
 			# 字幕タイトルがドラッグされた時に字幕を移動
-			@jimakuSubject.addEventListener("mousedown", @onMoveJimaku, true)
+			@jimakuTitle.addEventListener("mousedown", @onMoveJimaku, true)
 			# スレッドビューウィンドウが閉じた時にアプリを終了する
 			window.nativeWindow.addEventListener(@jimakuView.air.Event.CLOSING, =>
 				@jimakuView.air.NativeApplication.nativeApplication.exit()
@@ -81,13 +86,15 @@ class window.ThreadController
 
 	# 字幕にレスを表示
 	printResToJimaku: (res) =>
-		@jimakuRes.innerHTML = res
+		if @jimakuRes?
+			@jimakuRes.innerHTML = res
 
 	# 字幕にレス数を描画
 	printJimakuResCount: =>
-		@jimakuCount.innerHTML = "("+@thread.resCount+")"
+		if @jimakuCount?
+			@jimakuCount.innerHTML = "("+@thread.resCount+")"
 
-	# キューの要素数を調べて字幕表示秒数を返す
+	# キューの要素数(引数)を調べて字幕表示秒数を返す
 	checkQueueLength: (count) ->
 		switch
 			when count <= 1
@@ -165,9 +172,9 @@ class window.ThreadController
 		clearInterval(@clock)
 
 	switchClassAir: =>
-		if @airFlag
+		if @airFlag && @jimakuBody?
 			@jimakuBody.className = ""
 			@airFlag = false
-		else
+		else if  @jimakuBody?
 			@jimakuBody.className = "bg-air"
 			@airFlag = true

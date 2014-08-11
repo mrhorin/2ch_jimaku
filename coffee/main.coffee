@@ -13,6 +13,7 @@ $ ->
 
 		# スレッドが押された時
 		$(".thread").click =>
+			$("#pause").addClass("on")
 			# 自動更新ONボタンを有効化
 			$("#play").attr('disabled', false)
 			$("#play").removeAttr('disabled')
@@ -33,10 +34,16 @@ $ ->
 			# 字幕を生成
 			jimakuView.create()
 			jimakuView.activate()
-			# jimakuView.close()
 
 			# ThreadControllerを生成
 			threadController = new ThreadController(thread, threadView, jimakuView)
+
+			bbsDb = new Db(air)
+			bbsDb.connect()
+			bbsDb.create()
+			# bbsDb.insertBbs("今からpeercastでゲーム実況配信", "http://jbbs.shitaraba.net/game/33090/")
+			bbsDb.deleteBbs(4)
+			bbsDb.selectBbs()
 
 			# 自動更新ONボタン
 			$("#play").click =>
@@ -45,9 +52,19 @@ $ ->
 					thread.resLoadFlag = true
 					threadController.resLoadOn()
 					$("#play").addClass("on")
+					$("#pause").removeClass("on")
 
 			# 自動更新OFFボタン
-			$("#pause,#get-thread").click =>
+			$("#pause").click =>
+				if thread.resLoadFlag
+					# 自動更新OFF
+					thread.resLoadFlag = false
+					threadController.resLoadOff()
+					$("#play").removeClass("on")
+					$("#pause").addClass("on")
+
+			# スレッド一覧ボタン
+			$("#get-thread").click =>
 				threadController.jimakuView.close()
 				threadController.jimakuClockOff()
 				if thread.resLoadFlag
@@ -55,7 +72,13 @@ $ ->
 					thread.resLoadFlag = false
 					threadController.resLoadOff()
 					$("#play").removeClass("on")
+					$("#pause").addClass("on")
+				$("#air").removeClass("on")
 
 			# Airボタン
 			$("#air").click =>
 				threadController.switchClassAir()
+				if threadController.airFlag
+					$("#air").addClass("on")
+				else
+					$("#air").removeClass("on")

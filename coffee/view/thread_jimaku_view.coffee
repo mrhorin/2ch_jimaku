@@ -70,6 +70,8 @@ class window.ThreadJimakuView extends BaseView
 		nowHour = nowTime.getHours()
 		nowMin = nowTime.getMinutes()
 		nowSec = nowTime.getSeconds()
+		if nowMin < 10
+			nowMin = "0" + nowMin
 		if nowSec < 10
 			nowSec = "0" + nowSec
 		clock = nowHour + ":" + nowMin + ":" + nowSec

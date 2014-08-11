@@ -24,11 +24,14 @@ window.ThreadController = (function() {
     this.resLoadTimer = null;
     this.jimakuPrintTimer = null;
     this.clock = null;
+    this.jimakuBody = null;
+    this.jimakuTitle = null;
     this.jimakuSubject = null;
     this.jimakuClock = null;
     this.jimakuCount = null;
     this.jimakuRes = null;
     this.jimakuResQueue = [];
+    this.jimakuCompleteFlag = false;
     this.jimakuLoadFlag = false;
     this.airFlag = false;
     req = new this.jimakuView.air.URLRequest("../../sound/sound.mp3");
@@ -41,13 +44,14 @@ window.ThreadController = (function() {
   };
 
   ThreadController.prototype.jimakuCompleteHandler = function() {
+    this.jimakuTitle = this.jimakuView.html.window.document.getElementById("jimaku-title");
     this.jimakuSubject = this.jimakuView.html.window.document.getElementById("jimaku-subject");
     this.jimakuBody = this.jimakuView.html.window.document.getElementById("jimaku-body");
     this.jimakuClock = this.jimakuView.html.window.document.getElementById("jimaku-clock");
     this.jimakuCount = this.jimakuView.html.window.document.getElementById("jimaku-count");
     this.jimakuRes = this.jimakuView.html.window.document.getElementById("jimaku-res");
     if (this.jimakuSubject != null) {
-      this.jimakuSubject.addEventListener("mousedown", this.onMoveJimaku, true);
+      this.jimakuTitle.addEventListener("mousedown", this.onMoveJimaku, true);
       window.nativeWindow.addEventListener(this.jimakuView.air.Event.CLOSING, (function(_this) {
         return function() {
           return _this.jimakuView.air.NativeApplication.nativeApplication.exit();
@@ -76,11 +80,15 @@ window.ThreadController = (function() {
   };
 
   ThreadController.prototype.printResToJimaku = function(res) {
-    return this.jimakuRes.innerHTML = res;
+    if (this.jimakuRes != null) {
+      return this.jimakuRes.innerHTML = res;
+    }
   };
 
   ThreadController.prototype.printJimakuResCount = function() {
-    return this.jimakuCount.innerHTML = "(" + this.thread.resCount + ")";
+    if (this.jimakuCount != null) {
+      return this.jimakuCount.innerHTML = "(" + this.thread.resCount + ")";
+    }
   };
 
   ThreadController.prototype.checkQueueLength = function(count) {
@@ -165,10 +173,10 @@ window.ThreadController = (function() {
   };
 
   ThreadController.prototype.switchClassAir = function() {
-    if (this.airFlag) {
+    if (this.airFlag && (this.jimakuBody != null)) {
       this.jimakuBody.className = "";
       return this.airFlag = false;
-    } else {
+    } else if (this.jimakuBody != null) {
       this.jimakuBody.className = "bg-air";
       return this.airFlag = true;
     }
@@ -187,7 +195,8 @@ $(function() {
     bbsView.printSubject();
     return $(".thread").click((function(_this) {
       return function() {
-        var jimakuView, res, thread, threadController, threadView;
+        var bbsDb, jimakuView, res, thread, threadController, threadView;
+        $("#pause").addClass("on");
         $("#play").attr('disabled', false);
         $("#play").removeAttr('disabled');
         thread = new Thread(bbsView.clickedThread, bbs.url);
@@ -199,24 +208,45 @@ $(function() {
         jimakuView.create();
         jimakuView.activate();
         threadController = new ThreadController(thread, threadView, jimakuView);
+        bbsDb = new Db(air);
+        bbsDb.connect();
+        bbsDb.create();
+        bbsDb.deleteBbs(4);
+        bbsDb.selectBbs();
         $("#play").click(function() {
           if (!thread.resLoadFlag) {
             thread.resLoadFlag = true;
             threadController.resLoadOn();
-            return $("#play").addClass("on");
+            $("#play").addClass("on");
+            return $("#pause").removeClass("on");
           }
         });
-        $("#pause,#get-thread").click(function() {
+        $("#pause").click(function() {
+          if (thread.resLoadFlag) {
+            thread.resLoadFlag = false;
+            threadController.resLoadOff();
+            $("#play").removeClass("on");
+            return $("#pause").addClass("on");
+          }
+        });
+        $("#get-thread").click(function() {
           threadController.jimakuView.close();
           threadController.jimakuClockOff();
           if (thread.resLoadFlag) {
             thread.resLoadFlag = false;
             threadController.resLoadOff();
-            return $("#play").removeClass("on");
+            $("#play").removeClass("on");
+            $("#pause").addClass("on");
           }
+          return $("#air").removeClass("on");
         });
         return $("#air").click(function() {
-          return threadController.switchClassAir();
+          threadController.switchClassAir();
+          if (threadController.airFlag) {
+            return $("#air").addClass("on");
+          } else {
+            return $("#air").removeClass("on");
+          }
         });
       };
     })(this));
@@ -458,6 +488,9 @@ window.ThreadJimakuView = (function(_super) {
     nowHour = nowTime.getHours();
     nowMin = nowTime.getMinutes();
     nowSec = nowTime.getSeconds();
+    if (nowMin < 10) {
+      nowMin = "0" + nowMin;
+    }
     if (nowSec < 10) {
       nowSec = "0" + nowSec;
     }
@@ -485,3 +518,93 @@ window.ThreadView = (function(_super) {
   return ThreadView;
 
 })(BaseView);
+
+window.Db = (function() {
+  function Db(air) {
+    this.connect = __bind(this.connect, this);
+    this.air = air;
+  }
+
+  Db.prototype.connect = function() {
+    var dbFile, error;
+    this.bbses = new this.air.SQLConnection();
+    dbFile = this.air.File.applicationStorageDirectory.resolvePath("bbs.db");
+    try {
+      return this.bbses.open(dbFile, this.air.SQLMode.CREATE);
+    } catch (_error) {
+      error = _error;
+      this.air.trace("Error message:", error.message);
+      return this.air.trace("Details:", error.details);
+    }
+  };
+
+  Db.prototype.create = function() {
+    var createBbs, error, sql;
+    createBbs = new this.air.SQLStatement();
+    createBbs.sqlConnection = this.bbses;
+    sql = "CREATE TABLE IF NOT EXISTS bbses (\n	id INTEGER PRIMARY KEY AUTOINCREMENT,\n	name TEXT,\n	url TEXT\n	)";
+    createBbs.text = sql;
+    try {
+      createBbs.execute();
+      return air.trace("Table created");
+    } catch (_error) {
+      error = _error;
+      this.air.trace("Error message:", error.message);
+      return this.air.trace("Details:", error.details);
+    }
+  };
+
+  Db.prototype.insertBbs = function(name, url) {
+    var error, insertBbsStmt, sql;
+    insertBbsStmt = new this.air.SQLStatement();
+    insertBbsStmt.sqlConnection = this.bbses;
+    sql = "INSERT INTO bbses (name, url) VALUES ('" + name + "', '" + url + "')";
+    insertBbsStmt.text = sql;
+    try {
+      insertBbsStmt.execute();
+      return this.air.trace("INSERT statement succeeded");
+    } catch (_error) {
+      error = _error;
+      this.air.trace("Error message:", error.message);
+      return this.air.trace("Details:", error.details);
+    }
+  };
+
+  Db.prototype.selectBbs = function() {
+    var error, result, selectBbsStmt, sql;
+    selectBbsStmt = new this.air.SQLStatement();
+    selectBbsStmt.sqlConnection = this.bbses;
+    sql = "SELECT * FROM bbses";
+    selectBbsStmt.text = sql;
+    try {
+      selectBbsStmt.execute();
+      result = selectBbsStmt.getResult();
+      this.bbsList = result.data;
+      this.air.trace("SELECT statement succeeded");
+      return this.air.Introspector.Console.log(result.data);
+    } catch (_error) {
+      error = _error;
+      this.air.trace("Error message:", error.message);
+      return this.air.trace("Details:", error.details);
+    }
+  };
+
+  Db.prototype.deleteBbs = function(id) {
+    var deleteBbsStmt, erorr, sql;
+    deleteBbsStmt = new this.air.SQLStatement();
+    deleteBbsStmt.sqlConnection = this.bbses;
+    sql = "DELETE FROM bbses WHERE id = " + id;
+    deleteBbsStmt.text = sql;
+    try {
+      deleteBbsStmt.execute();
+      return this.air.trace("DELETE statement succeeded");
+    } catch (_error) {
+      erorr = _error;
+      this.air.trace("Error message:", error.message);
+      return this.air.trace("Details:", error.details);
+    }
+  };
+
+  return Db;
+
+})();

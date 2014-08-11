@@ -1,6 +1,9 @@
 body {
   position: relative; }
 
+a {
+  text-decoration: none; }
+
 nav {
   top: 0;
   position: fixed;
@@ -14,6 +17,10 @@ nav {
     color: #555; }
   nav button:hover {
     cursor: pointer; }
+
+.on {
+  background-color: #5bc0de;
+  color: #fff; }
 
 section {
   font-size: 0.8em;
@@ -64,13 +71,18 @@ section {
   -webkit-text-stroke-width: 2px;
   font-weight: bold;
   padding: 0;
-  font-size: 3em;
+  font-size: 2.6em;
   cursor: none;
   padding: 0px;
   margin: 0px;
   position: absolute;
   top: 13px;
   left: 0; }
+  #jimaku-res a {
+    color: #FFF;
+    -webkit-text-stroke-color: #000;
+    -webkit-text-stroke-width: 2px;
+    cursor: default; }
 
 #jimaku-title {
   background-color: #FFD700;
@@ -96,7 +108,7 @@ section {
 #jimaku-count {
   margin-left: -6px; }
 
-#jimaku-subject:hover {
+#jimaku-title:hover {
   cursor: default; }
 
 .drag {
