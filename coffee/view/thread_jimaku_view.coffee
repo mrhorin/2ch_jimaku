@@ -1,20 +1,18 @@
 class window.ThreadJimakuView extends BaseView
-	# air Airインスタンス
 	# jimaku 字幕ウィンドウインスタンス
 	# path jimaku.htmlファイルへのパス
 	# clickedThread クリックされたスレタイとスレ番号
 	# flag 字幕のOn、Off状態を保持
 
-	constructor: (air, path) ->
-		@air = air
+	constructor: (path) ->
 		@path = path
 		@flag = false
 
 	# 字幕を生成
 	create: ->
 		# jimaku.htmlを取得
-		url = new @air.URLRequest(@path)
-		@html = new @air.HTMLLoader()
+		url = new window.air.URLRequest(@path)
+		@html = new window.air.HTMLLoader()
 		# HTMLLoaderの透過
 		@html.paintsDefaultBackground = false
 		@html.scaleX = 1
@@ -23,20 +21,20 @@ class window.ThreadJimakuView extends BaseView
 		# 読み込み完了時のイベント
 		# @html.addEventListener("complete", @completeHandler)
 
-		options = new @air.NativeWindowInitOptions()
+		options = new window.air.NativeWindowInitOptions()
 		# 透過にする
 		options.transparent = true
-		options.systemChrome = @air.NativeWindowSystemChrome.NONE
+		options.systemChrome = window.air.NativeWindowSystemChrome.NONE
 		# 透過無効
 		# options.transparent = false
 		# options.systemChrome = air.NativeWindowSystemChrome.STANDARD
-		options.type = @air.NativeWindowType.NORMAL
+		options.type = window.air.NativeWindowType.NORMAL
 
-		@jimaku = new @air.NativeWindow(options)
+		@jimaku = new window.air.NativeWindow(options)
 		@jimaku.title = "字幕"
 		@jimaku.width = 800
 		@jimaku.height = 200
-		@jimaku.addEventListener(@air.Event.RESIZE, @htmlResize)
+		@jimaku.addEventListener(window.air.Event.RESIZE, @htmlResize)
 
 		# HTMLLoaderのサイズをNativeWindowに合わせる
 		@html.width = @jimaku.width

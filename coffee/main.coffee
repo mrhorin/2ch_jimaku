@@ -1,6 +1,6 @@
 $ ->
 	# 掲示板データベースに接続
-	bbsDb = new BbsDb(air)
+	bbsDb = new BbsDb()
 	bbsDb.connect()
 	bbsDb.create()
 
@@ -47,7 +47,7 @@ $ ->
 			threadView.printRes(res)
 
 			# 字幕の表示系インスタンスを生成
-			jimakuView = new ThreadJimakuView(air, "../haml/jimaku.html")
+			jimakuView = new ThreadJimakuView("../haml/jimaku.html")
 			# 字幕を生成
 			jimakuView.create()
 			jimakuView.activate()
@@ -63,7 +63,6 @@ $ ->
 					threadController.resLoadOn()
 					$("#play").addClass("on")
 					$("#pause").removeClass("on")
-					$("#play").unbind("click")
 
 			# 自動更新OFFボタン
 			$("#pause").click =>
@@ -85,7 +84,7 @@ $ ->
 					$("#play").removeClass("on")
 					$("#pause").addClass("on")
 				$("#air").removeClass("on")
-				# delete threadController.resLoadFlag
+				$("#play").unbind("click")
 
 			# Airボタン
 			$("#air").click =>

@@ -19,7 +19,7 @@ class window.ThreadController
 	# resLoadFlag レス自動更新用フラグ
 	# sound レス着信音用Soundインスタンス
 	# airFlag switchClassAirのOnOff
-	# @jimakuView.air.Introspector.Console.log()
+	# window.air.Introspector.Console.log()
 
 	constructor: (thread, threadView, jimakuView) ->
 		@thread = thread
@@ -39,7 +39,7 @@ class window.ThreadController
 		@resLoadFlag = false
 		@jimakuLoadFlag = false
 		@airFlag = false
-		req = new @jimakuView.air.URLRequest("../../sound/sound.mp3")
+		req = new window.air.URLRequest("../../sound/sound.mp3")
 		@sound = new air.Sound(req)
 		@jimakuInitialize()
 
@@ -60,8 +60,8 @@ class window.ThreadController
 			# 字幕タイトルがドラッグされた時に字幕を移動
 			@jimakuTitle.addEventListener("mousedown", @onMoveJimaku, true)
 			# スレッドビューウィンドウが閉じた時にアプリを終了する
-			window.nativeWindow.addEventListener(@jimakuView.air.Event.CLOSING, =>
-				@jimakuView.air.NativeApplication.nativeApplication.exit()
+			window.nativeWindow.addEventListener(window.air.Event.CLOSING, =>
+				window.air.NativeApplication.nativeApplication.exit()
 			)
 			@jimakuBody.addEventListener("mousedown", @onResizeJimaku, true)
 			@printSubjectToJimaku(@jimakuSubject)
