@@ -62,7 +62,8 @@ class window.BbsDb
 			window.air.trace("Details:", error.details)
 
 	# 掲示板を削除
-	deleteBbs: (id) ->
+	# 【引数】削除する掲示板のID
+	deleteBbs: (id) =>
 		deleteBbsStmt = new window.air.SQLStatement()
 		deleteBbsStmt.sqlConnection = @bbses
 		sql = "DELETE FROM bbses WHERE id = #{id}"

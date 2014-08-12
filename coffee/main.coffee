@@ -1,21 +1,17 @@
 $ ->
+	# スレッド一覧ボタンを無効化
+	$("#get-thread").attr('disabled', true)
 	# 掲示板データベースに接続
 	bbsDb = new BbsDb()
 	bbsDb.connect()
 	bbsDb.create()
+	# bbsDb.insertBbs("アシベ", "http://jbbs.shitaraba.net/internet/6401/")
 
-	# 掲示板一覧を取得
 	$("#get-bbs").click ->
-		# bbsDb.insertBbs("アシベ", "http://jbbs.shitaraba.net/internet/6401/")
-		# bbsDb.deleteBbs(4)
-		bbsDb.selectBbs()
-		bbsDbView = new BbsDbView(bbsDb)
-		bbsDbView.printBbs()
-
-		# 掲示板が選択された時
-		$(".bbs").click =>
-			$("#url").val(bbsDbView.clickedBbs["url"])
-			$("#get-thread").trigger("click")
+		# スレッド一覧ボタンを無効化
+		$("#get-thread").attr('disabled', true)
+		bbsDbView = new BbsDbView()
+		bbsDbController = new BbsDbController(bbsDb, bbsDbView)
 
 	# スレッド一覧ボタン
 	$("#get-thread").click =>
