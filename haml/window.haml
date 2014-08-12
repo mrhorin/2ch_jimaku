@@ -11,15 +11,17 @@
 		%script{:src => "../js/scripts.js"}
 	%body#view
 		%nav
-			%input(type="text" id="url" value="http://jbbs.shitaraba.net/game/48925/")
+			%input(type="hidden" id="url" value="http://jbbs.shitaraba.net/game/48925/")
 			%button#play
 				%i.fa.fa-play
 			%button#pause
 				%i.fa.fa-pause
-			%button#get-thread
-				%i.fa.fa-list
 			%button#air
 				%i.fa.fa-eye
+			%button#get-thread
+				%i.fa.fa-list
+			%button#get-bbs
+				%i.fa.fa-home
 		%div#top-most
 		%section
 		%div#bottom-most

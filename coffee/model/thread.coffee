@@ -1,7 +1,6 @@
 class window.Thread
 	# clickedThread スレッドタイトルと番号とリクエストURLを格納
 	# bbsUrl 掲示板のURL
-	# resLoadFlag スレッド自動更新用フラグ
 	# resCount 取得済みレス数
 	# res レスを格納する二次元配列
 
@@ -12,8 +11,6 @@ class window.Thread
 		@clickedThread["ReqUrl"] = "http://#{bbsUrl["domain"]}/bbs/rawmode.cgi/#{bbsUrl["category"]}/#{bbsUrl["address"]}/#{clickedThread["number"]}/"
 		# 掲示板URL
 		@bbsUrl = bbsUrl
-		# スレッド自動更新用フラグ
-		@resLoadFlag = false;
 		# 取得済みレス数
 		@resCount = 0
 
@@ -43,7 +40,7 @@ class window.Thread
 
 			# 失敗時
 			error: ->
-				@res = null
+
 		});
 		return @res
 
@@ -65,11 +62,3 @@ class window.Thread
 			value = value.split("<>")
 			for i in [0..4]
 				@res[index][i] = value[i]
-
-	# 自動更新ON
-	loadOn: ->
-		@resLoadFlag = true
-
-	# 自動更新OFF
-	loadOff: ->
-		@resLoadFlag = false

@@ -41,6 +41,15 @@ section {
   background-color: #0088cc;
   color: #FFF; }
 
+.bbs {
+  font-size: 1.2em;
+  padding: 5px 10px; }
+
+.bbs:hover {
+  cursor: pointer;
+  background-color: #0088cc;
+  color: #FFF; }
+
 .odd {
   background-color: #B1FF8E; }
 

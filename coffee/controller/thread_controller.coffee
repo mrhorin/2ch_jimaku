@@ -16,6 +16,7 @@ class window.ThreadController
 
 	# jimakuResQueue 字幕レス表示用キュー
 	# jimakuLoadFlag
+	# resLoadFlag レス自動更新用フラグ
 	# sound レス着信音用Soundインスタンス
 	# airFlag switchClassAirのOnOff
 	# @jimakuView.air.Introspector.Console.log()
@@ -35,6 +36,7 @@ class window.ThreadController
 		@jimakuRes = null
 		@jimakuResQueue = []
 		@jimakuCompleteFlag = false
+		@resLoadFlag = false
 		@jimakuLoadFlag = false
 		@airFlag = false
 		req = new @jimakuView.air.URLRequest("../../sound/sound.mp3")
@@ -114,6 +116,7 @@ class window.ThreadController
 
 	# レス自動更新用タイマーON
 	resLoadOn: =>
+		@resLoadFlag = true
 		@resLoadTimer = setInterval =>
 			# 新着レスを取得
 			res = @thread.getRes()
@@ -121,7 +124,6 @@ class window.ThreadController
 			if res
 				# スレッドビューに新着レスを描画
 				@threadView.printRes(res)
-				# @jimakuView.air.Introspector.Console.log(res)
 				# 字幕表示用配列に新着レスをpush
 				$.each res, (index, value) =>
 					@jimakuResQueue.push res[index][4]
@@ -132,6 +134,7 @@ class window.ThreadController
 
 	# 自動更新OFF
 	resLoadOff: =>
+		@resLoadFlag = false
 		clearInterval(@resLoadTimer)
 		clearTimeout(@jimakuPrintTimer)
 
@@ -160,7 +163,7 @@ class window.ThreadController
 		, sec
 
 	# 字幕時計をON
-	jimakuClockOn: () =>
+	jimakuClockOn: =>
 		@clock = setInterval =>
 			# 現在時刻を取得
 			nowTime = @jimakuView.getNowTime()
@@ -168,7 +171,7 @@ class window.ThreadController
 		, 1000
 
 	# 字幕時計をOFF
-	jimakuClockOff: () =>
+	jimakuClockOff: =>
 		clearInterval(@clock)
 
 	switchClassAir: =>

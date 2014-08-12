@@ -1,15 +1,32 @@
 $ ->
+	# 掲示板データベースに接続
+	bbsDb = new BbsDb(air)
+	bbsDb.connect()
+	bbsDb.create()
+
+	# 掲示板一覧を取得
+	$("#get-bbs").click ->
+		# bbsDb.insertBbs("アシベ", "http://jbbs.shitaraba.net/internet/6401/")
+		# bbsDb.deleteBbs(4)
+		bbsDb.selectBbs()
+		bbsDbView = new BbsDbView(bbsDb)
+		bbsDbView.printBbs()
+
+		# 掲示板が選択された時
+		$(".bbs").click =>
+			$("#url").val(bbsDbView.clickedBbs["url"])
+			$("#get-thread").trigger("click")
+
 	# スレッド一覧ボタン
-	$("#get-thread").click ->
+	$("#get-thread").click =>
 		# 自動更新ONボタンを無効化
 		$("#play").attr('disabled', true)
 		# 掲示板の処理系インスタンスを生成
 		bbs = new Bbs($("#url").val())
 		# 掲示板の表示系インスタンスを生成
-		bbsView = new BbsView(bbs)
+		bbsView = new BbsView(bbs, bbsDb)
 		# スレッド一覧を描画
 		bbsView.printSubject()
-		# air.Introspector.Console.log(window.nativeWindow)
 
 		# スレッドが押された時
 		$(".thread").click =>
@@ -38,27 +55,21 @@ $ ->
 			# ThreadControllerを生成
 			threadController = new ThreadController(thread, threadView, jimakuView)
 
-			bbsDb = new Db(air)
-			bbsDb.connect()
-			bbsDb.create()
-			# bbsDb.insertBbs("今からpeercastでゲーム実況配信", "http://jbbs.shitaraba.net/game/33090/")
-			bbsDb.deleteBbs(4)
-			bbsDb.selectBbs()
-
 			# 自動更新ONボタン
-			$("#play").click =>
-				if !thread.resLoadFlag
+			$("#play").click ->
+				if !threadController.resLoadFlag
 					# 自動更新ON
-					thread.resLoadFlag = true
+					threadController.resLoadFlag = true
 					threadController.resLoadOn()
 					$("#play").addClass("on")
 					$("#pause").removeClass("on")
+					$("#play").unbind("click")
 
 			# 自動更新OFFボタン
 			$("#pause").click =>
-				if thread.resLoadFlag
+				if threadController.resLoadFlag
 					# 自動更新OFF
-					thread.resLoadFlag = false
+					threadController.resLoadFlag = false
 					threadController.resLoadOff()
 					$("#play").removeClass("on")
 					$("#pause").addClass("on")
@@ -67,13 +78,14 @@ $ ->
 			$("#get-thread").click =>
 				threadController.jimakuView.close()
 				threadController.jimakuClockOff()
-				if thread.resLoadFlag
+				if threadController.resLoadFlag
 					# 自動更新OFF
-					thread.resLoadFlag = false
+					threadController.resLoadFlag = false
 					threadController.resLoadOff()
 					$("#play").removeClass("on")
 					$("#pause").addClass("on")
 				$("#air").removeClass("on")
+				# delete threadController.resLoadFlag
 
 			# Airボタン
 			$("#air").click =>

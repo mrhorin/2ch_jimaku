@@ -4,7 +4,7 @@ class window.BbsView extends BaseView
 	# clickedThread クリックされたスレタイとスレ番号
 
 	# 【引数】Bbsインスタンス
-	constructor: (bbs) ->
+	constructor: (bbs, db) ->
 		@subjects = bbs.subjects
 		@url = bbs.url
 
