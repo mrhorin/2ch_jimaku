@@ -18,8 +18,6 @@ class window.ThreadJimakuView extends BaseView
 		@html.scaleX = 1
 		@html.scaleY = 1
 		@html.load(url)
-		# 読み込み完了時のイベント
-		# @html.addEventListener("complete", @completeHandler)
 
 		options = new window.air.NativeWindowInitOptions()
 		# 透過にする

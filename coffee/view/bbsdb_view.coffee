@@ -1,9 +1,8 @@
 class BbsDbView extends BaseView
 	# clickedBbs 選択された掲示板
 	# deleteId 削除する掲示板ID
-
-	# constructor: (bbsDb) ->
-	# 	@bbsDb = bbsDb
+	# html 掲示板追加ウィンドウ用HTMLLoader
+	# addBbs 掲示板追加用ウィンドウ
 
 	# 掲示板一覧を描画
 	printBbs: (bbsList) =>
@@ -20,11 +19,37 @@ class BbsDbView extends BaseView
 						"name": bbsList[index]["name"]
 						"url": bbsList[index]["url"]
 			)
-			# コンテキストメニューリスナー
-			# id = window.document.getElementById(bbsList[index]["id"])
-			# id.addEventListener("contextmenu", @contextHandler(bbsList[index]["id"]))
 		# 偶数行の背景を緑色、奇数行を白色に
 		$(".bbs:odd").addClass("odd")
 		$(".bbs:even").addClass("even")
 		# 一番上へスクロール
 		$("#top-most").get(0).scrollIntoView(true)
+
+	# 掲示板追加ウィンドウを描画
+	showAddbbs: =>
+		# jimaku.htmlを取得
+		url = new window.air.URLRequest("../../haml/add_bbs.html")
+		@html = new window.air.HTMLLoader()
+		@html.load(url)
+
+		options = new window.air.NativeWindowInitOptions()
+		# 透過無効
+		options.transparent = false
+		options.systemChrome = air.NativeWindowSystemChrome.STANDARD
+		options.type = window.air.NativeWindowType.NORMAL
+
+		@addBbs = new window.air.NativeWindow(options)
+		@addBbs.title = "掲示板を追加"
+		@addBbs.width = 450
+		@addBbs.height = 160
+		# @jimaku.addEventListener(window.air.Event.RESIZE, @htmlResize)
+
+		# HTMLLoaderのサイズをNativeWindowに合わせる
+		@html.width = @addBbs.width
+		@html.height = @addBbs.height
+		# 最前面表示
+		@addBbs.alwaysInFront  = true
+		@addBbs.stage.addChild(@html)
+		@addBbs.stage.scaleMode = "noScale"
+		@addBbs.stage.align = "topLeft"
+		@addBbs.activate()

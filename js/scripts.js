@@ -191,16 +191,19 @@ window.ThreadController = (function() {
 })();
 
 $(function() {
-  var bbsDb;
+  var bbsDb, bbsDbController, bbsDbView;
   $("#get-thread").attr('disabled', true);
   bbsDb = new BbsDb();
   bbsDb.connect();
   bbsDb.create();
+  bbsDbView = new BbsDbView();
+  bbsDbController = new BbsDbController(bbsDb, bbsDbView);
   $("#get-bbs").click(function() {
-    var bbsDbController, bbsDbView;
     $("#get-thread").attr('disabled', true);
-    bbsDbView = new BbsDbView();
-    return bbsDbController = new BbsDbController(bbsDb, bbsDbView);
+    return bbsDbController.getBbsList();
+  });
+  $("#add-bbs").click(function() {
+    return bbsDbController.getAddBbs();
   });
   return $("#get-thread").click((function(_this) {
     return function() {
@@ -607,73 +610,11 @@ window.ThreadView = (function(_super) {
 
 })(BaseView);
 
-window.BbsDbController = (function() {
-  function BbsDbController(bbsDb, bbsDbView) {
-    this.clickBbsHandler = __bind(this.clickBbsHandler, this);
-    this.deleteBbsHandler = __bind(this.deleteBbsHandler, this);
-    this.showContextMenu = __bind(this.showContextMenu, this);
-    this.addBbsListListener = __bind(this.addBbsListListener, this);
-    this.bbsDb = bbsDb;
-    this.bbsDbView = bbsDbView;
-    this.bbsDb.selectBbs();
-    this.bbsDbView.printBbs(this.bbsDb.bbsList);
-    this.addBbsListListener(this.bbsDb.bbsList);
-  }
-
-  BbsDbController.prototype.addBbsListListener = function(bbsList) {
-    return $.each(bbsList, (function(_this) {
-      return function(index, value) {
-        var id;
-        id = window.document.getElementById(bbsList[index]["id"]);
-        id.addEventListener("contextmenu", _this.showContextMenu(bbsList[index]["id"]));
-        return id.addEventListener("click", _this.clickBbsHandler(bbsList[index]["url"]));
-      };
-    })(this));
-  };
-
-  BbsDbController.prototype.showContextMenu = function(id) {
-    return (function(_this) {
-      return function(event) {
-        var contextMenu, deleteBbs;
-        contextMenu = new air.NativeMenu();
-        event.preventDefault();
-        deleteBbs = contextMenu.addItem(new air.NativeMenuItem("削除"));
-        deleteBbs.addEventListener(window.air.Event.SELECT, _this.deleteBbsHandler(id));
-        return contextMenu.display(window.nativeWindow.stage, event.clientX, event.clientY);
-      };
-    })(this);
-  };
-
-  BbsDbController.prototype.deleteBbsHandler = function(id) {
-    return (function(_this) {
-      return function(event) {
-        _this.bbsDb.deleteBbs(id);
-        _this.bbsDbView.sectionToEmpty();
-        _this.bbsDb.selectBbs();
-        _this.bbsDbView.printBbs(_this.bbsDb.bbsList);
-        return _this.addBbsListListener(_this.bbsDb.bbsList);
-      };
-    })(this);
-  };
-
-  BbsDbController.prototype.clickBbsHandler = function(url) {
-    return (function(_this) {
-      return function(event) {
-        $("#url").val(url);
-        $("#get-thread").attr('disabled', false);
-        return $("#get-thread").trigger("click");
-      };
-    })(this);
-  };
-
-  return BbsDbController;
-
-})();
-
 BbsDbView = (function(_super) {
   __extends(BbsDbView, _super);
 
   function BbsDbView() {
+    this.showAddbbs = __bind(this.showAddbbs, this);
     this.printBbs = __bind(this.printBbs, this);
     return BbsDbView.__super__.constructor.apply(this, arguments);
   }
@@ -695,6 +636,122 @@ BbsDbView = (function(_super) {
     return $("#top-most").get(0).scrollIntoView(true);
   };
 
+  BbsDbView.prototype.showAddbbs = function() {
+    var options, url;
+    url = new window.air.URLRequest("../../haml/add_bbs.html");
+    this.html = new window.air.HTMLLoader();
+    this.html.load(url);
+    options = new window.air.NativeWindowInitOptions();
+    options.transparent = false;
+    options.systemChrome = air.NativeWindowSystemChrome.STANDARD;
+    options.type = window.air.NativeWindowType.NORMAL;
+    this.addBbs = new window.air.NativeWindow(options);
+    this.addBbs.title = "掲示板を追加";
+    this.addBbs.width = 450;
+    this.addBbs.height = 160;
+    this.html.width = this.addBbs.width;
+    this.html.height = this.addBbs.height;
+    this.addBbs.alwaysInFront = true;
+    this.addBbs.stage.addChild(this.html);
+    this.addBbs.stage.scaleMode = "noScale";
+    this.addBbs.stage.align = "topLeft";
+    return this.addBbs.activate();
+  };
+
   return BbsDbView;
 
 })(BaseView);
+
+window.BbsDbController = (function() {
+  function BbsDbController(bbsDb, bbsDbView) {
+    this.clickBbsHandler = __bind(this.clickBbsHandler, this);
+    this.deleteBbsHandler = __bind(this.deleteBbsHandler, this);
+    this.showContextMenuHandler = __bind(this.showContextMenuHandler, this);
+    this.setBbsListListener = __bind(this.setBbsListListener, this);
+    this.postAddBbsHandler = __bind(this.postAddBbsHandler, this);
+    this.addBbsCompleteHandler = __bind(this.addBbsCompleteHandler, this);
+    this.bbsDb = bbsDb;
+    this.bbsDbView = bbsDbView;
+  }
+
+  BbsDbController.prototype.getBbsList = function() {
+    this.bbsDbView.sectionToEmpty();
+    this.bbsDb.selectBbs();
+    this.bbsDbView.printBbs(this.bbsDb.bbsList);
+    return this.setBbsListListener(this.bbsDb.bbsList);
+  };
+
+  BbsDbController.prototype.getAddBbs = function() {
+    this.bbsDbView.showAddbbs();
+    return this.addBbsInitialize();
+  };
+
+  BbsDbController.prototype.addBbsInitialize = function() {
+    return this.bbsDbView.html.addEventListener("complete", this.addBbsCompleteHandler);
+  };
+
+  BbsDbController.prototype.addBbsCompleteHandler = function(event) {
+    var id;
+    id = this.bbsDbView.html.window.document.getElementById("post-bbs-url");
+    if (id != null) {
+      return id.addEventListener("click", this.postAddBbsHandler);
+    }
+  };
+
+  BbsDbController.prototype.postAddBbsHandler = function(event) {
+    var name, url;
+    name = this.bbsDbView.html.window.document.getElementById("add-bbs-name").value;
+    url = this.bbsDbView.html.window.document.getElementById("add-bbs-url").value;
+    if ((url != null) && (name != null)) {
+      this.bbsDb.insertBbs(name, url);
+      this.bbsDbView.addBbs.close();
+      return this.getBbsList();
+    }
+  };
+
+  BbsDbController.prototype.setBbsListListener = function(bbsList) {
+    return $.each(bbsList, (function(_this) {
+      return function(index, value) {
+        var id;
+        id = window.document.getElementById(bbsList[index]["id"]);
+        id.addEventListener("contextmenu", _this.showContextMenuHandler(bbsList[index]["id"]));
+        return id.addEventListener("click", _this.clickBbsHandler(bbsList[index]["url"]));
+      };
+    })(this));
+  };
+
+  BbsDbController.prototype.showContextMenuHandler = function(id) {
+    return (function(_this) {
+      return function(event) {
+        var contextMenu, deleteBbs;
+        contextMenu = new air.NativeMenu();
+        event.preventDefault();
+        deleteBbs = contextMenu.addItem(new air.NativeMenuItem("削除"));
+        deleteBbs.addEventListener(window.air.Event.SELECT, _this.deleteBbsHandler(id));
+        return contextMenu.display(window.nativeWindow.stage, event.clientX, event.clientY);
+      };
+    })(this);
+  };
+
+  BbsDbController.prototype.deleteBbsHandler = function(id) {
+    return (function(_this) {
+      return function(event) {
+        _this.bbsDb.deleteBbs(id);
+        return _this.getBbsList();
+      };
+    })(this);
+  };
+
+  BbsDbController.prototype.clickBbsHandler = function(url) {
+    return (function(_this) {
+      return function(event) {
+        $("#url").val(url);
+        $("#get-thread").attr('disabled', false);
+        return $("#get-thread").trigger("click");
+      };
+    })(this);
+  };
+
+  return BbsDbController;
+
+})();

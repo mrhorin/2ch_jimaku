@@ -1,6 +1,8 @@
+- # encoding: utf-8
 !!!
 %html{:lang => "ja"}
 	%head
+		%meta{:content => "charset=UTF-8"}
 		%link{:href => "../scss/font-awesome.min.css", :media => "all", :rel => "stylesheet"}
 		%link{:href => "../scss/style.css", :media => "all", :rel => "stylesheet"}
 		/ jQuery
@@ -9,21 +11,13 @@
 		%script{:src => "../lib/air/AIRIntrospector.js"}
 		%script{:src => "../lib/air/AIRAliases.js"}
 		%script{:src => "../js/scripts.js"}
-	%body#view
-		%nav
-			%input(type="hidden" id="url" value="")
-			%button#play
-				%i.fa.fa-play
-			%button#pause
-				%i.fa.fa-pause
-			%button#air
-				%i.fa.fa-eye
-			%button#get-thread
-				%i.fa.fa-list
-			%button#get-bbs
-				%i.fa.fa-home
-			%button#add-bbs
-				%i.fa.fa-plus
-		%div#top-most
-		%section
-		%div#bottom-most
+	%body#add-bbs-body
+		%div
+			%input#add-bbs-name(style="width: 330px" placeholder="板名")
+			%input#add-bbs-url(style="width: 330px" placeholder="URL")
+			%button#post-bbs-url
+				追加
+		%p.add-info
+			掲示板トップURLの末尾に/をつけて登録
+		%p.add-info
+			【したらば】http://jbbs.shitaraba.net/internet/12345/

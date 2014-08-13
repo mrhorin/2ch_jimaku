@@ -125,23 +125,10 @@ section{
 #jimaku-title:hover{
 	cursor: default;
 }
-
-.drag {
-    width:200px;
-    height:200px;
-    margin:0px auto;
-    padding:15px;
-    border:1px dashed #333;
-    background-color:#eee;
+#add-bbs-body{
+	padding: 10px 15px;
 }
-
-.resize {
-    background-color:#FF0000;
-    padding:10px;
-}
-.left {
-    float:left;
-}
-.right {
-    float:right;
+#add-bbs-body{
+	font-size: 0.8em;
+	color: #777;
 }

@@ -6,12 +6,18 @@ $ ->
 	bbsDb.connect()
 	bbsDb.create()
 	# bbsDb.insertBbs("アシベ", "http://jbbs.shitaraba.net/internet/6401/")
+	bbsDbView = new BbsDbView()
+	bbsDbController = new BbsDbController(bbsDb, bbsDbView)
 
+	# 掲示板一覧ボタン
 	$("#get-bbs").click ->
 		# スレッド一覧ボタンを無効化
 		$("#get-thread").attr('disabled', true)
-		bbsDbView = new BbsDbView()
-		bbsDbController = new BbsDbController(bbsDb, bbsDbView)
+		bbsDbController.getBbsList()
+
+	# 掲示板追加ボタン
+	$("#add-bbs").click ->
+		bbsDbController.getAddBbs()
 
 	# スレッド一覧ボタン
 	$("#get-thread").click =>

@@ -37,3 +37,12 @@ main.coffeeでクリックイベントを受け取り各インスタンスを操
 ・レスのURLリンク化  
 ・naitiveMenuでメニュー実装  
 ・main.coffeeのリファクタリング  
+
+#使用素材
+
+【同封レス着信音】  
+魔王魂  
+http://maoudamashii.jokersounds.com/music_se.html  
+【フォントアイコン】  
+Font Awedome  
+http://fortawesome.github.io/Font-Awesome/  
