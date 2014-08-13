@@ -19,7 +19,6 @@ class window.ThreadController
 	# resLoadFlag レス自動更新用フラグ
 	# sound レス着信音用Soundインスタンス
 	# airFlag switchClassAirのOnOff
-	# window.air.Introspector.Console.log()
 
 	constructor: (thread, threadView, jimakuView) ->
 		@thread = thread
@@ -100,9 +99,9 @@ class window.ThreadController
 	checkQueueLength: (count) ->
 		switch
 			when count <= 1
-				sec = 10000
+				sec = 9000
 			when 2 <= count <= 3
-				sec = 7500
+				sec = 6000
 			when 4 <= count <= 5
 				sec = 5000
 			when 6 <= count <= 10

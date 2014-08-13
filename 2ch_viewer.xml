@@ -21,7 +21,7 @@
 	<!-- 初期ウィンドウプロパティ -->
 	<initialWindow>
 		<content>haml/window.html</content>
-		<title>なかやまんスレッドビューア</title>
+		<title>AirCast</title>
 		<systemChrome>standard</systemChrome>
 		<!-- 透過設定 -->
 		<transparent>false</transparent>

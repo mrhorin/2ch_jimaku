@@ -38,17 +38,17 @@ class BbsDbView extends BaseView
 		options.systemChrome = air.NativeWindowSystemChrome.STANDARD
 		options.type = window.air.NativeWindowType.NORMAL
 
+		# 掲示板追加用ウィンドウの生成
 		@addBbs = new window.air.NativeWindow(options)
 		@addBbs.title = "掲示板を追加"
 		@addBbs.width = 450
 		@addBbs.height = 160
-		# @jimaku.addEventListener(window.air.Event.RESIZE, @htmlResize)
 
 		# HTMLLoaderのサイズをNativeWindowに合わせる
 		@html.width = @addBbs.width
 		@html.height = @addBbs.height
 		# 最前面表示
-		@addBbs.alwaysInFront  = true
+		# @addBbs.alwaysInFront  = true
 		@addBbs.stage.addChild(@html)
 		@addBbs.stage.scaleMode = "noScale"
 		@addBbs.stage.align = "topLeft"

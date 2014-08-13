@@ -1,11 +1,11 @@
 $ ->
+	# window.air.Introspector.Console.log()
 	# スレッド一覧ボタンを無効化
 	$("#get-thread").attr('disabled', true)
 	# 掲示板データベースに接続
 	bbsDb = new BbsDb()
 	bbsDb.connect()
 	bbsDb.create()
-	# bbsDb.insertBbs("アシベ", "http://jbbs.shitaraba.net/internet/6401/")
 	bbsDbView = new BbsDbView()
 	bbsDbController = new BbsDbController(bbsDb, bbsDbView)
 

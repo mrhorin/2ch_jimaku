@@ -19,10 +19,11 @@ class window.BbsDbController
 
 	# 掲示板追加用ウィンドウを取得
 	getAddBbs: ->
-		# 表示
-		@bbsDbView.showAddbbs()
-		# 初期化
-		@addBbsInitialize()
+		if !@bbsDbView.addBbs?
+			# 表示
+			@bbsDbView.showAddbbs()
+			# 初期化
+			@addBbsInitialize()
 
 	# 掲示板追加用ウィンドウを初期化
 	addBbsInitialize: ->
@@ -31,6 +32,11 @@ class window.BbsDbController
 
 	# 掲示板追加用ウィンドウハンドラ
 	addBbsCompleteHandler: (event) =>
+		# スレッドビューウィンドウが閉じた時にアプリを終了する
+		window.nativeWindow.addEventListener(window.air.Event.CLOSING, =>
+			window.air.NativeApplication.nativeApplication.exit()
+		)
+		window.air.Introspector.Console.log(window.nativeWindow)
 		# 追加ボタンにイベントリスナーを追加
 		id = @bbsDbView.html.window.document.getElementById("post-bbs-url")
 		if id?
@@ -44,6 +50,7 @@ class window.BbsDbController
 		if url? && name?
 			@bbsDb.insertBbs(name, url)
 			@bbsDbView.addBbs.close()
+			@bbsDbView.addBbs = null
 			@getBbsList()
 
 	# 掲示板一覧にイベントリスナー追加

@@ -97,9 +97,9 @@ window.ThreadController = (function() {
     var sec;
     switch (false) {
       case !(count <= 1):
-        return sec = 10000;
+        return sec = 9000;
       case !((2 <= count && count <= 3)):
-        return sec = 7500;
+        return sec = 6000;
       case !((4 <= count && count <= 5)):
         return sec = 5000;
       case !((6 <= count && count <= 10)):
@@ -651,7 +651,6 @@ BbsDbView = (function(_super) {
     this.addBbs.height = 160;
     this.html.width = this.addBbs.width;
     this.html.height = this.addBbs.height;
-    this.addBbs.alwaysInFront = true;
     this.addBbs.stage.addChild(this.html);
     this.addBbs.stage.scaleMode = "noScale";
     this.addBbs.stage.align = "topLeft";
@@ -682,8 +681,10 @@ window.BbsDbController = (function() {
   };
 
   BbsDbController.prototype.getAddBbs = function() {
-    this.bbsDbView.showAddbbs();
-    return this.addBbsInitialize();
+    if (this.bbsDbView.addBbs == null) {
+      this.bbsDbView.showAddbbs();
+      return this.addBbsInitialize();
+    }
   };
 
   BbsDbController.prototype.addBbsInitialize = function() {
@@ -692,6 +693,12 @@ window.BbsDbController = (function() {
 
   BbsDbController.prototype.addBbsCompleteHandler = function(event) {
     var id;
+    window.nativeWindow.addEventListener(window.air.Event.CLOSING, (function(_this) {
+      return function() {
+        return window.air.NativeApplication.nativeApplication.exit();
+      };
+    })(this));
+    window.air.Introspector.Console.log(window.nativeWindow);
     id = this.bbsDbView.html.window.document.getElementById("post-bbs-url");
     if (id != null) {
       return id.addEventListener("click", this.postAddBbsHandler);
@@ -705,6 +712,7 @@ window.BbsDbController = (function() {
     if ((url != null) && (name != null)) {
       this.bbsDb.insertBbs(name, url);
       this.bbsDbView.addBbs.close();
+      this.bbsDbView.addBbs = null;
       return this.getBbsList();
     }
   };
