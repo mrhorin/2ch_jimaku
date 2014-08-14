@@ -293,6 +293,9 @@ windowIniInitialize = function() {
     window.nativeWindow.width = so.data.appWidth;
     window.nativeWindow.height = so.data.appHeight;
   }
+  if (so.data.bbsUrl) {
+    $("#url").val(so.data.bbsUrl);
+  }
   window.nativeWindow.visible = true;
   return window.nativeWindow.addEventListener(window.air.Event.CLOSING, windowClosedHandler);
 };
@@ -308,13 +311,13 @@ windowClosedHandler = function(event) {
 
 $(function() {
   var bbsDb, bbsDbController, bbsDbView;
-  $("#get-thread").attr('disabled', true);
   bbsDb = new BbsDb();
   bbsDb.connect();
   bbsDb.create();
   bbsDbView = new BbsDbView();
   bbsDbController = new BbsDbController(bbsDb, bbsDbView);
   $("#get-bbs").click(function() {
+    $("#get-thread").attr('disabled', true);
     return bbsDbController.getBbsList();
   });
   $("#add-bbs").click(function() {
@@ -322,11 +325,14 @@ $(function() {
   });
   return $("#get-thread").click((function(_this) {
     return function() {
-      var bbs, bbsView;
+      var bbs, bbsView, so;
+      $("#get-thread").attr('disabled', false);
       $("#play").attr('disabled', true);
       bbs = new Bbs($("#url").val());
       bbsView = new BbsView(bbs, bbsDb);
       bbsView.printSubject();
+      so = window.air.SharedObject.getLocal("superfoo");
+      so.data.bbsUrl = $("#url").val();
       return $(".thread").click(function() {
         var jimakuView, res, thread, threadController, threadView;
         $("#pause").addClass("on");

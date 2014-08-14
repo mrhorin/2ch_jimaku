@@ -9,6 +9,9 @@ windowIniInitialize = ->
 		window.nativeWindow.y = so.data.appY
 		window.nativeWindow.width = so.data.appWidth
 		window.nativeWindow.height = so.data.appHeight
+	# URLを復帰
+	if so.data.bbsUrl
+		$("#url").val(so.data.bbsUrl)
 	# ウィンドウを表示
 	window.nativeWindow.visible = true
 	window.nativeWindow.addEventListener(window.air.Event.CLOSING, windowClosedHandler)
@@ -24,7 +27,7 @@ windowClosedHandler = (event) ->
 
 $ ->
 	# スレッド一覧ボタンを無効化
-	$("#get-thread").attr('disabled', true)
+	# $("#get-thread").attr('disabled', true)
 	# 掲示板データベースに接続
 	bbsDb = new BbsDb()
 	bbsDb.connect()
@@ -35,7 +38,7 @@ $ ->
 	# 掲示板一覧ボタン
 	$("#get-bbs").click ->
 		# スレッド一覧ボタンを無効化
-		# $("#get-thread").attr('disabled', true)
+		$("#get-thread").attr('disabled', true)
 		bbsDbController.getBbsList()
 
 	# 掲示板追加ボタン
@@ -44,6 +47,8 @@ $ ->
 
 	# スレッド一覧ボタン
 	$("#get-thread").click =>
+		# スレッド一覧ボタンを有効化
+		$("#get-thread").attr('disabled', false)
 		# 自動更新ONボタンを無効化
 		$("#play").attr('disabled', true)
 		# 掲示板の処理系インスタンスを生成
@@ -52,6 +57,9 @@ $ ->
 		bbsView = new BbsView(bbs, bbsDb)
 		# スレッド一覧を描画
 		bbsView.printSubject()
+		# URLを保存
+		so = window.air.SharedObject.getLocal("superfoo")
+		so.data.bbsUrl = $("#url").val()
 
 		# スレッドが押された時
 		$(".thread").click =>

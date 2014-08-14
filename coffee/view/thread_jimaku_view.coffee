@@ -88,11 +88,6 @@ class window.ThreadJimakuView extends BaseView
 		@html.height = @jimaku.height
 
 	windowClosedHandler: (event) =>
-		# so = window.air.SharedObject.getLocal("superfoo")
-		# so.data.appX = window.nativeWindow.x
-		# so.data.appY = window.nativeWindow.y
-		# so.data.appWidth = window.nativeWindow.width
-		# so.data.appHeight = window.nativeWindow.height
 		@saveSettings()
 		window.air.NativeApplication.nativeApplication.exit()
 
