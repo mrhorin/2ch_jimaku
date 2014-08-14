@@ -56,13 +56,11 @@ class window.ThreadController
 		@jimakuCount = @jimakuView.html.window.document.getElementById("jimaku-count")
 		@jimakuRes = @jimakuView.html.window.document.getElementById("jimaku-res")
 		if @jimakuSubject?
-			# 字幕タイトルがドラッグされた時に字幕を移動
+			# 字幕タイトルがドラッグされた時のイベント
 			@jimakuTitle.addEventListener("mousedown", @onMoveJimaku, true)
-			# スレッドビューウィンドウが閉じた時にアプリを終了する
-			window.nativeWindow.addEventListener(window.air.Event.CLOSING, =>
-				window.air.NativeApplication.nativeApplication.exit()
-			)
+			# 字幕枠がリサイズされた時のイベント
 			@jimakuBody.addEventListener("mousedown", @onResizeJimaku, true)
+			# 字幕にスレタイとレス数を描画
 			@printSubjectToJimaku(@jimakuSubject)
 			@printJimakuResCount()
 			# @addClassAir()

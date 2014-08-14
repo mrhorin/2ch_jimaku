@@ -6,24 +6,25 @@ class BbsDbView extends BaseView
 
 	# 掲示板一覧を描画
 	printBbs: (bbsList) =>
-		# sectionを空に
-		@sectionToEmpty()
-		$.each bbsList, (index, value) =>
-			# 掲示板タイトルを描画
-			$("section").append(
-				$("<div class=\"bbs\" id=\""+bbsList[index]["id"]+"\">"+
-					bbsList[index]["name"]+
-				"</div>"
-				).click  =>
-					@clickedBbs =
-						"name": bbsList[index]["name"]
-						"url": bbsList[index]["url"]
-			)
-		# 偶数行の背景を緑色、奇数行を白色に
-		$(".bbs:odd").addClass("odd")
-		$(".bbs:even").addClass("even")
-		# 一番上へスクロール
-		$("#top-most").get(0).scrollIntoView(true)
+		if bbsList != null
+			# sectionを空に
+			@sectionToEmpty()
+			$.each bbsList, (index, value) =>
+				# 掲示板タイトルを描画
+				$("section").append(
+					$("<div class=\"bbs\" id=\""+bbsList[index]["id"]+"\">"+
+						bbsList[index]["name"]+
+					"</div>"
+					).click  =>
+						@clickedBbs =
+							"name": bbsList[index]["name"]
+							"url": bbsList[index]["url"]
+				)
+			# 偶数行の背景を緑色、奇数行を白色に
+			$(".bbs:odd").addClass("odd")
+			$(".bbs:even").addClass("even")
+			# 一番上へスクロール
+			$("#top-most").get(0).scrollIntoView(true)
 
 	# 掲示板追加ウィンドウを描画
 	showAddbbs: =>

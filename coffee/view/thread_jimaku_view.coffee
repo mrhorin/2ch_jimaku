@@ -30,13 +30,14 @@ class window.ThreadJimakuView extends BaseView
 
 		@jimaku = new window.air.NativeWindow(options)
 		@jimaku.title = "字幕"
-		@jimaku.width = 800
-		@jimaku.height = 200
 		@jimaku.addEventListener(window.air.Event.RESIZE, @htmlResize)
+		# アプリ終了時のイベントリスナーを追加
+		window.nativeWindow.addEventListener(window.air.Event.CLOSING, @windowClosedHandler)
 
 		# HTMLLoaderのサイズをNativeWindowに合わせる
 		@html.width = @jimaku.width
 		@html.height = @jimaku.height
+
 		# 最前面表示
 		@jimaku.alwaysInFront  = true
 		@jimaku.stage.addChild(@html)
@@ -44,20 +45,56 @@ class window.ThreadJimakuView extends BaseView
 		@jimaku.stage.align = "topLeft"
 
 	# 字幕をアクティベイト
-	activate: ->
-		@jimaku.activate()
-		@flag = true
+	activated: ->
+		if !@flag
+			@restoreSettings()
+			@jimaku.activate()
+			@flag = true
 
 	# 字幕を閉じる
-	close: ->
-		@jimaku.close()
-		@flag = false
+	closed: ->
+		if @flag
+			@saveSettings()
+			@jimaku.close()
+			@flag = false
+			# アプリ終了時のイベントリスナーを削除
+			window.nativeWindow.removeEventListener(window.air.Event.CLOSING, @windowClosedHandler)
+
+	# 字幕サイズと位置の設定を復旧
+	restoreSettings: ->
+		so = window.air.SharedObject.getLocal("superfoo")
+		# ウィンドウ位置の復帰
+		if so.data.jimakuX? && so.data.jimakuY?
+			@jimaku.x = so.data.jimakuX
+			@jimaku.y = so.data.jimakuY
+			@jimaku.width = so.data.jimakuWidth
+			@jimaku.height = so.data.jimakuHeight
+		else
+			@jimaku.width = 800
+			@jimaku.height = 200
+
+	# 字幕サイズと位置の設定を保存
+	saveSettings: =>
+		so = window.air.SharedObject.getLocal("superfoo")
+		so.data.jimakuX = @jimaku.x
+		so.data.jimakuY = @jimaku.y
+		so.data.jimakuWidth = @jimaku.width
+		so.data.jimakuHeight = @jimaku.height
 
 	# jimakuウィンドウリサイズイベントハンドラ
 	htmlResize: (event) =>
 		# HTMLLoaderのサイズをjimakuに合わせる
 		@html.width = @jimaku.width
 		@html.height = @jimaku.height
+
+	windowClosedHandler: (event) =>
+		# so = window.air.SharedObject.getLocal("superfoo")
+		# so.data.appX = window.nativeWindow.x
+		# so.data.appY = window.nativeWindow.y
+		# so.data.appWidth = window.nativeWindow.width
+		# so.data.appHeight = window.nativeWindow.height
+		@saveSettings()
+		window.air.NativeApplication.nativeApplication.exit()
 
 	# 字幕タイトル表示用の現在時刻を取得する
 	getNowTime: ->

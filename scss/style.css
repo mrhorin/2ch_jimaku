@@ -7,8 +7,7 @@ a {
 nav {
   top: 0;
   position: fixed;
-  background-color: #3d3d3d;
-  border-bottom: 1px solid #CCC;
+  background-color: #dddddd;
   padding: 3px;
   width: 100%; }
   nav button {
@@ -19,8 +18,7 @@ nav {
     cursor: pointer; }
 
 .on {
-  background-color: #5bc0de;
-  color: #fff; }
+  background-color: #5bc0de; }
 
 section {
   font-size: 0.8em;

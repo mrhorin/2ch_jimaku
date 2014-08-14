@@ -1,5 +1,28 @@
+# window.air.Introspector.Console.log()
+
+# window初期化
+windowIniInitialize = ->
+	so = window.air.SharedObject.getLocal("superfoo")
+	# ウィンドウサイズ位置の復帰
+	if so.data.appX? && so.data.appY?
+		window.nativeWindow.x = so.data.appX
+		window.nativeWindow.y = so.data.appY
+		window.nativeWindow.width = so.data.appWidth
+		window.nativeWindow.height = so.data.appHeight
+	# ウィンドウを表示
+	window.nativeWindow.visible = true
+	window.nativeWindow.addEventListener(window.air.Event.CLOSING, windowClosedHandler)
+
+# windowクローズイベントハンドラ
+windowClosedHandler = (event) ->
+	# ウィンドウサイズ位置を保存
+	so = window.air.SharedObject.getLocal("superfoo")
+	so.data.appX = window.nativeWindow.x
+	so.data.appY = window.nativeWindow.y
+	so.data.appWidth = window.nativeWindow.width
+	so.data.appHeight = window.nativeWindow.height
+
 $ ->
-	# window.air.Introspector.Console.log()
 	# スレッド一覧ボタンを無効化
 	$("#get-thread").attr('disabled', true)
 	# 掲示板データベースに接続
@@ -12,7 +35,7 @@ $ ->
 	# 掲示板一覧ボタン
 	$("#get-bbs").click ->
 		# スレッド一覧ボタンを無効化
-		$("#get-thread").attr('disabled', true)
+		# $("#get-thread").attr('disabled', true)
 		bbsDbController.getBbsList()
 
 	# 掲示板追加ボタン
@@ -52,7 +75,7 @@ $ ->
 			jimakuView = new ThreadJimakuView("../haml/jimaku.html")
 			# 字幕を生成
 			jimakuView.create()
-			jimakuView.activate()
+			jimakuView.activated()
 
 			# ThreadControllerを生成
 			threadController = new ThreadController(thread, threadView, jimakuView)
@@ -77,7 +100,7 @@ $ ->
 
 			# スレッド一覧ボタン
 			$("#get-thread").click =>
-				threadController.jimakuView.close()
+				threadController.jimakuView.closed()
 				threadController.jimakuClockOff()
 				if threadController.resLoadFlag
 					# 自動更新OFF

@@ -4,17 +4,17 @@
 	minimumPatchLevel="0">
 
 	<!-- アプリケーション情報の定義 -->
-	<id>com.example.ExampleApplication</id>
+	<id>AirCast</id>
 	<name>
-		<text xml:lang="en">Example Co. Example Application 1.0</text>
-		<text xml:lang="ja">テストアプリ 1.0</text>
+		<text xml:lang="en">AirCast</text>
+		<text xml:lang="ja">AirCast</text>
 	</name>
         <versionNumber>1.0.0</versionNumber>
         <versionLabel>v1</versionLabel>
-	<filename>Example Application</filename>
+	<filename>AirCast Application</filename>
 	<description>
-		<text xml:lang="en">This is a sample Adobe AIR application.</text>
-		<text xml:lang="ja">これは Adobe AIR のサンプルアプリケーションです。</text>
+		<text xml:lang="en">This is a BBS display Adobe AIR application.</text>
+		<text xml:lang="ja">2ch互換掲示板対応の字幕表示アプリケーション</text>
 	</description>
 	<copyright>Copyright 2014, mrhorin.</copyright>
 
@@ -25,24 +25,24 @@
 		<systemChrome>standard</systemChrome>
 		<!-- 透過設定 -->
 		<transparent>false</transparent>
-		<visible>true</visible>
+		<visible>false</visible>
 		<width>470</width>
 		<height>700</height>
 	</initialWindow>
 
 	<!-- インストールフォルダ -->
-	<installFolder>Example Company/Example Application</installFolder>
+	<installFolder>AirCat</installFolder>
 	<!-- プログラムメニューフォルダ -->
-	<programMenuFolder>Example Company/Example Application</programMenuFolder>
+	<programMenuFolder>AirCast</programMenuFolder>
 
 	<customUpdateUI>false</customUpdateUI>
 	<allowBrowserInvocation>false</allowBrowserInvocation>
 	<fileTypes>
 		<fileType>
-			<name>com.example</name>
+			<name>caircat</name>
 			<extension>xmpl</extension>
-			<description>Example file</description>
-			<contentType>example/x-data-type</contentType>
+			<description>AirCat file</description>
+			<contentType>aircat/x-data-type</contentType>
 			<icon>
 				<image16x16>icons/AIRApp_16.png</image16x16>
 				<image32x32>icons/AIRApp_32.png</image32x32>

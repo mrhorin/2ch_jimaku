@@ -32,11 +32,6 @@ class window.BbsDbController
 
 	# 掲示板追加用ウィンドウハンドラ
 	addBbsCompleteHandler: (event) =>
-		# スレッドビューウィンドウが閉じた時にアプリを終了する
-		window.nativeWindow.addEventListener(window.air.Event.CLOSING, =>
-			window.air.NativeApplication.nativeApplication.exit()
-		)
-		window.air.Introspector.Console.log(window.nativeWindow)
 		# 追加ボタンにイベントリスナーを追加
 		id = @bbsDbView.html.window.document.getElementById("post-bbs-url")
 		if id?
@@ -55,10 +50,11 @@ class window.BbsDbController
 
 	# 掲示板一覧にイベントリスナー追加
 	setBbsListListener: (bbsList) =>
-		$.each bbsList, (index, value) =>
-			id = window.document.getElementById(bbsList[index]["id"])
-			id.addEventListener "contextmenu", @showContextMenuHandler(bbsList[index]["id"])
-			id.addEventListener "click", @clickBbsHandler(bbsList[index]["url"])
+		if bbsList != null
+			$.each bbsList, (index, value) =>
+				id = window.document.getElementById(bbsList[index]["id"])
+				id.addEventListener "contextmenu", @showContextMenuHandler(bbsList[index]["id"])
+				id.addEventListener "click", @clickBbsHandler(bbsList[index]["url"])
 
 	# コンテキストメニューハンドラ
 	showContextMenuHandler: (id) =>

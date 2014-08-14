@@ -9,21 +9,22 @@
 		%script{:src => "../lib/air/AIRIntrospector.js"}
 		%script{:src => "../lib/air/AIRAliases.js"}
 		%script{:src => "../js/scripts.js"}
-	%body#view
-		%nav
-			%input(type="hidden" id="url" value="")
-			%button#play
-				%i.fa.fa-play
-			%button#pause
-				%i.fa.fa-pause
-			%button#air
-				%i.fa.fa-eye
-			%button#get-thread
-				%i.fa.fa-list
-			%button#get-bbs
-				%i.fa.fa-home
-			%button#add-bbs
-				%i.fa.fa-plus
-		%div#top-most
-		%section
-		%div#bottom-most
+	%body(onLoad="windowIniInitialize()")
+		%div#view
+			%nav
+				%input(type="hidden" id="url" value="")
+				%button#play
+					%i.fa.fa-play
+				%button#pause
+					%i.fa.fa-pause
+				%button#air
+					%i.fa.fa-eye
+				%button#get-thread
+					%i.fa.fa-list
+				%button#get-bbs
+					%i.fa.fa-home
+				%button#add-bbs
+					%i.fa.fa-plus
+			%div#top-most
+			%section
+			%div#bottom-most
