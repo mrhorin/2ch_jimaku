@@ -1,8 +1,16 @@
 class window.ThreadView extends BaseView
 
+	# URL部分をリンク化
+	autoLink: (value) ->
+		# regexpUrl = "/((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/"
+		# regexpMakeLink = (all, url, h, href) ->
+		# 	"<a href=\"h#{href}\" target=\"_blank\">#{url}</a>"
+		# return value.replace(regexpUrl, regexpMakeLink)
+		value.replace(/((http:|https:|ttp:|ttps:)\/\/[\x21-\x26\x28-\x7e]+)/gi, "<a href='$1'>$1</a>")
+
 	# レスを描画
 	printRes: (res)->
-		$.each res, (index, value) ->
+		$.each res, (index, value) =>
 			$("section").append(
 				"""
 				<div class="res">
@@ -18,7 +26,7 @@ class window.ThreadView extends BaseView
 						</span>
 					</div>
 					<div class="res-body">
-						#{res[index][4]}
+						#{@autoLink(res[index][4])}
 					</div>
 				</div>
 				"""

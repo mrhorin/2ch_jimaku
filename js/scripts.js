@@ -809,10 +809,16 @@ window.ThreadView = (function(_super) {
     return ThreadView.__super__.constructor.apply(this, arguments);
   }
 
+  ThreadView.prototype.autoLink = function(value) {
+    return value.replace(/((http:|https:|ttp:|ttps:)\/\/[\x21-\x26\x28-\x7e]+)/gi, "<a href='$1'>$1</a>");
+  };
+
   ThreadView.prototype.printRes = function(res) {
-    $.each(res, function(index, value) {
-      return $("section").append("<div class=\"res\">\n	<div class=\"res-head\">\n		<span class=\"res-no\">\n			" + res[index][0] + "\n		</span>\n		<span class=\"res-name\">\n			" + res[index][1] + "\n		</span>\n		<span class=\"res-date\">\n			" + res[index][3] + "\n		</span>\n	</div>\n	<div class=\"res-body\">\n		" + res[index][4] + "\n	</div>\n</div>");
-    });
+    $.each(res, (function(_this) {
+      return function(index, value) {
+        return $("section").append("<div class=\"res\">\n	<div class=\"res-head\">\n		<span class=\"res-no\">\n			" + res[index][0] + "\n		</span>\n		<span class=\"res-name\">\n			" + res[index][1] + "\n		</span>\n		<span class=\"res-date\">\n			" + res[index][3] + "\n		</span>\n	</div>\n	<div class=\"res-body\">\n		" + (_this.autoLink(res[index][4])) + "\n	</div>\n</div>");
+      };
+    })(this));
     return $("#bottom-most").get(0).scrollIntoView(true);
   };
 
