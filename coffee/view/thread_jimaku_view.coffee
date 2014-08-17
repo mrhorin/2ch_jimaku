@@ -9,7 +9,7 @@ class window.ThreadJimakuView extends BaseView
 		@flag = false
 
 	# 字幕を生成
-	create: ->
+	create: =>
 		# jimaku.htmlを取得
 		url = new window.air.URLRequest(@path)
 		@html = new window.air.HTMLLoader()
@@ -52,7 +52,7 @@ class window.ThreadJimakuView extends BaseView
 			@flag = true
 
 	# 字幕を閉じる
-	closed: ->
+	closed: =>
 		if @flag
 			@saveSettings()
 			@jimaku.close()

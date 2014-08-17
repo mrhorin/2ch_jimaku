@@ -6,12 +6,13 @@ class window.ThreadView extends BaseView
 		# regexpMakeLink = (all, url, h, href) ->
 		# 	"<a href=\"h#{href}\" target=\"_blank\">#{url}</a>"
 		# return value.replace(regexpUrl, regexpMakeLink)
-		value.replace(/((http:|https:|ttp:|ttps:)\/\/[\x21-\x26\x28-\x7e]+)/gi, "<a href='$1'>$1</a>")
+		value.replace(/((http:|https:|ttp:|ttps:)\/\/[\x21-\x26\x28-\x7e]+)/gi, "<a href='$1' target='_blank'>$1</a>")
 
 	# レスを描画
 	printRes: (res)->
 		$.each res, (index, value) =>
-			$("section").append(
+			section = window.viewerObj.html.window.document.getElementById("section")
+			$(section).append(
 				"""
 				<div class="res">
 					<div class="res-head">
@@ -32,4 +33,8 @@ class window.ThreadView extends BaseView
 				"""
 			)
 		# 一番下へスクロール
-		$("#bottom-most").get(0).scrollIntoView(true)
+		bottomMost = window.viewerObj.html.window.document.getElementById("bottom-most")
+		# window.air.Introspector.Console.log(bottomMost)
+		# $(bottomMost)[0].scrollIntoView(false)
+		bottomMost.scrollTop = bottomMost.scrollHeight
+		# alert "38"

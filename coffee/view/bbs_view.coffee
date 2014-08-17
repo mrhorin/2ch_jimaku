@@ -12,18 +12,18 @@ class window.BbsView extends BaseView
 	printSubject: =>
 		# sectionを空に
 		@sectionToEmpty()
-
+		section = window.viewerObj.html.window.document.getElementById("section")
 		$.each @subjects, (index, value) =>
-			$("section").append(
+			$(section).append(
 				$("<div class=\"thread\">"+
 					@subjects[index]["title"]+
 				"</div>").click  =>
 					@clickedThread =
 						"title": @subjects[index]["title"]
 						"number": @subjects[index]["number"]
+					window.viewerObj.clickThreadHandler()
 			)
-		# 偶数行の背景を緑色に
-		$(".thread:odd").addClass("odd")
-		$(".thread:even").addClass("even")
 		# 一番上へスクロール
-		$("#top-most").get(0).scrollIntoView(true)
+		topMost = window.viewerObj.html.window.document.getElementById("top-most")
+		# window.air.Introspector.Console.log(topMost)
+		$(topMost)[0].scrollIntoView(true)

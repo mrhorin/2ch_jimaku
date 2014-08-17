@@ -9,13 +9,15 @@
 http://get.adobe.com/jp/air/  
 ### 【Adobe AIR SDK & Compiler】
 http://www.adobe.com/devnet/air/air-sdk-download.html  
+### 【起動方法】
+`/AIRSDK_Compiler/bin/adl /2ch_jimaku/2ch_jimaku.xml`  
 ### 【CoffeeScript】
 node.jsがインストールされている事が前提  
 `sudo npm install -g coffee-script`  
 プロジェクトルートディレクトリへ移動  
 `cd project_root`  
 CoffeeScriptビルドコマンド  
- `# coffee (オプション) (保存先パス/ファイル名) (coffeeファイルがある場所)`  
+# coffee (オプション) (保存先パス/ファイル名) (coffeeファイルがある場所)  
 `coffee -bwc -j js/scripts.js .`  
 上記のコマンドを実行した後にcoffeeファイルを編集すると、変更前との差分を検知し、自動的にビルドされた後にjs/scripts.jsファイルに保存されます。  
 ### 【その他】
@@ -30,12 +32,10 @@ main.coffeeでクリックイベントを受け取り各インスタンスを操
 
 #実装・改良したい機能
 
-・板登録機能  
 ・したらば旧URL、＠chs、２ちゃんねるに対応  
-・ウィンドウの位置・サイズの記憶機能  
 ・フォント、フォントサイズ、フォントカラーの変更機能  
-・レスのURLリンク化  
 ・main.coffeeのリファクタリング  
+・リンクを規定ブラウザで開くようにする  
 
 #使用素材
 

@@ -3,4 +3,5 @@ class window.BaseView
 
 	# sectionタグを空にする
 	sectionToEmpty: ->
-		$("section").empty()
+		section = window.viewerObj.html.window.document.getElementById("section")
+		$(section).empty()

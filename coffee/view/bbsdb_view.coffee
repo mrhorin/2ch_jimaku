@@ -9,9 +9,10 @@ class BbsDbView extends BaseView
 		if bbsList != null
 			# sectionを空に
 			@sectionToEmpty()
+			section = window.viewerObj.html.window.document.getElementById("section")
 			$.each bbsList, (index, value) =>
 				# 掲示板タイトルを描画
-				$("section").append(
+				$(section).append(
 					$("<div class=\"bbs\" id=\""+bbsList[index]["id"]+"\">"+
 						bbsList[index]["name"]+
 					"</div>"
@@ -20,11 +21,9 @@ class BbsDbView extends BaseView
 							"name": bbsList[index]["name"]
 							"url": bbsList[index]["url"]
 				)
-			# 偶数行の背景を緑色、奇数行を白色に
-			$(".bbs:odd").addClass("odd")
-			$(".bbs:even").addClass("even")
 			# 一番上へスクロール
-			$("#top-most").get(0).scrollIntoView(true)
+			topMost = window.viewerObj.html.window.document.getElementById("top-most")
+			$(topMost).get(0).scrollIntoView(true)
 
 	# 掲示板追加ウィンドウを描画
 	showAddbbs: =>

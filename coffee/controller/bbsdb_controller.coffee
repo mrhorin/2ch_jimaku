@@ -52,7 +52,7 @@ class window.BbsDbController
 	setBbsListListener: (bbsList) =>
 		if bbsList != null
 			$.each bbsList, (index, value) =>
-				id = window.document.getElementById(bbsList[index]["id"])
+				id = window.viewerObj.html.window.document.getElementById(bbsList[index]["id"])
 				id.addEventListener "contextmenu", @showContextMenuHandler(bbsList[index]["id"])
 				id.addEventListener "click", @clickBbsHandler(bbsList[index]["url"])
 
@@ -79,7 +79,10 @@ class window.BbsDbController
 	# 掲示板クリックハンドラ
 	clickBbsHandler: (url) =>
 		(event) =>
-			$("#url").val(url)
+			getUrl = window.document.getElementById("url")
+			$(getUrl).val(url)
 			# スレッド一覧ボタンを有効化
-			$("#get-thread").attr('disabled', false)
-			$("#get-thread").trigger("click")
+			getTread = window.document.getElementById("get-thread")
+			$(getTread).attr('disabled', false)
+			# スレッド一覧ボタンを押下
+			$(getTread).trigger("click")

@@ -20,9 +20,9 @@
 
 	<!-- 初期ウィンドウプロパティ -->
 	<initialWindow>
-		<content>haml/window.html</content>
+		<content>haml/viewer.html</content>
 		<title>AirCast</title>
-		<systemChrome>standard</systemChrome>
+		<systemChrome>none</systemChrome>
 		<!-- 透過設定 -->
 		<transparent>false</transparent>
 		<visible>false</visible>

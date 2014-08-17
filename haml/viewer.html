@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang='ja'>
+  <head>
+    <link href='../scss/font-awesome.min.css' media='all' rel='stylesheet'>
+    <link href='../scss/style.css' media='all' rel='stylesheet'>
+    <!-- jQuery -->
+    <script src='../lib/jquery-2.1.1.min.js'></script>
+    <!-- Air -->
+    <script src='../lib/air/AIRIntrospector.js'></script>
+    <script src='../lib/air/AIRAliases.js'></script>
+    <script src='../js/scripts.js'></script>
+  </head>
+  <body id='viewer' onLoad='viewerIniInitialize()'>
+    <div class='container'>
+      <dkv id='task-bar'>
+        <ul>
+          <!-- %li#maximize -->
+          <!-- %i.fa.fa-plus -->
+          <li id='minimize'>
+            <i class='fa fa-minus'></i>
+          </li>
+          <li id='close'>
+            <i class='fa fa-times'></i>
+          </li>
+        </ul>
+      </dkv>
+      <nav>
+        <input id='url' type='hidden' value=''>
+        <button id='play'>
+          <i class='fa fa-play'></i>
+        </button>
+        <button id='pause'>
+          <i class='fa fa-pause'></i>
+        </button>
+        <button id='air'>
+          <i class='fa fa-eye'></i>
+        </button>
+        <button id='get-thread'>
+          <i class='fa fa-list'></i>
+        </button>
+        <button id='get-bbs'>
+          <i class='fa fa-home'></i>
+        </button>
+        <button id='add-bbs'>
+          <i class='fa fa-plus'></i>
+        </button>
+      </nav>
+    </div>
+    <i class='fa fa-arrows' id='arrows'></i>
+  </body>
+</html>
