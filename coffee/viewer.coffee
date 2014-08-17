@@ -1,5 +1,6 @@
 # window.air.Introspector.Console.log()
 viewerObj = null
+
 # viewer初期化
 viewerIniInitialize = ->
 	viewerObj = new window.Viewer()
@@ -7,6 +8,7 @@ viewerIniInitialize = ->
 	viewerObj.setTaskBarListener()
 	viewerObj.windowSettings()
 	viewerObj.loadViewerSection()
+	window.air.Introspector.Console.log()
 
 class window.Viewer
 	# buttonStatus ボタンの状態を持つ連想配列
@@ -18,15 +20,25 @@ class window.Viewer
 			"pause": false
 			"air": false
 			"get-thread": false
-			"get-bbs": true
-			"add-bbs": true
-
+			"get-bbs": false
+			"add-bbs": false
+			"jimaku": false
 		# 掲示板データベースに接続
 		@bbsDb = new BbsDb()
 		@bbsDb.connect()
 		@bbsDb.create()
 		@bbsDbView = new BbsDbView()
 		@bbsDbController = new BbsDbController(@bbsDb, @bbsDbView)
+
+	# ボタンの状態を切り替える
+	switchButton: =>
+		$.each @buttonStatus, (key, index) =>
+			button = window.document.getElementById(key)
+			if @buttonStatus[key][index]
+				$(button).addClass("on")
+			else
+				$(button).removeClass("on")
+
 
 	# window設定読み込み
 	windowSettings: =>
@@ -40,8 +52,10 @@ class window.Viewer
 		# ウィンドウを表示
 		window.nativeWindow.visible = true
 		# URLを復帰
-		# if so.data.bbsUrl
-		# 	$("#url").val(so.data.bbsUrl)
+		if so.data.bbsUrl
+			$(@url).val(so.data.bbsUrl)
+		else
+			$(@url).val("http://jbbs.shitaraba.net/computer/10298/")
 		# タスクバーの移動イベント
 		taskBar = window.document.getElementById("task-bar")
 		taskBar.addEventListener("mousedown", @omMoveWindow)
@@ -118,13 +132,18 @@ class window.Viewer
 		# maximize = window.document.getElementById("maximize")
 		# maximize.addEventListener "click", maximizeHandler
 
-	closeHandler: (event) ->
+	closeHandler: (event) =>
 		# ウィンドウサイズ位置を保存
+		# viewerウィンドウ
 		so = window.air.SharedObject.getLocal("superfoo")
 		so.data.appX = window.nativeWindow.x
 		so.data.appY = window.nativeWindow.y
 		so.data.appWidth = window.nativeWindow.width
 		so.data.appHeight = window.nativeWindow.height
+		# 字幕
+		if @buttonStatus["jimaku"]
+			@threadController.jimakuView.saveSettings()
+		# アプリケーションを終了
 		window.air.NativeApplication.nativeApplication.exit()
 
 	minimizeHandler: (event) ->
@@ -150,16 +169,31 @@ class window.Viewer
 		@url = window.document.getElementById("url")
 
 	playHandler: =>
-		if !@threadController.resLoadFlag
+		if @threadController? && !@threadController.resLoadFlag
 			# 自動更新ON
 			@threadController.resLoadFlag = true
 			@threadController.resLoadOn()
 			$(@play).addClass("on")
 			$(@pause).removeClass("on")
 
-	pauseHandler: ->
+	pauseHandler: =>
+		# 自動更新がONか？
+		if @threadController? && @threadController.resLoadFlag
+			# 自動更新OFF
+			@threadController.resLoadFlag = false
+			@threadController.resLoadOff()
+			$(@play).removeClass("on")
+			$(@pause).addClass("on")
 
-	airHandler: ->
+	airHandler: =>
+		if @buttonStatus["jimaku"]
+			@threadController.switchClassAir()
+			if @threadController.airFlag
+				$("#air").addClass("on")
+				@buttonStatus["air"] = true
+			else
+				$("#air").removeClass("on")
+				@buttonStatus["air"] = false
 
 	# スレッド選択時のハンドラ
 	# BbsView.printSubjectからの呼び出し
@@ -180,11 +214,25 @@ class window.Viewer
 		# 字幕を生成
 		@jimakuView.create()
 		@jimakuView.activated()
+		# 字幕表示フラグをON
+		@buttonStatus["jimaku"] = true
 
 		# ThreadControllerを生成
 		@threadController = new ThreadController(@thread, @threadView, @jimakuView)
 
+	# スレッド一覧取得ハンドラ
 	getThreadHandler: =>
+		# 字幕が表示中か？
+		if @buttonStatus["jimaku"]
+			# 字幕を閉じる
+			@threadController.jimakuView.closed()
+			# 字幕の時計を止める
+			@threadController.jimakuClockOff()
+			@buttonStatus["jimaku"] = false
+			$(@air).removeClass("on")
+
+		# 自動更新OFF
+		@pauseHandler()
 		# 掲示板の処理系インスタンスを生成
 		@bbs = new Bbs($("#url").val())
 		# 掲示板の表示系インスタンスを生成
@@ -196,6 +244,15 @@ class window.Viewer
 		so.data.bbsUrl = $("#url").val()
 
 	getBbsHandler: =>
+		# if @buttonStatus["get-bbs"]
+		# 	@buttonStatus =
+		# 		"play": false
+		# 		"pause": false
+		# 		"air": false
+		# 		"get-thread": false
+		# 		"get-bbs": true
+		# 		"add-bbs": true
+		# 	@switchButton()
 		@bbsDbController.getBbsList()
 
 	addBbsHandler: =>

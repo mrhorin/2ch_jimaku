@@ -18,12 +18,11 @@ class window.BbsDbController
 		@setBbsListListener(@bbsDb.bbsList)
 
 	# 掲示板追加用ウィンドウを取得
-	getAddBbs: ->
-		if !@bbsDbView.addBbs?
-			# 表示
-			@bbsDbView.showAddbbs()
-			# 初期化
-			@addBbsInitialize()
+	getAddBbs: =>
+		# 表示
+		@bbsDbView.showAddbbs()
+		# 初期化
+		@addBbsInitialize()
 
 	# 掲示板追加用ウィンドウを初期化
 	addBbsInitialize: ->

@@ -33,8 +33,6 @@ class window.ThreadView extends BaseView
 				"""
 			)
 		# 一番下へスクロール
+		# window.air.Introspector.Console.log(window.viewerObj.html)
 		bottomMost = window.viewerObj.html.window.document.getElementById("bottom-most")
-		# window.air.Introspector.Console.log(bottomMost)
-		# $(bottomMost)[0].scrollIntoView(false)
-		bottomMost.scrollTop = bottomMost.scrollHeight
-		# alert "38"
+		$(bottomMost)[0].scrollIntoView(false)

@@ -62,24 +62,23 @@ class window.ThreadJimakuView extends BaseView
 
 	# 字幕サイズと位置の設定を復旧
 	restoreSettings: ->
-		so = window.air.SharedObject.getLocal("superfoo")
+		@so = window.air.SharedObject.getLocal("superfoo")
 		# ウィンドウ位置の復帰
-		if so.data.jimakuX? && so.data.jimakuY?
-			@jimaku.x = so.data.jimakuX
-			@jimaku.y = so.data.jimakuY
-			@jimaku.width = so.data.jimakuWidth
-			@jimaku.height = so.data.jimakuHeight
+		if @so.data.jimakuX? && @so.data.jimakuY?
+			@jimaku.x = @so.data.jimakuX
+			@jimaku.y = @so.data.jimakuY
+			@jimaku.width = @so.data.jimakuWidth
+			@jimaku.height = @so.data.jimakuHeight
 		else
 			@jimaku.width = 800
 			@jimaku.height = 200
 
 	# 字幕サイズと位置の設定を保存
 	saveSettings: =>
-		so = window.air.SharedObject.getLocal("superfoo")
-		so.data.jimakuX = @jimaku.x
-		so.data.jimakuY = @jimaku.y
-		so.data.jimakuWidth = @jimaku.width
-		so.data.jimakuHeight = @jimaku.height
+		@so.data.jimakuX = @jimaku.x
+		@so.data.jimakuY = @jimaku.y
+		@so.data.jimakuWidth = @jimaku.width
+		@so.data.jimakuHeight = @jimaku.height
 
 	# jimakuウィンドウリサイズイベントハンドラ
 	htmlResize: (event) =>

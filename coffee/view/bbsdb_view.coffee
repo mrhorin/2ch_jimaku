@@ -4,6 +4,9 @@ class BbsDbView extends BaseView
 	# html 掲示板追加ウィンドウ用HTMLLoader
 	# addBbs 掲示板追加用ウィンドウ
 
+	constructor: ->
+		@showAddbbsFlag = false
+
 	# 掲示板一覧を描画
 	printBbs: (bbsList) =>
 		if bbsList != null

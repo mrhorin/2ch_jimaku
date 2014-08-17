@@ -1,14 +1,21 @@
 body#viewer {
-  background-color: #444444;
+  background-color: #222222;
   position: relative; }
 
 body#viewer-section {
-  overflow-y: scroll; }
+  overflow-y: auto;
+  height: 100%; }
 
 html, body {
   height: 100%;
   width: 100%;
   overflow: hidden; }
+
+#top-most {
+  width: 100%; }
+
+#bottom-most {
+  width: 100%; }
 
 .container {
   width: 100%;
@@ -18,7 +25,7 @@ a {
   text-decoration: none; }
 
 #task-bar {
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#49a9d4), color-stop(0.49, #2989d8), color-stop(0.52, #2285d6), to(#2989d8));
+  background: -webkit-gradient(linear, left top, left bottom, from(#222222), to(#333333));
   color: #444;
   top: 5;
   position: absolute;
@@ -63,32 +70,27 @@ a {
 nav {
   top: 27px;
   position: absolute;
-  background-color: #444444;
+  background-color: #222222;
   width: 100%; }
   nav button#play {
     margin-left: 10px; }
   nav button {
     padding: 3px 0px;
     width: 30px;
-    background-color: white;
-    border: 1px solid #CCC;
-    color: #555;
+    background-color: #222222;
+    color: #eee;
     -webkit-border-radius: 3px; }
   nav button:hover {
     cursor: pointer;
-    background: #2C7CFF;
-    color: #fff; }
+    color: #2C7CFF; }
 
 .on {
   cursor: pointer;
-  background: #2C7CFF;
-  color: #fff; }
+  color: #2C7CFF; }
 
 section {
   font-size: 0.8em;
   padding-bottom: 30px;
-  width: 100%;
-  height: 100%;
   background-color: #FEFEFE;
   word-wrap: break-word;
   color: #444; }

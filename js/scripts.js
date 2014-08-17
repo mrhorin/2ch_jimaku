@@ -12,6 +12,7 @@ window.BbsDbController = (function() {
     this.setBbsListListener = __bind(this.setBbsListListener, this);
     this.postAddBbsHandler = __bind(this.postAddBbsHandler, this);
     this.addBbsCompleteHandler = __bind(this.addBbsCompleteHandler, this);
+    this.getAddBbs = __bind(this.getAddBbs, this);
     this.bbsDb = bbsDb;
     this.bbsDbView = bbsDbView;
   }
@@ -24,10 +25,8 @@ window.BbsDbController = (function() {
   };
 
   BbsDbController.prototype.getAddBbs = function() {
-    if (this.bbsDbView.addBbs == null) {
-      this.bbsDbView.showAddbbs();
-      return this.addBbsInitialize();
-    }
+    this.bbsDbView.showAddbbs();
+    return this.addBbsInitialize();
   };
 
   BbsDbController.prototype.addBbsInitialize = function() {
@@ -554,7 +553,7 @@ BbsDbView = (function(_super) {
   function BbsDbView() {
     this.showAddbbs = __bind(this.showAddbbs, this);
     this.printBbs = __bind(this.printBbs, this);
-    return BbsDbView.__super__.constructor.apply(this, arguments);
+    this.showAddbbsFlag = false;
   }
 
   BbsDbView.prototype.printBbs = function(bbsList) {
@@ -657,13 +656,12 @@ window.ThreadJimakuView = (function(_super) {
   };
 
   ThreadJimakuView.prototype.restoreSettings = function() {
-    var so;
-    so = window.air.SharedObject.getLocal("superfoo");
-    if ((so.data.jimakuX != null) && (so.data.jimakuY != null)) {
-      this.jimaku.x = so.data.jimakuX;
-      this.jimaku.y = so.data.jimakuY;
-      this.jimaku.width = so.data.jimakuWidth;
-      return this.jimaku.height = so.data.jimakuHeight;
+    this.so = window.air.SharedObject.getLocal("superfoo");
+    if ((this.so.data.jimakuX != null) && (this.so.data.jimakuY != null)) {
+      this.jimaku.x = this.so.data.jimakuX;
+      this.jimaku.y = this.so.data.jimakuY;
+      this.jimaku.width = this.so.data.jimakuWidth;
+      return this.jimaku.height = this.so.data.jimakuHeight;
     } else {
       this.jimaku.width = 800;
       return this.jimaku.height = 200;
@@ -671,12 +669,10 @@ window.ThreadJimakuView = (function(_super) {
   };
 
   ThreadJimakuView.prototype.saveSettings = function() {
-    var so;
-    so = window.air.SharedObject.getLocal("superfoo");
-    so.data.jimakuX = this.jimaku.x;
-    so.data.jimakuY = this.jimaku.y;
-    so.data.jimakuWidth = this.jimaku.width;
-    return so.data.jimakuHeight = this.jimaku.height;
+    this.so.data.jimakuX = this.jimaku.x;
+    this.so.data.jimakuY = this.jimaku.y;
+    this.so.data.jimakuWidth = this.jimaku.width;
+    return this.so.data.jimakuHeight = this.jimaku.height;
   };
 
   ThreadJimakuView.prototype.htmlResize = function(event) {
@@ -729,7 +725,7 @@ window.ThreadView = (function(_super) {
       };
     })(this));
     bottomMost = window.viewerObj.html.window.document.getElementById("bottom-most");
-    return bottomMost.scrollTop = bottomMost.scrollHeight;
+    return $(bottomMost)[0].scrollIntoView(false);
   };
 
   return ThreadView;
@@ -743,7 +739,8 @@ viewerIniInitialize = function() {
   viewerObj.setNavListener();
   viewerObj.setTaskBarListener();
   viewerObj.windowSettings();
-  return viewerObj.loadViewerSection();
+  viewerObj.loadViewerSection();
+  return window.air.Introspector.Console.log();
 };
 
 window.Viewer = (function() {
@@ -752,19 +749,24 @@ window.Viewer = (function() {
     this.getBbsHandler = __bind(this.getBbsHandler, this);
     this.getThreadHandler = __bind(this.getThreadHandler, this);
     this.clickThreadHandler = __bind(this.clickThreadHandler, this);
+    this.airHandler = __bind(this.airHandler, this);
+    this.pauseHandler = __bind(this.pauseHandler, this);
     this.playHandler = __bind(this.playHandler, this);
+    this.closeHandler = __bind(this.closeHandler, this);
     this.htmlResize = __bind(this.htmlResize, this);
     this.onResizeWindow = __bind(this.onResizeWindow, this);
     this.loadViewerSection2 = __bind(this.loadViewerSection2, this);
     this.loadViewerSection = __bind(this.loadViewerSection, this);
     this.windowSettings = __bind(this.windowSettings, this);
+    this.switchButton = __bind(this.switchButton, this);
     this.buttonStatus = {
       "play": false,
       "pause": false,
       "air": false,
       "get-thread": false,
-      "get-bbs": true,
-      "add-bbs": true
+      "get-bbs": false,
+      "add-bbs": false,
+      "jimaku": false
     };
     this.bbsDb = new BbsDb();
     this.bbsDb.connect();
@@ -772,6 +774,20 @@ window.Viewer = (function() {
     this.bbsDbView = new BbsDbView();
     this.bbsDbController = new BbsDbController(this.bbsDb, this.bbsDbView);
   }
+
+  Viewer.prototype.switchButton = function() {
+    return $.each(this.buttonStatus, (function(_this) {
+      return function(key, index) {
+        var button;
+        button = window.document.getElementById(key);
+        if (_this.buttonStatus[key][index]) {
+          return $(button).addClass("on");
+        } else {
+          return $(button).removeClass("on");
+        }
+      };
+    })(this));
+  };
 
   Viewer.prototype.windowSettings = function() {
     var so, taskBar, viewer;
@@ -783,6 +799,11 @@ window.Viewer = (function() {
       window.nativeWindow.height = so.data.appHeight;
     }
     window.nativeWindow.visible = true;
+    if (so.data.bbsUrl) {
+      $(this.url).val(so.data.bbsUrl);
+    } else {
+      $(this.url).val("http://jbbs.shitaraba.net/computer/10298/");
+    }
     taskBar = window.document.getElementById("task-bar");
     taskBar.addEventListener("mousedown", this.omMoveWindow);
     viewer = window.document.getElementById("arrows");
@@ -853,6 +874,9 @@ window.Viewer = (function() {
     so.data.appY = window.nativeWindow.y;
     so.data.appWidth = window.nativeWindow.width;
     so.data.appHeight = window.nativeWindow.height;
+    if (this.buttonStatus["jimaku"]) {
+      this.threadController.jimakuView.saveSettings();
+    }
     return window.air.NativeApplication.nativeApplication.exit();
   };
 
@@ -877,7 +901,7 @@ window.Viewer = (function() {
   };
 
   Viewer.prototype.playHandler = function() {
-    if (!this.threadController.resLoadFlag) {
+    if ((this.threadController != null) && !this.threadController.resLoadFlag) {
       this.threadController.resLoadFlag = true;
       this.threadController.resLoadOn();
       $(this.play).addClass("on");
@@ -885,9 +909,27 @@ window.Viewer = (function() {
     }
   };
 
-  Viewer.prototype.pauseHandler = function() {};
+  Viewer.prototype.pauseHandler = function() {
+    if ((this.threadController != null) && this.threadController.resLoadFlag) {
+      this.threadController.resLoadFlag = false;
+      this.threadController.resLoadOff();
+      $(this.play).removeClass("on");
+      return $(this.pause).addClass("on");
+    }
+  };
 
-  Viewer.prototype.airHandler = function() {};
+  Viewer.prototype.airHandler = function() {
+    if (this.buttonStatus["jimaku"]) {
+      this.threadController.switchClassAir();
+      if (this.threadController.airFlag) {
+        $("#air").addClass("on");
+        return this.buttonStatus["air"] = true;
+      } else {
+        $("#air").removeClass("on");
+        return this.buttonStatus["air"] = false;
+      }
+    }
+  };
 
   Viewer.prototype.clickThreadHandler = function() {
     var res;
@@ -899,11 +941,19 @@ window.Viewer = (function() {
     this.jimakuView = new ThreadJimakuView("../haml/jimaku.html");
     this.jimakuView.create();
     this.jimakuView.activated();
+    this.buttonStatus["jimaku"] = true;
     return this.threadController = new ThreadController(this.thread, this.threadView, this.jimakuView);
   };
 
   Viewer.prototype.getThreadHandler = function() {
     var so;
+    if (this.buttonStatus["jimaku"]) {
+      this.threadController.jimakuView.closed();
+      this.threadController.jimakuClockOff();
+      this.buttonStatus["jimaku"] = false;
+      $(this.air).removeClass("on");
+    }
+    this.pauseHandler();
     this.bbs = new Bbs($("#url").val());
     this.bbsView = new BbsView(this.bbs, this.bbsDb);
     this.bbsView.printSubject();
