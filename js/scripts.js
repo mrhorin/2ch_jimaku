@@ -742,8 +742,7 @@ viewerIniInitialize = function() {
   viewerObj.setNavListener();
   viewerObj.setTaskBarListener();
   viewerObj.windowSettings();
-  viewerObj.loadViewerSection();
-  return window.air.Introspector.Console.log();
+  return viewerObj.loadViewerSection();
 };
 
 window.Viewer = (function() {

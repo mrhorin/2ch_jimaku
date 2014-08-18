@@ -8,7 +8,6 @@ viewerIniInitialize = ->
 	viewerObj.setTaskBarListener()
 	viewerObj.windowSettings()
 	viewerObj.loadViewerSection()
-	window.air.Introspector.Console.log()
 
 class window.Viewer
 	# buttonStatus ボタンの状態を持つ連想配列

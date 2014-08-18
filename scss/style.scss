@@ -148,7 +148,7 @@ section{
 	padding-bottom: 30px;
 	background-color: #FEFEFE;
 	word-wrap: break-word;
-	color: #444;
+	color: #555;
 }
 .thread{
 	font-size: 1.2em;
@@ -211,14 +211,14 @@ section{
 }
 #jimaku-res{
 	// background-color: rgba(0, 0, 0, 0.5);
-	color: #FFF;
-	-webkit-text-stroke-color: #000;
+	color: #fff;
+	-webkit-text-stroke-color: #222;
 	-webkit-text-stroke-width: 2px;
 	font-weight: bold;
-	padding: 0;
 	font-size: 2.6em;
 	cursor: none;
 	padding: 0px;
+	padding-left: 10px;
 	margin: 0px;
 	position: absolute;
 	top: 13px;
@@ -231,8 +231,9 @@ section{
 	}
 }
 #jimaku-title{
-	background-color: #FFD700;
-	color: #000;
+	// background-color: #FFD700;
+	background-color: #fff;
+	color: #2C7CFF;
 	padding: 0;
 	padding-left: 4px;
 	padding-right: 4px;
@@ -252,7 +253,7 @@ section{
 	margin-left: 5px;
 }
 #jimaku-count{
-	margin-left: -6px;
+	margin-left: -1px;
 }
 #jimaku-title:hover{
 	cursor: default;
