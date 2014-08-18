@@ -42,19 +42,23 @@ class window.Viewer
 
 	# window設定読み込み
 	windowSettings: =>
-		so = window.air.SharedObject.getLocal("superfoo")
+		@so = window.air.SharedObject.getLocal("superfoo")
 		# ウィンドウサイズ位置の復帰
-		if so.data.appX? && so.data.appY?
-			window.nativeWindow.x = so.data.appX
-			window.nativeWindow.y = so.data.appY
-			window.nativeWindow.width = so.data.appWidth
-			window.nativeWindow.height = so.data.appHeight
+		if @so.data.appX? && @so.data.appY?
+			window.nativeWindow.x = @so.data.appX
+			window.nativeWindow.y = @so.data.appY
+			window.nativeWindow.width = @so.data.appWidth
+			window.nativeWindow.height = @so.data.appHeight
+		# 前回開いた掲示板名をセット
+		if @so.data.bbsTitle
+			@bbsTitle.innerHTML = @so.data.bbsTitle
 		# ウィンドウを表示
 		window.nativeWindow.visible = true
 		# URLを復帰
-		if so.data.bbsUrl
-			$(@url).val(so.data.bbsUrl)
+		if @so.data.bbsUrl
+			$(@url).val(@so.data.bbsUrl)
 		else
+			# したらば助け合い掲示板
 			$(@url).val("http://jbbs.shitaraba.net/computer/10298/")
 		# タスクバーの移動イベント
 		taskBar = window.document.getElementById("task-bar")
@@ -65,8 +69,8 @@ class window.Viewer
 		# ウィンドウを閉じた時
 		window.nativeWindow.stage.addEventListener(window.air.Event.CLOSING, @closeHandler)
 
+	# viewer_section.htmlの読み込み
 	loadViewerSection: =>
-		# viewer_section.htmlの読み込み
 		url = new window.air.URLRequest("../haml/viewer_section.html")
 		@html = new window.air.HTMLLoader()
 		@html.scaleX = 1
@@ -84,27 +88,7 @@ class window.Viewer
 		window.nativeWindow.stage.addChild(@html)
 		window.nativeWindow.stage.scaleMode = "noScale"
 		window.nativeWindow.stage.align = "topLeft"
-
-	loadViewerSection2: =>
-		initOptions = new window.air.NativeWindowInitOptions()
-		bounds = new window.air.Rectangle(10, 10, 600, 400)
-		@html = window.air.HTMLLoader.createRootWindow(false, initOptions, true, bounds)
-		urlReq = new window.air.URLRequest("../haml/viewer_section.html")
-		@html.load(urlReq)
-
-		# HTMLLoaderのサイズをNativeWindowに合わせる
-		@html.width = window.nativeWindow.width - 20
-		@html.height = window.nativeWindow.height - 80
-		@html.x = 10
-		@html.y = 65
-
-		@html.stage.nativeWindow.close()
-
-		# viewerウィンドウがリサイズされた時のイベント
-		window.nativeWindow.addEventListener(window.air.Event.RESIZE, @htmlResize)
-		window.nativeWindow.stage.addChild(@html)
-		window.nativeWindow.stage.scaleMode = "noScale"
-		window.nativeWindow.stage.align = "topLeft"
+		@html.addEventListener("complete", @htmlCompleteHandler)
 
 	# viewerウィンドウムーブハンドラ
 	omMoveWindow: (event) ->
@@ -152,6 +136,11 @@ class window.Viewer
 	# maximizeHandler = (event) ->
 	# 	window.nativeWindow.maximize()
 
+	# viewer_section.html読み込み完了時
+	htmlCompleteHandler: =>
+		if $(@url).val()
+			@getThreadHandler()
+
 	# ナビバーにイベントリスナーをセット
 	setNavListener: ->
 		@play = window.document.getElementById("play")
@@ -167,6 +156,7 @@ class window.Viewer
 		@addBbs = window.document.getElementById("add-bbs")
 		@addBbs.addEventListener "click", @addBbsHandler
 		@url = window.document.getElementById("url")
+		@bbsTitle = window.document.getElementById("bbs-title")
 
 	playHandler: =>
 		if @threadController? && !@threadController.resLoadFlag
@@ -234,25 +224,15 @@ class window.Viewer
 		# 自動更新OFF
 		@pauseHandler()
 		# 掲示板の処理系インスタンスを生成
-		@bbs = new Bbs($("#url").val())
+		@bbs = new Bbs($(@url).val())
 		# 掲示板の表示系インスタンスを生成
 		@bbsView = new BbsView(@bbs, @bbsDb)
 		# スレッド一覧を描画
 		@bbsView.printSubject()
 		# URLを保存
-		so = window.air.SharedObject.getLocal("superfoo")
-		so.data.bbsUrl = $("#url").val()
+		@so.data.bbsUrl = $(@url).val()
 
 	getBbsHandler: =>
-		# if @buttonStatus["get-bbs"]
-		# 	@buttonStatus =
-		# 		"play": false
-		# 		"pause": false
-		# 		"air": false
-		# 		"get-thread": false
-		# 		"get-bbs": true
-		# 		"add-bbs": true
-		# 	@switchButton()
 		@bbsDbController.getBbsList()
 
 	addBbsHandler: =>

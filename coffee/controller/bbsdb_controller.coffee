@@ -53,7 +53,7 @@ class window.BbsDbController
 			$.each bbsList, (index, value) =>
 				id = window.viewerObj.html.window.document.getElementById(bbsList[index]["id"])
 				id.addEventListener "contextmenu", @showContextMenuHandler(bbsList[index]["id"])
-				id.addEventListener "click", @clickBbsHandler(bbsList[index]["url"])
+				id.addEventListener "click", @clickBbsHandler(bbsList[index]["url"],bbsList[index]["name"])
 
 	# コンテキストメニューハンドラ
 	showContextMenuHandler: (id) =>
@@ -76,12 +76,18 @@ class window.BbsDbController
 			@getBbsList()
 
 	# 掲示板クリックハンドラ
-	clickBbsHandler: (url) =>
+	clickBbsHandler: (url, name) =>
 		(event) =>
+			# URLをセット
 			getUrl = window.document.getElementById("url")
 			$(getUrl).val(url)
+			# 掲示板名をセット
+			bbsTitle = window.document.getElementById("bbs-title")
+			bbsTitle.innerHTML = name
+			# 掲示板名を保存
+			window.viewerObj.so.data.bbsTitle = name
 			# スレッド一覧ボタンを有効化
 			getTread = window.document.getElementById("get-thread")
 			$(getTread).attr('disabled', false)
 			# スレッド一覧ボタンを押下
-			$(getTread).trigger("click")
+			window.viewerObj.getThreadHandler()

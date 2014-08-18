@@ -60,7 +60,7 @@ window.BbsDbController = (function() {
           var id;
           id = window.viewerObj.html.window.document.getElementById(bbsList[index]["id"]);
           id.addEventListener("contextmenu", _this.showContextMenuHandler(bbsList[index]["id"]));
-          return id.addEventListener("click", _this.clickBbsHandler(bbsList[index]["url"]));
+          return id.addEventListener("click", _this.clickBbsHandler(bbsList[index]["url"], bbsList[index]["name"]));
         };
       })(this));
     }
@@ -88,15 +88,18 @@ window.BbsDbController = (function() {
     })(this);
   };
 
-  BbsDbController.prototype.clickBbsHandler = function(url) {
+  BbsDbController.prototype.clickBbsHandler = function(url, name) {
     return (function(_this) {
       return function(event) {
-        var getTread, getUrl;
+        var bbsTitle, getTread, getUrl;
         getUrl = window.document.getElementById("url");
         $(getUrl).val(url);
+        bbsTitle = window.document.getElementById("bbs-title");
+        bbsTitle.innerHTML = name;
+        window.viewerObj.so.data.bbsTitle = name;
         getTread = window.document.getElementById("get-thread");
         $(getTread).attr('disabled', false);
-        return $(getTread).trigger("click");
+        return window.viewerObj.getThreadHandler();
       };
     })(this);
   };
@@ -752,10 +755,10 @@ window.Viewer = (function() {
     this.airHandler = __bind(this.airHandler, this);
     this.pauseHandler = __bind(this.pauseHandler, this);
     this.playHandler = __bind(this.playHandler, this);
+    this.htmlCompleteHandler = __bind(this.htmlCompleteHandler, this);
     this.closeHandler = __bind(this.closeHandler, this);
     this.htmlResize = __bind(this.htmlResize, this);
     this.onResizeWindow = __bind(this.onResizeWindow, this);
-    this.loadViewerSection2 = __bind(this.loadViewerSection2, this);
     this.loadViewerSection = __bind(this.loadViewerSection, this);
     this.windowSettings = __bind(this.windowSettings, this);
     this.switchButton = __bind(this.switchButton, this);
@@ -790,17 +793,20 @@ window.Viewer = (function() {
   };
 
   Viewer.prototype.windowSettings = function() {
-    var so, taskBar, viewer;
-    so = window.air.SharedObject.getLocal("superfoo");
-    if ((so.data.appX != null) && (so.data.appY != null)) {
-      window.nativeWindow.x = so.data.appX;
-      window.nativeWindow.y = so.data.appY;
-      window.nativeWindow.width = so.data.appWidth;
-      window.nativeWindow.height = so.data.appHeight;
+    var taskBar, viewer;
+    this.so = window.air.SharedObject.getLocal("superfoo");
+    if ((this.so.data.appX != null) && (this.so.data.appY != null)) {
+      window.nativeWindow.x = this.so.data.appX;
+      window.nativeWindow.y = this.so.data.appY;
+      window.nativeWindow.width = this.so.data.appWidth;
+      window.nativeWindow.height = this.so.data.appHeight;
+    }
+    if (this.so.data.bbsTitle) {
+      this.bbsTitle.innerHTML = this.so.data.bbsTitle;
     }
     window.nativeWindow.visible = true;
-    if (so.data.bbsUrl) {
-      $(this.url).val(so.data.bbsUrl);
+    if (this.so.data.bbsUrl) {
+      $(this.url).val(this.so.data.bbsUrl);
     } else {
       $(this.url).val("http://jbbs.shitaraba.net/computer/10298/");
     }
@@ -825,25 +831,8 @@ window.Viewer = (function() {
     window.nativeWindow.addEventListener(window.air.Event.RESIZE, this.htmlResize);
     window.nativeWindow.stage.addChild(this.html);
     window.nativeWindow.stage.scaleMode = "noScale";
-    return window.nativeWindow.stage.align = "topLeft";
-  };
-
-  Viewer.prototype.loadViewerSection2 = function() {
-    var bounds, initOptions, urlReq;
-    initOptions = new window.air.NativeWindowInitOptions();
-    bounds = new window.air.Rectangle(10, 10, 600, 400);
-    this.html = window.air.HTMLLoader.createRootWindow(false, initOptions, true, bounds);
-    urlReq = new window.air.URLRequest("../haml/viewer_section.html");
-    this.html.load(urlReq);
-    this.html.width = window.nativeWindow.width - 20;
-    this.html.height = window.nativeWindow.height - 80;
-    this.html.x = 10;
-    this.html.y = 65;
-    this.html.stage.nativeWindow.close();
-    window.nativeWindow.addEventListener(window.air.Event.RESIZE, this.htmlResize);
-    window.nativeWindow.stage.addChild(this.html);
-    window.nativeWindow.stage.scaleMode = "noScale";
-    return window.nativeWindow.stage.align = "topLeft";
+    window.nativeWindow.stage.align = "topLeft";
+    return this.html.addEventListener("complete", this.htmlCompleteHandler);
   };
 
   Viewer.prototype.omMoveWindow = function(event) {
@@ -884,6 +873,12 @@ window.Viewer = (function() {
     return window.nativeWindow.minimize();
   };
 
+  Viewer.prototype.htmlCompleteHandler = function() {
+    if ($(this.url).val()) {
+      return this.getThreadHandler();
+    }
+  };
+
   Viewer.prototype.setNavListener = function() {
     this.play = window.document.getElementById("play");
     this.play.addEventListener("click", this.playHandler);
@@ -897,7 +892,8 @@ window.Viewer = (function() {
     this.getBbs.addEventListener("click", this.getBbsHandler);
     this.addBbs = window.document.getElementById("add-bbs");
     this.addBbs.addEventListener("click", this.addBbsHandler);
-    return this.url = window.document.getElementById("url");
+    this.url = window.document.getElementById("url");
+    return this.bbsTitle = window.document.getElementById("bbs-title");
   };
 
   Viewer.prototype.playHandler = function() {
@@ -946,7 +942,6 @@ window.Viewer = (function() {
   };
 
   Viewer.prototype.getThreadHandler = function() {
-    var so;
     if (this.buttonStatus["jimaku"]) {
       this.threadController.jimakuView.closed();
       this.threadController.jimakuClockOff();
@@ -954,11 +949,10 @@ window.Viewer = (function() {
       $(this.air).removeClass("on");
     }
     this.pauseHandler();
-    this.bbs = new Bbs($("#url").val());
+    this.bbs = new Bbs($(this.url).val());
     this.bbsView = new BbsView(this.bbs, this.bbsDb);
     this.bbsView.printSubject();
-    so = window.air.SharedObject.getLocal("superfoo");
-    return so.data.bbsUrl = $("#url").val();
+    return this.so.data.bbsUrl = $(this.url).val();
   };
 
   Viewer.prototype.getBbsHandler = function() {
