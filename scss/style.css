@@ -14,7 +14,6 @@ body#viewer {
   position: relative; }
 
 body#viewer-section {
-  border: 1px solid #ccc;
   overflow-y: auto;
   height: 100%; }
 
@@ -121,7 +120,7 @@ nav {
 
 section {
   font-size: 0.8em;
-  padding-bottom: 30px;
+  padding-bottom: 20px;
   background-color: #FEFEFE;
   word-wrap: break-word;
   color: #555; }
@@ -236,3 +235,14 @@ section {
 #add-bbs-body {
   font-size: 0.8em;
   color: #777; }
+
+#config-window {
+  padding-left: 20px;
+  padding-right: 20px; }
+  #config-window #font-sample {
+    padding: 0px;
+    margin: 0px;
+    display: inline; }
+  #config-window p {
+    margin-top: 5px;
+    margin-bottom: 0px; }

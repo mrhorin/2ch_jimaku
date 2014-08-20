@@ -1,13 +1,13 @@
 # window.air.Introspector.Console.log()
-viewerObj = null
+# viewerObj = null
 
 # viewer初期化
-viewerIniInitialize = ->
-	viewerObj = new window.Viewer()
-	viewerObj.setNavListener()
-	viewerObj.setTaskBarListener()
-	viewerObj.windowSettings()
-	viewerObj.loadViewerSection()
+viewerIniInitialize = =>
+	@viewerObj = new window.Viewer()
+	@viewerObj.setNavListener()
+	@viewerObj.setTaskBarListener()
+	@viewerObj.windowSettings()
+	@viewerObj.loadViewerSection()
 
 class window.Viewer
 	# buttonStatus ボタンの状態を持つ連想配列
@@ -28,6 +28,9 @@ class window.Viewer
 		@bbsDb.create()
 		@bbsDbView = new BbsDbView()
 		@bbsDbController = new BbsDbController(@bbsDb, @bbsDbView)
+		# 設定ウィンドウ系インスタンス
+		@configView = new ConfigView()
+		@configController = new ConfigController(@configView)
 
 	# ボタンの状態を切り替える
 	switchButton: =>
@@ -37,7 +40,6 @@ class window.Viewer
 				$(button).addClass("on")
 			else
 				$(button).removeClass("on")
-
 
 	# window設定読み込み
 	windowSettings: =>
@@ -129,6 +131,7 @@ class window.Viewer
 		# アプリケーションを終了
 		window.air.NativeApplication.nativeApplication.exit()
 
+	# 最小化ハンドラ
 	minimizeHandler: (event) ->
 		window.nativeWindow.minimize()
 
@@ -154,6 +157,8 @@ class window.Viewer
 		@getBbs.addEventListener "click", @getBbsHandler
 		@addBbs = window.document.getElementById("add-bbs")
 		@addBbs.addEventListener "click", @addBbsHandler
+		@config = window.document.getElementById("config")
+		@config.addEventListener "click", @configHandler
 		@url = window.document.getElementById("url")
 		@bbsTitle = window.document.getElementById("bbs-title")
 
@@ -236,3 +241,6 @@ class window.Viewer
 
 	addBbsHandler: =>
 		@bbsDbController.getAddBbs()
+
+	configHandler: =>
+		@configController.getConfig()

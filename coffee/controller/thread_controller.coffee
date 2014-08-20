@@ -67,6 +67,18 @@ class window.ThreadController
 		# 字幕時計をON
 		if @jimakuClock?
 			@jimakuClockOn()
+		# 字幕CSSスタイルを復帰
+		if @jimakuRes?
+			if window.viewerObj.so.data.fontFamily?
+				$(@jimakuRes).css("font-family", window.viewerObj.so.data.fontFamily)
+			if window.viewerObj.so.data.color?
+				$(@jimakuRes).css("color",window.viewerObj.so.data.color)
+			if window.viewerObj.so.data.fontSize?
+				$(@jimakuRes).css("font-size", window.viewerObj.so.data.fontSize)
+			if window.viewerObj.so.data.strokeWidth?
+				$(@jimakuRes).css("-webkit-text-stroke-width", window.viewerObj.so.data.strokeWidth)
+			if window.viewerObj.so.data.strokeColor?
+				$(@jimakuRes).css("-webkit-text-stroke-color", window.viewerObj.so.data.strokeColor)
 
 	# 字幕移動ハンドラ
 	onMoveJimaku: (event) =>

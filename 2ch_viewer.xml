@@ -1,54 +1,37 @@
-<?xml version="1.0" encoding="EUC-JP" ?>
-<application
-	xmlns="http://ns.adobe.com/air/application/14.0"
-	minimumPatchLevel="0">
-
-	<!-- アプリケーション情報の定義 -->
-	<id>AirCast</id>
-	<name>
-		<text xml:lang="en">AirCast</text>
-		<text xml:lang="ja">AirCast</text>
-	</name>
-        <versionNumber>1.0.0</versionNumber>
-        <versionLabel>v1</versionLabel>
-	<filename>AirCast Application</filename>
-	<description>
-		<text xml:lang="en">This is a BBS display Adobe AIR application.</text>
-		<text xml:lang="ja">2ch互換掲示板対応の字幕表示アプリケーション</text>
-	</description>
-	<copyright>Copyright 2014, mrhorin.</copyright>
-
-	<!-- 初期ウィンドウプロパティ -->
-	<initialWindow>
-		<content>haml/viewer.html</content>
-		<title>AirCast</title>
-		<systemChrome>none</systemChrome>
-		<!-- 透過設定 -->
-		<transparent>false</transparent>
-		<visible>false</visible>
-		<width>470</width>
-		<height>700</height>
-	</initialWindow>
-
-	<!-- インストールフォルダ -->
-	<installFolder>AirCat</installFolder>
-	<!-- プログラムメニューフォルダ -->
-	<programMenuFolder>AirCast</programMenuFolder>
-
-	<customUpdateUI>false</customUpdateUI>
-	<allowBrowserInvocation>false</allowBrowserInvocation>
-	<fileTypes>
-		<fileType>
-			<name>caircat</name>
-			<extension>xmpl</extension>
-			<description>AirCat file</description>
-			<contentType>aircat/x-data-type</contentType>
-			<icon>
-				<image16x16>icons/AIRApp_16.png</image16x16>
-				<image32x32>icons/AIRApp_32.png</image32x32>
-				<image48x48>icons/AIRApp_48.png</image48x48>
-				<image128x128>icons/AIRApp_128.png</image128x128>
-			</icon>
-		</fileType>
-	</fileTypes>
+<?xml version="14.0" encoding="utf-8" ?>
+<application xmlns="http://ns.adobe.com/air/application/14.0" minimumPatchLevel="0">
+ <id>AirCast</id>
+ <name>
+  <text xml:lang="en">AirCast</text>
+  <text xml:lang="ja">AirCast</text>
+ </name>
+ <versionNumber>1.0.0</versionNumber>
+ <versionLabel>v1</versionLabel>
+ <filename>AirCast Application</filename>
+ <description>
+  <text xml:lang="en">This is a BBS display Adobe AIR application.</text>
+  <text xml:lang="ja">2ch互換掲示板対応の字幕表示アプリケーション</text>
+ </description>
+ <copyright>Copyright 2014, mrhorin.</copyright>
+ <initialWindow>
+  <content>haml/viewer.html</content>
+  <title>AirCast</title>
+  <systemChrome>none</systemChrome>
+  <transparent>false</transparent>
+  <visible>false</visible>
+  <width>470</width>
+  <height>700</height>
+ </initialWindow>
+ <installFolder>AirCast</installFolder>
+ <programMenuFolder>AirCast</programMenuFolder>
+ <customUpdateUI>false</customUpdateUI>
+ <allowBrowserInvocation>false</allowBrowserInvocation>
+ <fileTypes>
+  <fileType>
+   <name>caircat</name>
+   <extension>xmpl</extension>
+   <description>AirCat file</description>
+   <contentType>text/html</contentType>
+  </fileType>
+ </fileTypes>
 </application>

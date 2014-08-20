@@ -1,4 +1,4 @@
-class BbsDbView extends BaseView
+class window.BbsDbView extends BaseView
 	# clickedBbs 選択された掲示板
 	# deleteId 削除する掲示板ID
 	# html 掲示板追加ウィンドウ用HTMLLoader
@@ -30,7 +30,7 @@ class BbsDbView extends BaseView
 
 	# 掲示板追加ウィンドウを描画
 	showAddbbs: =>
-		# jimaku.htmlを取得
+		# add_bbs.htmlを取得
 		url = new window.air.URLRequest("../../haml/add_bbs.html")
 		@html = new window.air.HTMLLoader()
 		@html.load(url)
