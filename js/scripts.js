@@ -25,8 +25,10 @@ window.BbsDbController = (function() {
   };
 
   BbsDbController.prototype.getAddBbs = function() {
-    this.bbsDbView.showAddbbs();
-    return this.addBbsInitialize();
+    if (!this.bbsDbView.showAddbbsFlag) {
+      this.bbsDbView.showAddbbs();
+      return this.addBbsInitialize();
+    }
   };
 
   BbsDbController.prototype.addBbsInitialize = function() {
@@ -571,6 +573,7 @@ window.BbsDbView = (function(_super) {
   __extends(BbsDbView, _super);
 
   function BbsDbView() {
+    this.addBbsClosingListener = __bind(this.addBbsClosingListener, this);
     this.showAddbbs = __bind(this.showAddbbs, this);
     this.printBbs = __bind(this.printBbs, this);
     this.showAddbbsFlag = false;
@@ -614,7 +617,14 @@ window.BbsDbView = (function(_super) {
     this.addBbs.stage.addChild(this.html);
     this.addBbs.stage.scaleMode = "noScale";
     this.addBbs.stage.align = "topLeft";
+    this.showAddbbsFlag = true;
+    this.addBbs.addEventListener("closing", this.addBbsClosingListener);
     return this.addBbs.activate();
+  };
+
+  BbsDbView.prototype.addBbsClosingListener = function(event) {
+    this.addBbs.removeEventListener("closing", this.addBbsClosingListener);
+    return this.showAddbbsFlag = false;
   };
 
   return BbsDbView;
@@ -996,13 +1006,14 @@ window.ConfigView = (function(_super) {
   __extends(ConfigView, _super);
 
   function ConfigView() {
-    this.windowResizeHandler = __bind(this.windowResizeHandler, this);
     this.restoreConfig = __bind(this.restoreConfig, this);
     this.getConfigElements = __bind(this.getConfigElements, this);
     this.applyHandler = __bind(this.applyHandler, this);
+    this.windowResizeHandler = __bind(this.windowResizeHandler, this);
+    this.windowClosingHandler = __bind(this.windowClosingHandler, this);
     this.htmlCompleteHandler = __bind(this.htmlCompleteHandler, this);
     this.showConfigWindow = __bind(this.showConfigWindow, this);
-    return ConfigView.__super__.constructor.apply(this, arguments);
+    this.windowFlag = false;
   }
 
   ConfigView.prototype.showConfigWindow = function() {
@@ -1025,6 +1036,8 @@ window.ConfigView = (function(_super) {
     this.window.stage.scaleMode = "noScale";
     this.window.stage.align = "topLeft";
     this.window.addEventListener("resize", this.windowResizeHandler);
+    this.window.addEventListener("closing", this.windowClosingHandler);
+    this.windowFlag = true;
     return this.window.activate();
   };
 
@@ -1046,6 +1059,16 @@ window.ConfigView = (function(_super) {
       apply.addEventListener("click", this.applyHandler);
     }
     return this.restoreConfig();
+  };
+
+  ConfigView.prototype.windowClosingHandler = function(event) {
+    this.windowFlag = false;
+    return this.window.removeEventListener("closing", this.windowClosingHandler);
+  };
+
+  ConfigView.prototype.windowResizeHandler = function() {
+    this.html.width = this.window.width;
+    return this.html.height = this.window.height;
   };
 
   ConfigView.prototype.applyHandler = function(event) {
@@ -1107,11 +1130,6 @@ window.ConfigView = (function(_super) {
     }
   };
 
-  ConfigView.prototype.windowResizeHandler = function() {
-    this.html.width = this.window.width;
-    return this.html.height = this.window.height;
-  };
-
   return ConfigView;
 
 })(BaseView);
@@ -1120,11 +1138,12 @@ window.ConfigController = (function() {
   function ConfigController(configView) {
     this.getConfig = __bind(this.getConfig, this);
     this.configView = configView;
-    this.windowFlag = false;
   }
 
   ConfigController.prototype.getConfig = function() {
-    return this.configView.showConfigWindow();
+    if (!this.configView.windowFlag) {
+      return this.configView.showConfigWindow();
+    }
   };
 
   return ConfigController;

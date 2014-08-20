@@ -3,6 +3,7 @@ class window.BbsDbView extends BaseView
 	# deleteId 削除する掲示板ID
 	# html 掲示板追加ウィンドウ用HTMLLoader
 	# addBbs 掲示板追加用ウィンドウ
+	# showAddbbsFlag addBbsウィンドウが開いているか
 
 	constructor: ->
 		@showAddbbsFlag = false
@@ -55,4 +56,10 @@ class window.BbsDbView extends BaseView
 		@addBbs.stage.addChild(@html)
 		@addBbs.stage.scaleMode = "noScale"
 		@addBbs.stage.align = "topLeft"
+		@showAddbbsFlag = true
+		@addBbs.addEventListener("closing", @addBbsClosingListener)
 		@addBbs.activate()
+
+	addBbsClosingListener: (event) =>
+		@addBbs.removeEventListener("closing", @addBbsClosingListener)
+		@showAddbbsFlag = false

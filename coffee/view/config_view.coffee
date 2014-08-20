@@ -1,4 +1,8 @@
 class window.ConfigView extends BaseView
+	# windowFlag ウィンドウが開いているかフラグ
+
+	constructor: ->
+		@windowFlag = false
 
 	# コンフィグウィンドウを表示
 	showConfigWindow: =>
@@ -29,6 +33,8 @@ class window.ConfigView extends BaseView
 		@window.stage.scaleMode = "noScale"
 		@window.stage.align = "topLeft"
 		@window.addEventListener("resize", @windowResizeHandler)
+		@window.addEventListener("closing", @windowClosingHandler)
+		@windowFlag = true
 		@window.activate()
 
 	htmlCompleteHandler: (event) =>
@@ -46,15 +52,25 @@ class window.ConfigView extends BaseView
 					"</option>"
 				)
 
-		# # 適用ボタンにイベントを追加
+		# 適用ボタンにイベントを追加
 		apply = @html.window.document.getElementById("config-apply")
 		if apply?
 			apply.addEventListener("click", @applyHandler)
 
 		@restoreConfig()
 
+	windowClosingHandler: (event) =>
+		@windowFlag = false
+		@window.removeEventListener("closing", @windowClosingHandler)
+
+	windowResizeHandler: =>
+		# HTMLLoaderのサイズをNativeWindowに合わせる
+		@html.width = @window.width
+		@html.height = @window.height
+
 	# 適用ボタンハンドラ
 	applyHandler: (event) =>
+		# 入力値を取得
 		@getConfigElements()
 		style =
 			'font-family':@fontFamily.value
@@ -63,17 +79,17 @@ class window.ConfigView extends BaseView
 			'-webkit-text-stroke-width':@fontStrokeWidth.value
 			'-webkit-text-stroke-color':"##{@fontStrokeColor.value}"
 
-		# 字幕に設定を適用
+		# 字幕に入力値を適用
 		if window.viewerObj.threadController?
 			if window.viewerObj.threadController.jimakuRes?
 				jimakuRes = window.viewerObj.threadController.jimakuRes
 				$(jimakuRes).css(style)
 
-		# サンプル文字に設定を適用
+		# サンプル文字に入力値を適用
 		if @sample?
 			$(@sample).css(style)
 
-		# 適用した値を保存
+		# 入力値を保存
 		window.viewerObj.so.data.fontFamily = style["font-family"]
 		window.viewerObj.so.data.fontSize = style["font-size"]
 		window.viewerObj.so.data.color = style["color"]
@@ -118,8 +134,3 @@ class window.ConfigView extends BaseView
 		if window.viewerObj.so.data.strokeColor?
 			$(@fontStrokeColor).val(window.viewerObj.so.data.strokeColor.replace(/#/,''))
 			$(@sample).css("-webkit-text-stroke-color", window.viewerObj.so.data.strokeColor)
-
-	windowResizeHandler: =>
-		# HTMLLoaderのサイズをNativeWindowに合わせる
-		@html.width = @window.width
-		@html.height = @window.height

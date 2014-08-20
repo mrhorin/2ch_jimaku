@@ -19,10 +19,11 @@ class window.BbsDbController
 
 	# 掲示板追加用ウィンドウを取得
 	getAddBbs: =>
-		# 表示
-		@bbsDbView.showAddbbs()
-		# 初期化
-		@addBbsInitialize()
+		if !@bbsDbView.showAddbbsFlag
+			# 表示
+			@bbsDbView.showAddbbs()
+			# 初期化
+			@addBbsInitialize()
 
 	# 掲示板追加用ウィンドウを初期化
 	addBbsInitialize: ->
