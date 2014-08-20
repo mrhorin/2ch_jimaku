@@ -35,7 +35,6 @@ main.coffeeでクリックイベントを受け取り各インスタンスを操
 #実装・改良したい機能
 
 ・したらば旧URL、＠chs、２ちゃんねるに対応  
-・フォント、フォントサイズ、フォントカラーの変更機能  
 ・リンクを規定ブラウザで開くようにする  
 ・ウィンドウリサイズを左右上下でもできるように  
 
@@ -47,3 +46,6 @@ http://maoudamashii.jokersounds.com/music_se.html
 【フォントアイコン】  
 Font Awedome  
 http://fortawesome.github.io/Font-Awesome/  
+【カラーピッカー】  
+jscolor  
+http://jscolor.com/  

@@ -1,2 +1,5 @@
 # general
 *.DS_Store
+*.pfx
+*.air
+.sass-cache
