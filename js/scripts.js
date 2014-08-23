@@ -765,13 +765,15 @@ window.ThreadView = (function(_super) {
   };
 
   ThreadView.prototype.addEventToLink = function() {
-    return $.each(this.links, (function(_this) {
+    this.links = [];
+    $.each(this.links, (function(_this) {
       return function(index, value) {
         var id;
         id = window.viewerObj.html.window.document.getElementById(_this.links[index]["id"]);
         return id.addEventListener("click", _this.callNavigateToURL(_this.links[index]["url"]));
       };
     })(this));
+    return this.links = [];
   };
 
   ThreadView.prototype.callNavigateToURL = function(url) {

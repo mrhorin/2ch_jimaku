@@ -19,9 +19,11 @@ class window.ThreadView extends BaseView
 
 	# リンクにイベントを付加する
 	addEventToLink: =>
+		@links = []
 		$.each @links, (index,value) =>
 			id = window.viewerObj.html.window.document.getElementById(@links[index]["id"])
 			id.addEventListener "click",@callNavigateToURL(@links[index]["url"])
+		@links = []
 
 	callNavigateToURL: (url) =>
 		(event) =>
