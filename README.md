@@ -12,7 +12,7 @@ http://www.adobe.com/devnet/air/air-sdk-download.html
 ### 【起動方法】
 `/AIRSDK_Compiler/bin/adl /2ch_jimaku/2ch_jimaku.xml`  
 ### 【パッケージ化コマンド】
-`adt -package -storetype pkcs12 -keystore test.pfx -storepass pass AirCast.air aircast.xml fonts haml js lib scss`  
+`adt -package -storetype pkcs12 -keystore test.pfx -storepass pass AirCast.air 2ch_jimaku.xml fonts icons sound haml js lib scss`  
 ### 【CoffeeScript】
 node.jsがインストールされている事が前提  
 `sudo npm install -g coffee-script`  

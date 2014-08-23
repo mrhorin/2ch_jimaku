@@ -738,11 +738,50 @@ window.ThreadView = (function(_super) {
   __extends(ThreadView, _super);
 
   function ThreadView() {
+    this.callNavigateToURL = __bind(this.callNavigateToURL, this);
+    this.addEventToLink = __bind(this.addEventToLink, this);
+    this.autoLink = __bind(this.autoLink, this);
     return ThreadView.__super__.constructor.apply(this, arguments);
   }
 
-  ThreadView.prototype.autoLink = function(value) {
-    return value.replace(/((http:|https:|ttp:|ttps:)\/\/[\x21-\x26\x28-\x7e]+)/gi, "<a href='$1' target='_blank'>$1</a>");
+  ThreadView.prototype.regex = /(f|h?)(t{1}tps?:\/\/[-a-zA-Z0-9@:%_\+.~?&\/\/=]+)/gi;
+
+  ThreadView.prototype.links = [];
+
+  ThreadView.prototype.autoLink = function(res) {
+    var makeLink;
+    makeLink = (function(_this) {
+      return function(all, url, h, href) {
+        var id;
+        id = Math.floor(Math.random() * 100000000);
+        _this.links.push({
+          "id": id,
+          "url": "h" + h
+        });
+        return "<a href=\"#\" id=\"" + id + "\">" + all + "</a>";
+      };
+    })(this);
+    return res.replace(this.regex, makeLink);
+  };
+
+  ThreadView.prototype.addEventToLink = function() {
+    return $.each(this.links, (function(_this) {
+      return function(index, value) {
+        var id;
+        id = window.viewerObj.html.window.document.getElementById(_this.links[index]["id"]);
+        return id.addEventListener("click", _this.callNavigateToURL(_this.links[index]["url"]));
+      };
+    })(this));
+  };
+
+  ThreadView.prototype.callNavigateToURL = function(url) {
+    return (function(_this) {
+      return function(event) {
+        var urlReq;
+        urlReq = new window.air.URLRequest(url);
+        return window.air.navigateToURL(urlReq);
+      };
+    })(this);
   };
 
   ThreadView.prototype.printRes = function(res) {
@@ -754,6 +793,7 @@ window.ThreadView = (function(_super) {
         return $(section).append("<div class=\"res\">\n	<div class=\"res-head\">\n		<span class=\"res-no\">\n			" + res[index][0] + "\n		</span>\n		<span class=\"res-name\">\n			" + res[index][1] + "\n		</span>\n		<span class=\"res-date\">\n			" + res[index][3] + "\n		</span>\n	</div>\n	<div class=\"res-body\">\n		" + (_this.autoLink(res[index][4])) + "\n	</div>\n</div>");
       };
     })(this));
+    this.addEventToLink();
     bottomMost = window.viewerObj.html.window.document.getElementById("bottom-most");
     return $(bottomMost)[0].scrollIntoView(false);
   };

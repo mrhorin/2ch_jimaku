@@ -1,4 +1,4 @@
-<?xml version="14.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <application xmlns="http://ns.adobe.com/air/application/14.0" minimumPatchLevel="0">
  <id>AirCast</id>
  <name>
@@ -7,7 +7,7 @@
  </name>
  <versionNumber>1.0.0</versionNumber>
  <versionLabel>v1</versionLabel>
- <filename>AirCast Application</filename>
+ <filename>AirCast</filename>
  <description>
   <text xml:lang="en">This is a BBS display Adobe AIR application.</text>
   <text xml:lang="ja">2ch互換掲示板対応の字幕表示アプリケーション</text>
@@ -24,13 +24,19 @@
  </initialWindow>
  <installFolder>AirCast</installFolder>
  <programMenuFolder>AirCast</programMenuFolder>
+ <icon>
+  <image16x16>icons/icon_016.png</image16x16>
+  <image32x32>icons/icon_032.png</image32x32>
+  <image48x48>icons/icon_048.png</image48x48>
+  <image128x128>icons/icon_128.png</image128x128>
+ </icon>
  <customUpdateUI>false</customUpdateUI>
  <allowBrowserInvocation>false</allowBrowserInvocation>
  <fileTypes>
   <fileType>
-   <name>caircat</name>
+   <name>aircast</name>
    <extension>xmpl</extension>
-   <description>AirCat file</description>
+   <description>AirCast file</description>
    <contentType>text/html</contentType>
   </fileType>
  </fileTypes>

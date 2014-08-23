@@ -1,12 +1,32 @@
 class window.ThreadView extends BaseView
 
-	# URL部分をリンク化
-	autoLink: (value) ->
-		# regexpUrl = "/((h?)(ttps?:\/\/[a-zA-Z0-9.\-_@:/~?%&;=+#',()*!]+))/g; // ']))/"
-		# regexpMakeLink = (all, url, h, href) ->
-		# 	"<a href=\"h#{href}\" target=\"_blank\">#{url}</a>"
-		# return value.replace(regexpUrl, regexpMakeLink)
-		value.replace(/((http:|https:|ttp:|ttps:)\/\/[\x21-\x26\x28-\x7e]+)/gi, "<a href='$1' target='_blank'>$1</a>")
+	# regex: /((http:|https:|ttp:|ttps:)\/\/[\x21-\x26\x28-\x7e]+)/gi
+	# regex: /(((f|h?t){1}tp(s)?:\/\/)[-a-zA-Z0-9@:%_\+.~?&\/\/=]+)/gi
+	# regex: /(((f|h?t){1}tp(s)?:\/\/)[-a-zA-Z0-9@:%_\+.~?&\/\/=]+)/gi
+	regex: /(f|h?)(t{1}tps?:\/\/[-a-zA-Z0-9@:%_\+.~?&\/\/=]+)/gi
+	links: []
+
+	# URLをリンク化してidを付加する
+	autoLink: (res) =>
+		makeLink = (all, url, h, href) =>
+			# リンク用idを生成
+			id = Math.floor(Math.random() * 100000000)
+			# idとurlの組み合わせを配列に格納
+			@links.push("id": id, "url": "h"+h)
+			# window.air.Introspector.Console.log(id)
+			return "<a href=\"#\" id=\""+id+"\">" + all + "</a>"
+		res.replace(@regex, makeLink)
+
+	# リンクにイベントを付加する
+	addEventToLink: =>
+		$.each @links, (index,value) =>
+			id = window.viewerObj.html.window.document.getElementById(@links[index]["id"])
+			id.addEventListener "click",@callNavigateToURL(@links[index]["url"])
+
+	callNavigateToURL: (url) =>
+		(event) =>
+			urlReq = new window.air.URLRequest(url)
+			window.air.navigateToURL(urlReq)
 
 	# レスを描画
 	printRes: (res)->
@@ -32,7 +52,7 @@ class window.ThreadView extends BaseView
 				</div>
 				"""
 			)
+		@addEventToLink()
 		# 一番下へスクロール
-		# window.air.Introspector.Console.log(window.viewerObj.html)
 		bottomMost = window.viewerObj.html.window.document.getElementById("bottom-most")
 		$(bottomMost)[0].scrollIntoView(false)
