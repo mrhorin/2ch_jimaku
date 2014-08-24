@@ -6,7 +6,7 @@
   <text xml:lang="ja">AirCast</text>
  </name>
  <versionNumber>1.0.0</versionNumber>
- <versionLabel>v1</versionLabel>
+ <versionLabel>v1.0.0</versionLabel>
  <filename>AirCast</filename>
  <description>
   <text xml:lang="en">This is a BBS display Adobe AIR application.</text>
