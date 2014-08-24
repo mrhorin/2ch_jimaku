@@ -10,18 +10,39 @@ http://get.adobe.com/jp/air/
 ### 【Adobe AIR SDK & Compiler】
 http://www.adobe.com/devnet/air/air-sdk-download.html  
 ### 【起動方法】
-`/AIRSDK_Compiler/bin/adl /2ch_jimaku/2ch_jimaku.xml`  
+
+```
+/AIRSDK_Compiler/bin/adl 2ch_jimaku/2ch_jimaku.xml
+```
+
 ### 【パッケージ化コマンド】
-`adt -package -storetype pkcs12 -keystore test.pfx -storepass pass AirCast.air 2ch_jimaku.xml fonts icons sound haml js lib scss`  
+
+```
+adt -package -storetype pkcs12 -keystore AirCast.pfx -storepass pass AirCast.air 2ch_jimaku.xml fonts icons sound haml js lib scss
+```
+
 ### 【CoffeeScript】
 node.jsがインストールされている事が前提  
-`sudo npm install -g coffee-script`  
+
+```
+sudo npm install -g coffee-script
+```
+
 プロジェクトルートディレクトリへ移動  
-`cd project_root`  
+
+```
+cd project_root
+```
+
 CoffeeScriptビルドコマンド  
-### coffee (オプション) (保存先パス/ファイル名) (coffeeファイルがある場所)  
-`coffee -bwc -j js/scripts.js .`  
-上記のコマンドを実行した後にcoffeeファイルを編集すると、変更前との差分を検知し、自動的にビルドされた後にjs/scripts.jsファイルに保存されます。  
+### coffee (オプション) (保存先パス/ファイル名) (coffeeファイルがある場所/ファイル名)  
+
+```
+coffee -bwc -j js/scripts.js .
+```
+
+上記のコマンドを実行した後にcoffeeファイルを編集すると、変更前との差分を検知し、自動的にビルドされた後にjs/scripts.
+jsファイルに保存されます。  
 ### 【その他】
 haml  
 scss  
@@ -29,13 +50,12 @@ scss
 #説明
 
 ロジック系はcoffeeフォルダ内を参照 。  
-main.coffeeでクリックイベントを受け取り各インスタンスを操作しています。  
 現在対応している掲示板はしたらばのみ  
 
 #実装・改良したい機能
 
-・したらば旧URL、＠chs、２ちゃんねるに対応  
-・ウィンドウリサイズを左右上下でもできるように  
+・＠chs、２ちゃんねるに対応  
+・ウィンドウリサイズを左右下でもできるように  
 ・レス書き込み機能  
 
 #使用素材
