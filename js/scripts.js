@@ -735,6 +735,8 @@ window.ThreadJimakuView = (function(_super) {
 })(BaseView);
 
 window.ThreadView = (function(_super) {
+  var links;
+
   __extends(ThreadView, _super);
 
   function ThreadView() {
@@ -746,7 +748,7 @@ window.ThreadView = (function(_super) {
 
   ThreadView.prototype.regex = /(f|h?)(t{1}tps?:\/\/[-a-zA-Z0-9@:%_\+.~?&\/\/=]+)/gi;
 
-  ThreadView.prototype.links = [];
+  links = [];
 
   ThreadView.prototype.autoLink = function(res) {
     var makeLink;
@@ -758,22 +760,20 @@ window.ThreadView = (function(_super) {
           "id": id,
           "url": "h" + h
         });
-        return "<a href=\"#\" id=\"" + id + "\">" + all + "</a>";
+        return "<a href=\"" + h + "\" id=\"" + id + "\">" + all + "</a>";
       };
     })(this);
     return res.replace(this.regex, makeLink);
   };
 
   ThreadView.prototype.addEventToLink = function() {
-    this.links = [];
-    $.each(this.links, (function(_this) {
+    return $.each(this.links, (function(_this) {
       return function(index, value) {
         var id;
         id = window.viewerObj.html.window.document.getElementById(_this.links[index]["id"]);
         return id.addEventListener("click", _this.callNavigateToURL(_this.links[index]["url"]));
       };
     })(this));
-    return this.links = [];
   };
 
   ThreadView.prototype.callNavigateToURL = function(url) {
@@ -788,6 +788,7 @@ window.ThreadView = (function(_super) {
 
   ThreadView.prototype.printRes = function(res) {
     var bottomMost;
+    this.links = [];
     $.each(res, (function(_this) {
       return function(index, value) {
         var section;

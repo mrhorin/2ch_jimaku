@@ -76,6 +76,7 @@ class window.Viewer
 		@html = new window.air.HTMLLoader()
 		@html.scaleX = 1
 		@html.scaleY = 1
+		# @html.navigateInSystemBrowser = true
 		@html.load(url)
 
 		# HTMLLoaderのサイズをNativeWindowに合わせる

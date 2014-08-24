@@ -1,10 +1,7 @@
 class window.ThreadView extends BaseView
 
-	# regex: /((http:|https:|ttp:|ttps:)\/\/[\x21-\x26\x28-\x7e]+)/gi
-	# regex: /(((f|h?t){1}tp(s)?:\/\/)[-a-zA-Z0-9@:%_\+.~?&\/\/=]+)/gi
-	# regex: /(((f|h?t){1}tp(s)?:\/\/)[-a-zA-Z0-9@:%_\+.~?&\/\/=]+)/gi
 	regex: /(f|h?)(t{1}tps?:\/\/[-a-zA-Z0-9@:%_\+.~?&\/\/=]+)/gi
-	links: []
+	links = []
 
 	# URLをリンク化してidを付加する
 	autoLink: (res) =>
@@ -14,16 +11,14 @@ class window.ThreadView extends BaseView
 			# idとurlの組み合わせを配列に格納
 			@links.push("id": id, "url": "h"+h)
 			# window.air.Introspector.Console.log(id)
-			return "<a href=\"#\" id=\""+id+"\">" + all + "</a>"
+			return "<a href=\""+h+"\" id=\""+id+"\">" + all + "</a>"
 		res.replace(@regex, makeLink)
 
 	# リンクにイベントを付加する
 	addEventToLink: =>
-		@links = []
 		$.each @links, (index,value) =>
 			id = window.viewerObj.html.window.document.getElementById(@links[index]["id"])
 			id.addEventListener "click",@callNavigateToURL(@links[index]["url"])
-		@links = []
 
 	callNavigateToURL: (url) =>
 		(event) =>
@@ -32,6 +27,7 @@ class window.ThreadView extends BaseView
 
 	# レスを描画
 	printRes: (res)->
+		@links = []
 		$.each res, (index, value) =>
 			section = window.viewerObj.html.window.document.getElementById("section")
 			$(section).append(
