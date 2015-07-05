@@ -1,8 +1,10 @@
-$window-color: #ffffff;
+$window-color: #ddd;
 $widows-color-to: #333;
 $nav-btn: $window-color;
-$nav-btn-font: #fd5675;
+$nav-btn-font: #333;
 $border: #cccccc;
+$bbs-hover-color: #3399FF;
+$bbs-2n-color: #B1FF8E;
 
 ::-webkit-scrollbar {
   width: 12px;
@@ -129,7 +131,7 @@ nav{
 			background-color: $nav-btn;
 			// border: 1px solid #ddd;
 			color: $nav-btn-font;
-			-webkit-border-radius: 3px;
+			// -webkit-border-radius: 3px;
 		}
 		li#play{
 			margin-left: 10px;
@@ -141,12 +143,14 @@ nav{
 		}
 	}
 }
+// ボタンON時
 .on{
 	cursor: pointer;
 	// background: #2C7CFF;
 	color: #2C7CFF;
 }
 section{
+  border-top: 1px solid darken($window-color, 30%);
 	font-size: 0.8em;
 	padding-bottom: 20px;
 	background-color: #FEFEFE;
@@ -159,15 +163,15 @@ section{
 }
 .thread:nth-child(2n):hover{
 	cursor: pointer;
-	background-color: #0088cc;
+	background-color: $bbs-hover-color;
 	color: #FFF;
 }
 .thread:nth-child(2n){
-	background-color: #B1FF8E;
+	background-color: $bbs-2n-color;
 }
 .thread:nth-child(2n-1):hover{
 	cursor: pointer;
-	background-color: #0088cc;
+	background-color: $bbs-hover-color;
 	color: #FFF;
 }
 .thread:nth-child(2n-1){
@@ -179,7 +183,7 @@ section{
 }
 .bbs:nth-child(2n):hover{
 	cursor: pointer;
-	background-color: #0088cc;
+	background-color: $bbs-hover-color;
 	color: #FFF;
 }
 .bbs:nth-child(2n){
@@ -187,7 +191,7 @@ section{
 }
 .bbs:nth-child(2n-1):hover{
 	cursor: pointer;
-	background-color: #0088cc;
+	background-color: $bbs-hover-color;
 	color: #FFF;
 }
 .bbs:nth-child(2n-1){

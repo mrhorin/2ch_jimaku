@@ -83,9 +83,9 @@ class window.Viewer
 		@html.load(url)
 
 		# HTMLLoaderのサイズをNativeWindowに合わせる
-		@html.width = window.nativeWindow.width - 20
-		@html.height = window.nativeWindow.height - 80
-		@html.x = 10
+		@html.width = window.nativeWindow.width
+		@html.height = window.nativeWindow.height - 67
+		@html.x = 0
 		@html.y = 45
 
 		# viewerウィンドウがリサイズされた時のイベント
@@ -106,8 +106,8 @@ class window.Viewer
 	# viewerウィンドウリサイズイベントハンドラ
 	htmlResize: (event) =>
 		# HTMLLoaderのサイズをviewerウィンドウに合わせる
-		@html.width = window.nativeWindow.width - 20
-		@html.height = window.nativeWindow.height - 80
+		@html.width = window.nativeWindow.width
+		@html.height = window.nativeWindow.height - 67
 
 	# タスクバーにイベントリスナーをセット
 	setTaskBarListener: ->

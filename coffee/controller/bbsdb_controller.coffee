@@ -84,7 +84,7 @@ class window.BbsDbController
 			$(getUrl).val(url)
 			# 掲示板名をセット
 			bbsTitle = window.document.getElementById("bbs-title")
-			bbsTitle.innerHTML = name
+			# bbsTitle.innerHTML = name
 			# 掲示板名を保存
 			window.viewerObj.so.data.bbsTitle = name
 			# スレッド一覧ボタンを有効化
