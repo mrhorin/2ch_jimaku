@@ -2,7 +2,8 @@
 ==========
 
 2ch互換掲示板用の字幕表示ソフト
-
+## このアプリについて
+したらば掲示板などに代表される2ch互換掲示板のスレッドの書き込みを読み込んで字幕表示してくれるアプリ。主に実況用途で使用する。  
 ## 開発環境
 npm  
 bower  
@@ -29,7 +30,8 @@ adl 2ch_jimaku/2ch_jimaku.xml
 ## パッケージ化コマンド
 
 ```
-adt -package -storetype pkcs12 -keystore AirCast.pfx -storepass pass AirCast.air 2ch_jimaku.xml icons sound haml js/scripts.js lib scss/style.css bower_components node_modules```
+adt -package -storetype pkcs12 -keystore AirCast.pfx -storepass pass AirCast.air 2ch_jimaku.xml icons sound haml js/scripts.js lib scss/style.css bower_components node_modules
+```
 
 ##説明
 
