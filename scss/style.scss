@@ -212,13 +212,16 @@ section{
 	position: fixed;
 	width: 100%;
 	height: 100%;
+  max-width: 1900px;
+  min-width: 300px;
+  max-height: 1000px;
+  min-height: 300px;
 	cursor: none;
 }
 .bg-air{
 	background-color: rgba(0, 0, 0, 0.5);
 }
 #jimaku-res{
-	// background-color: rgba(0, 0, 0, 0.5);
 	color: #fff;
 	-webkit-text-stroke-color: #222;
 	-webkit-text-stroke-width: 2px;
@@ -230,11 +233,10 @@ section{
   padding-top: 8px;
 	margin: 0px;
   margin-top: 13px;
-  max-width: 1000px;
-  min-width: 800px;
-	// position: absolute;
-	// top: 18px;
-	// left: 0;
+  max-width: 1900px;
+  min-width: 300px;
+  max-height: 1000px;
+  min-height: 300px;
 	a{
 		color: #FFF;
 		-webkit-text-stroke-color: #000;
