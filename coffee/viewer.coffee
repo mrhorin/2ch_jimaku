@@ -52,8 +52,8 @@ class window.Viewer
 			window.nativeWindow.width = @so.data.appWidth
 			window.nativeWindow.height = @so.data.appHeight
 		# 前回開いた掲示板名をセット
-		if @so.data.bbsTitle
-			@bbsTitle.innerHTML = @so.data.bbsTitle
+		# if @so.data.bbsTitle
+			# @bbsTitle.innerHTML = @so.data.bbsTitle
 		# ウィンドウを表示
 		window.nativeWindow.visible = true
 		# URLを復帰
@@ -63,13 +63,14 @@ class window.Viewer
 			# したらば助け合い掲示板
 			$(@url).val("http://jbbs.shitaraba.net/computer/10298/")
 		# タスクバーの移動イベント
-		taskBar = window.document.getElementById("task-bar")
-		taskBar.addEventListener("mousedown", @omMoveWindow)
+		# taskBar = window.document.getElementById("task-bar")
+		# taskBar.addEventListener("mousedown", @omMoveWindow)
 		# viewerのリサイズイベント
-		viewer = window.document.getElementById("arrows")
-		viewer.addEventListener("mousedown", @onResizeWindow)
+		# viewer = window.document.getElementById("arrows")
+		# viewer.addEventListener("mousedown", @onResizeWindow)
 		# ウィンドウを閉じた時
 		window.nativeWindow.stage.addEventListener(window.air.Event.CLOSING, @closeHandler)
+		air.Introspector.Console.log window.nativeWindow
 
 	# viewer_section.htmlの読み込み
 	loadViewerSection: =>
@@ -84,14 +85,14 @@ class window.Viewer
 		@html.width = window.nativeWindow.width - 20
 		@html.height = window.nativeWindow.height - 80
 		@html.x = 10
-		@html.y = 65
+		@html.y = 45
 
 		# viewerウィンドウがリサイズされた時のイベント
 		window.nativeWindow.addEventListener(window.air.Event.RESIZE, @htmlResize)
 		window.nativeWindow.stage.addChild(@html)
 		window.nativeWindow.stage.scaleMode = "noScale"
 		window.nativeWindow.stage.align = "topLeft"
-		@html.addEventListener("complete", @htmlCompleteHandler)
+		# @html.addEventListener("complete", @htmlCompleteHandler)
 
 	# viewerウィンドウムーブハンドラ
 	omMoveWindow: (event) ->
@@ -110,11 +111,11 @@ class window.Viewer
 	# タスクバーにイベントリスナーをセット
 	setTaskBarListener: ->
 		# 閉じる
-		close = window.document.getElementById("close")
-		close.addEventListener "click", @closeHandler
+		# close = window.document.getElementById("close")
+		# close.addEventListener "click", @closeHandler
 		# 最小化
-		minimize = window.document.getElementById("minimize")
-		minimize.addEventListener "click", @minimizeHandler
+		# minimize = window.document.getElementById("minimize")
+		# minimize.addEventListener "click", @minimizeHandler
 		# 最大化
 		# maximize = window.document.getElementById("maximize")
 		# maximize.addEventListener "click", maximizeHandler
@@ -162,7 +163,7 @@ class window.Viewer
 		@config = window.document.getElementById("config")
 		@config.addEventListener "click", @configHandler
 		@url = window.document.getElementById("url")
-		@bbsTitle = window.document.getElementById("bbs-title")
+		# @bbsTitle = window.document.getElementById("bbs-title")
 
 	playHandler: =>
 		if @threadController? && !@threadController.resLoadFlag

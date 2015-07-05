@@ -16,7 +16,7 @@
  <initialWindow>
   <content>haml/viewer.html</content>
   <title>AirCast</title>
-  <systemChrome>none</systemChrome>
+  <systemChrome>standard</systemChrome>
   <transparent>false</transparent>
   <visible>false</visible>
   <width>470</width>
