@@ -1,13 +1,14 @@
 # window.air.Introspector.Console.log()
 # viewerObj = null
 
-# viewer初期化
-viewerIniInitialize = =>
-	@viewerObj = new window.Viewer()
-	@viewerObj.setNavListener()
-	@viewerObj.setTaskBarListener()
-	@viewerObj.windowSettings()
-	@viewerObj.loadViewerSection()
+
+# viewer初期化(Gruntコンパイラの影響でviewer.hamlに移動)
+# viewerIniInitialize = =>
+# 	@viewerObj = new window.Viewer()
+# 	@viewerObj.setNavListener()
+# 	@viewerObj.setTaskBarListener()
+# 	@viewerObj.windowSettings()
+# 	@viewerObj.loadViewerSection()
 
 class window.Viewer
 	# buttonStatus ボタンの状態を持つ連想配列

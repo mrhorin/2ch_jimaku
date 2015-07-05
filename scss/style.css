@@ -193,9 +193,9 @@ section {
   padding: 0px;
   padding-left: 10px;
   margin: 0px;
-  position: absolute;
-  top: 18px;
-  left: 0; }
+  margin-top: 13px;
+  max-width: 1000px;
+  min-width: 800px; }
   #jimaku-res a {
     color: #FFF;
     -webkit-text-stroke-color: #000;

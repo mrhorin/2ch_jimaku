@@ -3,3 +3,6 @@
 *.pfx
 *.air
 .sass-cache
+bower_components
+node_modules
+js/coffee

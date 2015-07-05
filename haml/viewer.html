@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang='ja'>
   <head>
-    <link href='../scss/font-awesome.min.css' media='all' rel='stylesheet'>
     <link href='../scss/style.css' media='all' rel='stylesheet'>
-    <!-- jQuery -->
+    <link href='../bower_components/font-awesome/css/font-awesome.min.css' media='all' rel='stylesheet'>
     <script src='../lib/jquery-2.1.1.min.js'></script>
-    <!-- Air -->
     <script src='../lib/air/AIRIntrospector.js'></script>
     <script src='../lib/air/AIRAliases.js'></script>
     <script src='../js/scripts.js'></script>
+    <script>
+      viewerIniInitialize = (function(_this) {
+      	return function() {
+      		_this.viewerObj = new window.Viewer();
+      		_this.viewerObj.setNavListener();
+      		_this.viewerObj.setTaskBarListener();
+      		_this.viewerObj.windowSettings();
+      		return _this.viewerObj.loadViewerSection();
+      	};
+      })(this);
+    </script>
   </head>
   <body id='viewer' onLoad='viewerIniInitialize()'>
     <div class='container'>

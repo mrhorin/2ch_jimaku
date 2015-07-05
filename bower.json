@@ -1,0 +1,19 @@
+{
+  "name": "2ch_jimaku",
+  "version": "1.0.0",
+  "homepage": "https://github.com/mrhorin/2ch_jimaku",
+  "authors": [
+    "mrhorin"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "font-awesome": "~4.3.0"
+  }
+}
