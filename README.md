@@ -4,47 +4,32 @@
 2ch互換掲示板用の字幕表示ソフト
 
 ## 開発環境
-
-#### 【Adobe Air 14.0】
+npm  
+bower  
+Grunt  
+Adobe Air 14.0  
 http://get.adobe.com/jp/air/  
-### 【Adobe AIR SDK & Compiler】
+Adobe AIR SDK & Compiler  
 http://www.adobe.com/devnet/air/air-sdk-download.html  
-#### 【起動方法】
 
+## コンパイル
+Grunt,npm,bowerについては各自で調べて下さい。  
+下記コマンドでhaml,scss,coffeeの変更を検知して自動コンパイル、coffeeはconcatでscripts.jsに結合。  
+詳細はGruntfile参照。  
 ```
-AIRSDK_Compiler/bin/adl 2ch_jimaku/2ch_jimaku.xml
-```
-
-#### 【パッケージ化コマンド】
-
-```
-adt -package -storetype pkcs12 -keystore AirCast.pfx -storepass pass AirCast.air 2ch_jimaku.xml fonts icons sound haml js lib scss
+grunt watch
 ```
 
-#### 【CoffeeScript】
-node.jsがインストールされている事が前提  
+## 起動コマンド
 
 ```
-sudo npm install -g coffee-script
+adl 2ch_jimaku/2ch_jimaku.xml
 ```
 
-プロジェクトルートディレクトリへ移動  
+## パッケージ化コマンド
 
 ```
-cd 2ch_jimaku
-```
-
-CoffeeScriptビルドコマンド  
-
-```
-coffee -bwc -j js/scripts.js .
-```
-
-上記のコマンドを実行した後にcoffeeファイルを編集すると、変更前との差分を検知し、自動的にビルドされた後にjs/scripts.
-jsファイルに保存されます。  
-#### 【その他】
-haml  
-scss  
+adt -package -storetype pkcs12 -keystore AirCast.pfx -storepass pass AirCast.air 2ch_jimaku.xml icons sound haml js/scripts.js lib scss/style.css bower_components node_modules```
 
 ##説明
 
@@ -54,7 +39,6 @@ scss
 ##実装・改良したい機能
 
 ・＠chs、２ちゃんねるに対応  
-・ウィンドウリサイズを左右下でもできるように  
 ・レス書き込み機能  
 
 ##使用素材
