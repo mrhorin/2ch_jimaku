@@ -30,7 +30,7 @@ html,body{
 	height: 100%;
 	width: 100%;
 	overflow: hidden;
-  font-family: 'Lucida Grande','Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, sans-serif;
+  font-family: Meiryo, メイリオ, sans-serif;
 }
 #top-most{
 	width: 100%;
@@ -227,6 +227,7 @@ section{
 	cursor: none;
 	padding: 0px;
 	padding-left: 10px;
+  padding-top: 7px;
 	margin: 0px;
   margin-top: 13px;
   max-width: 1000px;
