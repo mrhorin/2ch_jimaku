@@ -69,8 +69,9 @@ class window.Viewer
 		# viewer = window.document.getElementById("arrows")
 		# viewer.addEventListener("mousedown", @onResizeWindow)
 		# ウィンドウを閉じた時
-		window.nativeWindow.stage.addEventListener(window.air.Event.CLOSING, @closeHandler)
-		air.Introspector.Console.log window.nativeWindow
+		window.nativeWindow.addEventListener(window.air.Event.CLOSING, @closeHandler)
+		# ウィンドウを閉じた時(非systemChrome.none時)
+		# window.nativeWindow.stage.addEventListener(window.air.Event.CLOSING, @closeHandler)
 
 	# viewer_section.htmlの読み込み
 	loadViewerSection: =>
@@ -92,7 +93,7 @@ class window.Viewer
 		window.nativeWindow.stage.addChild(@html)
 		window.nativeWindow.stage.scaleMode = "noScale"
 		window.nativeWindow.stage.align = "topLeft"
-		# @html.addEventListener("complete", @htmlCompleteHandler)
+		@html.addEventListener("complete", @htmlCompleteHandler)
 
 	# viewerウィンドウムーブハンドラ
 	omMoveWindow: (event) ->
@@ -111,14 +112,14 @@ class window.Viewer
 	# タスクバーにイベントリスナーをセット
 	setTaskBarListener: ->
 		# 閉じる
-		# close = window.document.getElementById("close")
-		# close.addEventListener "click", @closeHandler
+		close = window.document.getElementById("close")
+		close.addEventListener "click", @closeHandler
 		# 最小化
-		# minimize = window.document.getElementById("minimize")
-		# minimize.addEventListener "click", @minimizeHandler
+		minimize = window.document.getElementById("minimize")
+		minimize.addEventListener "click", @minimizeHandler
 		# 最大化
-		# maximize = window.document.getElementById("maximize")
-		# maximize.addEventListener "click", maximizeHandler
+		maximize = window.document.getElementById("maximize")
+		maximize.addEventListener "click", maximizeHandler
 
 	closeHandler: (event) =>
 		# ウィンドウサイズ位置を保存
@@ -138,8 +139,9 @@ class window.Viewer
 	minimizeHandler: (event) ->
 		window.nativeWindow.minimize()
 
-	# maximizeHandler = (event) ->
-	# 	window.nativeWindow.maximize()
+	# 最大化ハンドラ
+	maximizeHandler = (event) ->
+		window.nativeWindow.maximize()
 
 	# viewer_section.html読み込み完了時
 	htmlCompleteHandler: =>
