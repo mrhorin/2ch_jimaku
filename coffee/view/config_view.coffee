@@ -37,20 +37,50 @@ class window.ConfigView extends BaseView
 		@windowFlag = true
 		@window.activate()
 
+	# 設定ウィンドウ読み込み完了ハンドラ
 	htmlCompleteHandler: (event) =>
 		@html.removeEventListener("complete", @htmlCompleteHandler)
-		# インストールされたフォント一覧を取得
+		# フォント一覧プルダウンリスト
 		@fontList = @html.window.document.getElementById("font-list")
+
 		if @fontList?
+			# ゴシック系
+			$(@fontList).append("<option>"+"sans-serif"+"</option>")
+			# 明朝系
+			$(@fontList).append("<option>"+"serif"+"</option>")
+			# 筆記体
+			$(@fontList).append("<option>"+"cursive"+"</option>")
+			# 装飾系
+			$(@fontList).append("<option>"+"fantasy"+"</option>")
+			# 等幅系
+			$(@fontList).append("<option>"+"monospace"+"</option>")
+
+			# インストールされたフォント一覧を取得
 			@fonts = window.air.Font.enumerateFonts(true)
 			@fonts.sortOn("fontName")
-			# 表示
+			# ヒラギノフォントの一覧
+			hiraginoFontList =
+				"ヒラギノ角ゴ Pro W3": "Hiragino Kaku Gothic Pro"
+				"ヒラギノ角ゴ ProN W3": "Hiragino Kaku Gothic ProN"
+				"ヒラギノ明朝 Pro W3": "Hiragino Mincho Pro"
+				"ヒラギノ明朝 ProN W3": "Hiragino Mincho ProN"
+				"ヒラギノ丸ゴ Pro W4": "Hiragino Maru Gothic Pro"
+				"ヒラギノ丸ゴ ProN W4": "Hiragino Maru Gothic ProN"
+			# フォント一覧プルダウンに追加
 			$.each @fonts, (index,value) =>
+				font = @fonts[index]["fontName"]
+				# フォント一覧を追加
 				$(@fontList).append(
 					"<option>"+
 					@fonts[index]["fontName"]+
 					"</option>"
 				)
+				# ヒラギノフォントリストと照合
+				for hiraginoName, hiraginoFont of hiraginoFontList
+					# window.air.Introspector.Console.log hiraginoName
+					if hiraginoName == font
+						# ヒラギノフォントリストとマッチしたらヒラギノフォント一覧を追加
+						$(@fontList).append "<option>"+hiraginoFont+"</option>"
 
 		# 適用ボタンにイベントを追加
 		apply = @html.window.document.getElementById("config-apply")
@@ -134,3 +164,18 @@ class window.ConfigView extends BaseView
 		if window.viewerObj.so.data.strokeColor?
 			$(@fontStrokeColor).val(window.viewerObj.so.data.strokeColor.replace(/#/,''))
 			$(@sample).css("-webkit-text-stroke-color", window.viewerObj.so.data.strokeColor)
+
+	# ヒラギノフォントのリストを取得（フォント名： CSS指定名）
+	getHiraginoFontList: =>
+		hiraginoFontList =
+			"ヒラギノ角ゴ Pro W3": ["ヒラギノ角ゴ Pro","Hiragino Kaku Gothic Pro"]
+			"ヒラギノ角ゴ ProN W3": [ "ヒラギノ角ゴ ProN","Hiragino Kaku Gothic ProN"]
+			"ヒラギノ角ゴ Pro W6": ["ヒラギノ角ゴ Pro","Hiragino Kaku Gothic Pro"]
+			"ヒラギノ角ゴ ProN W6": ["ヒラギノ角ゴ ProN","Hiragino Kaku Gothic ProN"]
+			"ヒラギノ明朝 Pro W3": ["ヒラギノ明朝 Pro","Hiragino Mincho Pro"]
+			"ヒラギノ明朝 ProN W3": ["ヒラギノ明朝 ProN","Hiragino Mincho ProN"]
+			"ヒラギノ明朝 Pro W6": ["ヒラギノ明朝 Pro","Hiragino Mincho Pro"]
+			"ヒラギノ明朝 ProN W6": ["ヒラギノ明朝 ProN","Hiragino Mincho ProN"]
+			"ヒラギノ丸ゴ Pro W4": ["ヒラギノ丸ゴ Pro","Hiragino Maru Gothic Pro"]
+			"ヒラギノ丸ゴ ProN W4": ["ヒラギノ丸ゴ ProN","Hiragino Maru Gothic ProN"]
+		return hiraginoFontList
