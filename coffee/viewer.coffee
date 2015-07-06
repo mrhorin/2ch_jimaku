@@ -62,16 +62,16 @@ class window.Viewer
 		else
 			# したらば助け合い掲示板
 			$(@url).val("http://jbbs.shitaraba.net/computer/10298/")
+		# ウィンドウを閉じた時
+		window.nativeWindow.addEventListener(window.air.Event.CLOSING, @closeHandler)
+		# ウィンドウを閉じた時(非systemChrome.none時)
+		# window.nativeWindow.stage.addEventListener(window.air.Event.CLOSING, @closeHandler)
 		# タスクバーの移動イベント
 		# taskBar = window.document.getElementById("task-bar")
 		# taskBar.addEventListener("mousedown", @omMoveWindow)
 		# viewerのリサイズイベント
 		# viewer = window.document.getElementById("arrows")
 		# viewer.addEventListener("mousedown", @onResizeWindow)
-		# ウィンドウを閉じた時
-		window.nativeWindow.addEventListener(window.air.Event.CLOSING, @closeHandler)
-		# ウィンドウを閉じた時(非systemChrome.none時)
-		# window.nativeWindow.stage.addEventListener(window.air.Event.CLOSING, @closeHandler)
 
 	# viewer_section.htmlの読み込み
 	loadViewerSection: =>
@@ -152,6 +152,7 @@ class window.Viewer
 	setNavListener: ->
 		@play = window.document.getElementById("play")
 		@play.addEventListener "click", @playHandler
+		@playRefresh = window.document.getElementById("play-refresh")
 		@pause = window.document.getElementById("pause")
 		@pause.addEventListener "click", @pauseHandler
 		@air = window.document.getElementById("air")
@@ -173,6 +174,7 @@ class window.Viewer
 			@threadController.resLoadFlag = true
 			@threadController.resLoadOn()
 			$(@play).addClass("on")
+			$(@playRefresh).addClass("show")
 			$(@pause).removeClass("on")
 
 	pauseHandler: =>
@@ -182,6 +184,7 @@ class window.Viewer
 			@threadController.resLoadFlag = false
 			@threadController.resLoadOff()
 			$(@play).removeClass("on")
+			$(@playRefresh).removeClass("show")
 			$(@pause).addClass("on")
 
 	airHandler: =>

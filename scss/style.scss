@@ -107,49 +107,59 @@ a{
 }
 nav{
 	background-color: $window-color;
-	// border-bottom: 1px solid #CCC;
-	// padding: 3px;
 	width: 100%;
-	// height: 10px;
+  // 更新中アイコン
+  #play-refresh{
+    display: none;
+    color: lighten(#5cb85c, 5%);
+    font-size: 25px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+  }
+  // ボタンメニュー
 	ul{
 		position: absolute;
-		top: -5px;
+		top: -11px;
 		margin-bottom: 35px;
 		height: 0px;
 		padding: 0px;
 		padding-left: 20px;
-		li{
+		li,li:active,li:focus{
 			text-align: center;
 			font-size: 20px;
 			list-style: none;
 			display: inline-block;
-			padding: 0;
-			// margin: 0;
 			cursor: pointer;
-			padding: 1px 0px;
-			width: 28px;
-			height: 25px;
-			background-color: $nav-btn;
-			// border: 1px solid #ddd;
-			color: $nav-btn-font;
-			// -webkit-border-radius: 3px;
+			width: 30px;
+			height: 22px;
+      background: #EEE;
+      color:#111;
+      border-top: 1px solid #DDD;
+      border-left: 1px solid #DDD;
+      border-right: 1px solid #BBB;
+      border-bottom: 1px solid #BBB;
+      padding: 5px;
+		}
+    li:hover{
+			cursor: pointer;
+			color: #2C7CFF;
+      background: lighten(#eee, 4%);
 		}
 		li#play{
 			margin-left: 10px;
-		}
-		li:hover{
-			cursor: pointer;
-			// background: #2C7CFF;
-			color: #2C7CFF;
 		}
 	}
 }
 // ボタンON時
 .on{
-	cursor: pointer;
-	// background: #2C7CFF;
-	color: #2C7CFF;
+  cursor: pointer;
+  color: #2C7CFF;
+  background: lighten(#eee, 4%);
 }
+// 表示
+.show{ display: inline !important; }
+
 section{
 	font-size: 0.8em;
 	padding-bottom: 20px;
@@ -257,7 +267,7 @@ section{
 	left: 0;
 }
 #jimaku-clock{
-	margin-left: -4px;
+	margin-left: -2px;
 	padding-left: 0px;
 }
 #jimaku-subject{

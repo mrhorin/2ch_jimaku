@@ -33,7 +33,11 @@
 			-# 		%li#close
 			-# 			%i.fa.fa-times
 			%nav
+				-# スレッドURL
 				%input(type="hidden" id="url" value="")
+				-# 更新中アイコン
+				%i#play-refresh.fa.fa-refresh.fa-spin
+				-# ボタンメニュー
 				%ul
 					%li#play
 						%i.fa.fa-play
@@ -47,8 +51,6 @@
 						%i.fa.fa-home
 					%li#add-bbs
 						%i.fa.fa-plus
-					/ %li#write
-					/ 	%i.fa.fa-pencil-square-o
 					%li#config
 						%i.fa.fa-gear
 		%i.fa.fa-arrows#arrows

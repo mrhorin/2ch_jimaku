@@ -1,4 +1,4 @@
-2ch_jimaku
+AirCast
 ==========
 
 2ch互換掲示板用の字幕表示ソフト
@@ -14,8 +14,8 @@ Adobe AIR SDK & Compiler
 http://www.adobe.com/devnet/air/air-sdk-download.html  
 
 ## コンパイル
-Grunt,npm,bowerについては各自で調べて下さい。  
-下記コマンドでhaml,scss,coffeeの変更を検知して自動コンパイル、coffeeはconcatでscripts.jsに結合。  
+Grunt,npm,bowerについては各自で調べて下さい。
+下記コマンドでhaml,scss,coffeeの変更を検知して自動コンパイル、coffeeはconcatでscripts.jsに結合。
 詳細はGruntfile参照。  
 ```
 grunt watch
@@ -33,9 +33,9 @@ adl 2ch_jimaku/2ch_jimaku.xml
 adt -package -storetype pkcs12 -keystore AirCast.pfx -storepass pass AirCast.air 2ch_jimaku.xml icons sound haml js/scripts.js lib scss/style.css bower_components node_modules
 ```
 
-##説明
+##備考
 
-ロジック系はcoffeeフォルダ内を参照 。  
+ロジック系はcoffeeフォルダ内を参照 。
 現在対応している掲示板はしたらばのみ  
 
 ##実装・改良したい機能
@@ -46,11 +46,4 @@ adt -package -storetype pkcs12 -keystore AirCast.pfx -storepass pass AirCast.air
 ##使用素材
 
 【同封レス着信音】  
-魔王魂  
 http://maoudamashii.jokersounds.com/music_se.html  
-【フォントアイコン】  
-Font Awedome  
-http://fortawesome.github.io/Font-Awesome/  
-【カラーピッカー】  
-jscolor  
-http://jscolor.com/  
