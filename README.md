@@ -1,9 +1,9 @@
 AirCast
 ==========
-
+![スクリーンショット](screen_shot.png)
 2ch互換掲示板用の字幕表示ソフト
 ## このアプリについて
-したらば掲示板などに代表される2ch互換掲示板のスレッドの書き込みを読み込んで字幕表示してくれるアプリ。主に実況用途で使用する。  
+したらば掲示板などに代表される2ch互換掲示板のスレッドの書き込みを読み込んで字幕表示してくれるアプリ。主に実況用途で使用する。Windows,MacなどAdobeAirランタイム対応のすべてのOSに対応。  
 ## 開発環境
 npm  
 bower  
@@ -15,7 +15,7 @@ http://www.adobe.com/devnet/air/air-sdk-download.html
 
 ## コンパイル
 Grunt,npm,bowerについては各自で調べて下さい。
-下記コマンドでhaml,scss,coffeeの変更を検知して自動コンパイル、coffeeはconcatでscripts.jsに結合。
+下記コマンドでhaml,scss,coffeeの変更を検知して自動コンパイル、coffeeはconcatで./js/scripts.jsに結合。
 詳細はGruntfile参照。  
 ```
 grunt watch
