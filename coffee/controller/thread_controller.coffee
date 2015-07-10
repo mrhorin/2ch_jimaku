@@ -21,6 +21,9 @@ class window.ThreadController
 	# sound レス着信音用Soundインスタンス
 	# airFlag switchClassAirのOnOff
 
+	# スレッドの最大レス数
+	@MAX_RES_COUNT = 1000
+
 	constructor: (thread, threadView, jimakuView) ->
 		@thread = thread
 		@threadView = threadView
@@ -99,23 +102,18 @@ class window.ThreadController
 
 	# 字幕にレスを表示
 	printResToJimaku: (res) =>
-		# アスキアートモードを解除
-		if @jimakuAAFlag
-			$(@jimakuRes).removeClass("jimaku-res-aa")
-			@jimakuAAFlag = false
 		# レスを表示
 		if @jimakuRes?
+			# アスキアートモードOFF
+			@AAModeOff()
 			@jimakuRes.innerHTML = res
 
 	# 字幕にアスキーアートを表示
 	printAAToJimaku: (res) =>
 		if window.viewerObj.threadController?
 			if window.viewerObj.threadController.jimakuRes?
-				# 字幕がAAモードになっているか
-				if !@jimakuAAFlag
-					# アスキーアート用クラスを追加
-					$(@jimakuRes).addClass("jimaku-res-aa")
-					@jimakuAAFlag = true
+				# アスキアートモードON
+				@AAModeOn()
 				@jimakuRes.innerHTML = res
 
 	# 字幕にレス数を表示
@@ -161,6 +159,9 @@ class window.ThreadController
 	resLoadOn: =>
 		@resLoadFlag = true
 		@resLoadTimer = setInterval =>
+			# レス1000表示
+			if @thread.resCount >= @MAX_RES_COUNT
+				@printResToJimaku("スレが1000になりました＼(^o^)／")
 			# 新着レスを取得
 			res = @thread.getRes()
 			# 新着レスがあるか確認
@@ -180,6 +181,21 @@ class window.ThreadController
 		@resLoadFlag = false
 		clearInterval(@resLoadTimer)
 		clearTimeout(@jimakuPrintTimer)
+
+	# アスキアートモードをON
+	AAModeOn: =>
+		# 字幕がAAモードになっているか
+		if !@jimakuAAFlag
+			# アスキーアート用cssクラスを追加
+			$(@jimakuRes).addClass("jimaku-res-aa")
+			@jimakuAAFlag = true
+
+	# アスキアートモードをOFF
+	AAModeOff: =>
+		# アスキアートモードか
+		if @jimakuAAFlag
+			$(@jimakuRes).removeClass("jimaku-res-aa")
+			@jimakuAAFlag = false
 
 	# 字幕表示用タイマーON
 	jimakuLoadOn: (sec = 0) =>
@@ -206,10 +222,8 @@ class window.ThreadController
 				hoge = @checkQueueLength(@jimakuResQueue.length)
 				@jimakuLoadOn(hoge)
 			else
-				# アスキアートモードか
-				if @jimakuAAFlag
-					$(@jimakuRes).removeClass("jimaku-res-aa")
-					@jimakuAAFlag = false
+				# アスキアートモードOFF
+				@AAModeOff()
 				# 字幕レス表示を消す
 				@printResToJimaku("")
 				@jimakuLoadFlag = false
