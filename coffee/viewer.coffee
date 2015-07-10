@@ -68,7 +68,7 @@ class window.Viewer
 		# window.nativeWindow.stage.addEventListener(window.air.Event.CLOSING, @closeHandler)
 		# タスクバーの移動イベント
 		# taskBar = window.document.getElementById("task-bar")
-		# taskBar.addEventListener("mousedown", @omMoveWindow)
+		# taskBar.addEventListener("mousedown", @onMoveWindow)
 		# viewerのリサイズイベント
 		# viewer = window.document.getElementById("arrows")
 		# viewer.addEventListener("mousedown", @onResizeWindow)
@@ -96,7 +96,7 @@ class window.Viewer
 		@html.addEventListener("complete", @htmlCompleteHandler)
 
 	# viewerウィンドウムーブハンドラ
-	omMoveWindow: (event) ->
+	onMoveWindow: (event) ->
 		window.nativeWindow.startMove()
 
 	# viewerウィンドウリサイズハンドラ
@@ -121,6 +121,7 @@ class window.Viewer
 		maximize = window.document.getElementById("maximize")
 		maximize.addEventListener "click", maximizeHandler
 
+	# 閉じるハンドラ
 	closeHandler: (event) =>
 		# ウィンドウサイズ位置を保存
 		# viewerウィンドウ

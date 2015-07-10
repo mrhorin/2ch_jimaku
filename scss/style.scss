@@ -46,6 +46,7 @@ a{
 	text-decoration: none;
 }
 
+// ----------- タスクバー -----------
 #task-bar{
 	background-color: $window-color;
 	border-bottom: 1px solid $border;
@@ -105,6 +106,8 @@ a{
 	cursor: se-resize;
   display: none;
 }
+
+// ---------------- メニュー ----------------
 nav{
 	background-color: $window-color;
 	width: 100%;
@@ -167,6 +170,8 @@ section{
 	word-wrap: break-word;
 	color: #555;
 }
+
+// ---------------- スレッド一覧 ----------------
 .thread{
 	font-size: 1.2em;
 	padding: 5px 10px;
@@ -187,6 +192,8 @@ section{
 .thread:nth-child(2n-1){
 	background-color: #FFF;
 }
+
+// ---------------- 掲示板一覧 ----------------
 .bbs{
 	font-size: 1.2em;
 	padding: 5px 10px;
@@ -207,6 +214,8 @@ section{
 .bbs:nth-child(2n-1){
 	background-color: #FFF;
 }
+
+// ---------------- 書き込み ----------------
 .res{
 	padding: 5px 13px;
 }
@@ -215,7 +224,10 @@ section{
 }
 .res-body{
 	padding-left: 25px;
+  font-family: 'ＭＳ Ｐゴシック', sans-serif !important;
 }
+
+// ---------------- 字幕 ----------------
 #jimaku-body{
 	padding-top: 19px;
 	position: fixed;
@@ -281,6 +293,16 @@ section{
 #jimaku-title:hover{
 	cursor: default;
 }
+// アスキーアート表示用クラス
+.jimaku-res-aa{
+  font-size: 17pt !important;
+  color: #428bca !important;
+	-webkit-text-stroke-color: #fff !important;
+	-webkit-text-stroke-width: 1px !important;
+  font-family: 'ＭＳ Ｐゴシック', sans-serif !important;
+}
+
+// -------- 掲示板追加ウィンドウ --------
 #add-bbs-body{
 	padding: 10px 15px;
 }
@@ -289,6 +311,7 @@ section{
 	color: #777;
 }
 
+// ----------- 設定ウィンドウ -----------
 #config-window{
 	padding-left: 20px;
 	padding-right: 20px;

@@ -15,6 +15,7 @@ class window.ThreadController
 	# jimakuRes 字幕レスエレメント
 
 	# jimakuResQueue 字幕レス表示用キュー
+	# jimakuAAFlag 字幕アスキアート表示フラグ
 	# jimakuLoadFlag
 	# resLoadFlag レス自動更新用フラグ
 	# sound レス着信音用Soundインスタンス
@@ -35,6 +36,7 @@ class window.ThreadController
 		@jimakuRes = null
 		@jimakuResQueue = []
 		@jimakuCompleteFlag = false
+		@jimakuAAFlag = false
 		@resLoadFlag = false
 		@jimakuLoadFlag = false
 		@airFlag = false
@@ -48,7 +50,7 @@ class window.ThreadController
 
 	# 字幕ウィンドウ読み込み完了時イベントハンドラー
 	jimakuCompleteHandler: =>
-		# 字幕タイトルエレメントの取得
+		# 字幕エレメントの取得
 		@jimakuTitle = @jimakuView.html.window.document.getElementById("jimaku-title")
 		@jimakuSubject = @jimakuView.html.window.document.getElementById("jimaku-subject")
 		@jimakuBody = @jimakuView.html.window.document.getElementById("jimaku-body")
@@ -97,13 +99,36 @@ class window.ThreadController
 
 	# 字幕にレスを表示
 	printResToJimaku: (res) =>
+		# アスキアートモードか
+		if @jimakuAAFlag
+			$(@jimakuRes).removeClass("jimaku-res-aa")
+			@jimakuAAFlag = false
 		if @jimakuRes?
 			@jimakuRes.innerHTML = res
 
-	# 字幕にレス数を描画
+	# 字幕にアスキーアートを表示
+	printAAToJimaku: (res)=>
+		if window.viewerObj.threadController?
+			if window.viewerObj.threadController.jimakuRes?
+				# 字幕がAAモードになっているか
+				if !@jimakuAAFlag
+					# アスキーアート用クラスを追加
+					$(@jimakuRes).addClass("jimaku-res-aa")
+					@jimakuAAFlag = true
+				@jimakuRes.innerHTML = res
+
+	# 字幕にレス数を表示
 	printJimakuResCount: =>
 		if @jimakuCount?
 			@jimakuCount.innerHTML = "("+@thread.resCount+")"
+
+	# レスがAAかを判定
+	checkAA: (res) =>
+		ptn = new RegExp("＼|∪|∩|⌒|从|;;;|:::|\,\,\,|'''")
+		if ptn.test(res)
+			return true
+		else
+			return false
 
 	# キューの要素数(引数)を調べて字幕表示秒数を返す
 	checkQueueLength: (count) ->
@@ -153,10 +178,17 @@ class window.ThreadController
 		@jimakuPrintTimer = setTimeout =>
 			# 新着レスがあるか確認
 			if @jimakuResQueue[0]?
+				# 表示用レス
+				res = @jimakuResQueue[0]
 				# 字幕に総レス数を表示
 				@printJimakuResCount()
-				# キューの先頭要素を表示
-				@printResToJimaku(@jimakuResQueue[0])
+				# 表示用レスがAAかを確認
+				if @checkAA(res)
+					# AAを表示
+					@printAAToJimaku(res)
+				else
+					# レスを表示
+					@printResToJimaku(res)
 				# レス着信音の再生
 				@sound.play()
 				# デキュー
@@ -165,6 +197,10 @@ class window.ThreadController
 				hoge = @checkQueueLength(@jimakuResQueue.length)
 				@jimakuLoadOn(hoge)
 			else
+				# アスキアートモードか
+				if @jimakuAAFlag
+					$(@jimakuRes).removeClass("jimaku-res-aa")
+					@jimakuAAFlag = false
 				# 字幕レス表示を消す
 				@printResToJimaku("")
 				@jimakuLoadFlag = false
