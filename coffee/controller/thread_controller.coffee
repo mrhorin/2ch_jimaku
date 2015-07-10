@@ -99,15 +99,16 @@ class window.ThreadController
 
 	# 字幕にレスを表示
 	printResToJimaku: (res) =>
-		# アスキアートモードか
+		# アスキアートモードを解除
 		if @jimakuAAFlag
 			$(@jimakuRes).removeClass("jimaku-res-aa")
 			@jimakuAAFlag = false
+		# レスを表示
 		if @jimakuRes?
 			@jimakuRes.innerHTML = res
 
 	# 字幕にアスキーアートを表示
-	printAAToJimaku: (res)=>
+	printAAToJimaku: (res) =>
 		if window.viewerObj.threadController?
 			if window.viewerObj.threadController.jimakuRes?
 				# 字幕がAAモードになっているか
@@ -125,6 +126,14 @@ class window.ThreadController
 	# レスがAAかを判定
 	checkAA: (res) =>
 		ptn = new RegExp("＼|∪|∩|⌒|从|;;;|:::|\,\,\,|'''")
+		if ptn.test(res)
+			return true
+		else
+			return false
+
+	# レスに画像URLが含まれているか判定
+	checkImageUrl: (res) =>
+		ptn = new RegExp("f|h?)(t{1}tps?:\/\/[-a-zA-Z0-9@:%_\+.~?&\/\/=]+\.(jpg|jpeg|png|bmp)$")
 		if ptn.test(res)
 			return true
 		else

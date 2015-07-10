@@ -1,6 +1,8 @@
 class window.ThreadView extends BaseView
 
+	# URL正規表現pattern
 	regex: /(f|h?)(t{1}tps?:\/\/[-a-zA-Z0-9@:%_\+.~?&\/\/=]+)/gi
+	# URL格納用配列
 	links = []
 
 	# URLをリンク化してidを付加する
