@@ -21,10 +21,9 @@ class window.ThreadController
 	# sound レス着信音用Soundインスタンス
 	# airFlag switchClassAirのOnOff
 
-	# スレッドの最大レス数
-	@MAX_RES_COUNT = 1000
-
 	constructor: (thread, threadView, jimakuView) ->
+		# スレッドの最大レス数
+		@MAX_RES_COUNT = 1000
 		@thread = thread
 		@threadView = threadView
 		@jimakuView = jimakuView
