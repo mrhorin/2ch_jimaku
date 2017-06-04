@@ -33,17 +33,17 @@ adl 2ch_jimaku/2ch_jimaku.xml
 adt -package -storetype pkcs12 -keystore AirCast.pfx -storepass pass AirCast.air 2ch_jimaku.xml icons sound haml js/scripts.js lib scss/style.css bower_components node_modules
 ```
 
-##備考
+## 備考
 
 ロジック系はcoffeeフォルダ内を参照 。
 現在対応している掲示板はしたらばのみ  
 
-##実装・改良したい機能
+## 実装・改良したい機能
 
 ・＠chs、２ちゃんねるに対応  
 ・レス書き込み機能  
 
-##使用素材
+## 使用素材
 
 【同封レス着信音】  
 http://maoudamashii.jokersounds.com/music_se.html  
