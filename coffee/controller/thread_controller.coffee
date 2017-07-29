@@ -18,12 +18,10 @@ class window.ThreadController
 	# jimakuAAFlag 字幕アスキアート表示フラグ
 	# jimakuLoadFlag
 	# resLoadFlag レス自動更新用フラグ
-	# sound レス着信音用Soundインスタンス
+	# res_sound レス着信音用Soundインスタンス
 	# airFlag switchClassAirのOnOff
 
 	constructor: (thread, threadView, jimakuView) ->
-		# スレッドの最大レス数
-		@MAX_RES_COUNT = 1000
 		@thread = thread
 		@threadView = threadView
 		@jimakuView = jimakuView
@@ -42,8 +40,14 @@ class window.ThreadController
 		@resLoadFlag = false
 		@jimakuLoadFlag = false
 		@airFlag = false
-		req = new window.air.URLRequest("../../sound/sound.mp3")
-		@sound = new air.Sound(req)
+		# スレッドの最大レス数
+		@MAX_RES_COUNT = 1000
+		# レス着信音
+		res_sound_url = new window.air.URLRequest("../../sound/sound.mp3")
+		@res_sound = new air.Sound(res_sound_url)
+		# スレッドストップ通知音
+		stop_sound_url = new window.air.URLRequest("../../sound/stop.mp3")
+		@stop_sound = new air.Sound(stop_sound_url)
 		@jimakuInitialize()
 
 	# 字幕初期化設定
@@ -158,9 +162,6 @@ class window.ThreadController
 	resLoadOn: =>
 		@resLoadFlag = true
 		@resLoadTimer = setInterval =>
-			# レス1000表示
-			if @thread.resCount >= @MAX_RES_COUNT
-				@printResToJimaku("スレが1000になりました＼(^o^)／")
 			# 新着レスを取得
 			res = @thread.getRes()
 			# 新着レスがあるか確認
@@ -173,6 +174,10 @@ class window.ThreadController
 				if !@jimakuLoadFlag
 					# 字幕表示用タイマーON
 					@jimakuLoadOn()
+			else if @thread.resCount >= @MAX_RES_COUNT
+				# レス1000表示
+				@printResToJimaku("スレが1000になりました")
+				@stop_sound.play()
 		, 7000
 
 	# 自動更新OFF
@@ -214,7 +219,7 @@ class window.ThreadController
 					# レスを表示
 					@printResToJimaku(res)
 				# レス着信音の再生
-				@sound.play()
+				@res_sound.play()
 				# デキュー
 				@jimakuResQueue.shift()
 				# レス表示時間を取得
